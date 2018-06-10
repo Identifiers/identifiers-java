@@ -48,9 +48,9 @@ public class Encoder {
             long packed = 0;
 
             for (int shift = BYTE_SHIFT_START; shift > -1; shift -= BYTE_SHIFT) {
-                byte aByte = unencoded[bytePos++];
-                packed = packByte(aByte, packed, shift);
-                checksum = updateChecksum(checksum, aByte);
+                long lByte = toLong(unencoded[bytePos++]);
+                packed = packByte(lByte, packed, shift);
+                checksum += lByte;
             }
 
             for (int shift = WORD_SHIFT_START; shift > -1; shift -= WORD_SHIFT) {
@@ -62,9 +62,9 @@ public class Encoder {
         if (bytePos < unencoded.length) {
             long packed = 0;
             for (int shift = BYTE_SHIFT_START; bytePos < unencoded.length; shift -= BYTE_SHIFT) {
-                byte aByte = unencoded[bytePos++];
-                packed = packByte(aByte, packed, shift);
-                checksum = updateChecksum(checksum, aByte);
+                long lByte = toLong(unencoded[bytePos++]);
+                packed = packByte(lByte, packed, shift);
+                checksum += lByte;
             }
 
             int remainder = unencoded.length - fullWordsEnd;
@@ -94,15 +94,15 @@ public class Encoder {
         return new String(result);
     }
 
-    private static long packByte(byte aByte, long packed, int shift) {
-        return packed | (((long) aByte) << shift);
+    private static long toLong(byte aByte) {
+        return (long) aByte & BYTE_MASK;
+    }
+
+    private static long packByte(long lByte, long packed, int shift) {
+        return packed | lByte << shift;
     }
 
     private static char packChar(long packed, int shift) {
         return CODES[(int) (packed >> shift) & BITS_MASK]; // right shift unsigned?
-    }
-
-    private static long updateChecksum(long checksum, byte aByte) {
-        return checksum + (aByte & BYTE_MASK);
     }
 }

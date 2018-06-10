@@ -26,6 +26,9 @@ class DecoderTest {
     void convertsShortByteArrays() {
         byte[] actual = decode("_cxs6asbeb");
         assertThat(actual).containsExactly("green".getBytes());
+
+        actual = decode("_xkakcp");
+        assertThat(actual).containsExactly(-20, -43, 54);
     }
 
     @Test

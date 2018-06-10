@@ -22,9 +22,9 @@ class RoundTripTest {
         Arrays.stream(bytes).forEach(this::roundTrip);
     }
 
-    private void roundTrip(byte[] bytes) {
+    private void roundTrip(byte[] bytes) throws IllegalArgumentException {
         String testEnc = encode(bytes);
         byte[] actual = decode(testEnc);
-        assertThat(bytes).containsExactly(actual);
+        assertThat(actual).containsExactly(bytes);
     }
 }

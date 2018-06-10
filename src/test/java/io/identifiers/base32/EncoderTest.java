@@ -29,5 +29,9 @@ class EncoderTest {
 
         actual = encode("yellow".getBytes());
         assertThat(actual).isEqualTo("_f5jprv3few2");
+
+        byte[] bytes = {-20, -43, 54};
+        actual = Encoder.encode(bytes);
+        assertThat(actual).isEqualTo("_xkakcp");
     }
 }
