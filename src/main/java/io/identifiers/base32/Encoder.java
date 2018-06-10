@@ -33,7 +33,7 @@ public class Encoder {
             return PREFIX;
         }
 
-        float wordCount = ((float) unencoded.length) / WORD_SIZE;
+        float wordCount = (float) unencoded.length / WORD_SIZE;
         int charCount = (int) Math.ceil(wordCount * BYTE_SHIFT) + 2;
         int fullWordsEnd = (int) Math.floor(wordCount) * WORD_SIZE;
         char[] result = new char[charCount];
