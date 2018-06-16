@@ -16,9 +16,10 @@ public class Constants {
     static final String PREFIX = "_";
     static final int CHECK_PRIME = SYMBOLS.length() + CHECK_EXTRAS.length();
     static final int WORD_SIZE = 0x5;
-    static final int CHARS_PER_WORD = 0x8;
-    static final int BYTE_MASK = 0xff;
+    static final long BYTE_MASK = 0xff;
     static final int BYTE_SHIFT = 0x8;
+
+    private static final int CHARS_PER_WORD = 0x8;
     static final int BYTE_SHIFT_START = WORD_SIZE * CHARS_PER_WORD - BYTE_SHIFT;
     static final int WORD_SHIFT = 0x5;
     static final int WORD_SHIFT_START = WORD_SIZE * CHARS_PER_WORD - WORD_SHIFT;
