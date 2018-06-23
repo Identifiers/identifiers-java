@@ -26,12 +26,15 @@ class EncoderTest {
     void encodesShortByteArrayWithNoRemainder() {
         String actual = encode("green".getBytes());
         assertThat(actual).isEqualTo("_cxs6asbeb");
+    }
 
-        actual = encode("yellow".getBytes());
+    @Test
+    void encodesShortByteArrayWithRemainder() {
+        String actual = encode("yellow".getBytes());
         assertThat(actual).isEqualTo("_f5jprv3few2");
 
         byte[] bytes = {-20, -43, 54};
-        actual = Encoder.encode(bytes);
+        actual = encode(bytes);
         assertThat(actual).isEqualTo("_xkakcp");
     }
 }

@@ -1,15 +1,18 @@
+/*
+  This base32 algorithm is based on Mikael Grev's MiGBase64 algorithm: http://migbase64.sourceforge.net
+  which is licensed under the BSD Open Source license.
+ */
 package io.identifiers.base32;
 
 import java.util.Arrays;
 
 import static io.identifiers.base32.Constants.BYTE_MASK;
-import static io.identifiers.base32.Constants.BYTE_SHIFT;
 import static io.identifiers.base32.Constants.BYTE_SHIFT_START;
+import static io.identifiers.base32.Constants.BYTE_SIZE;
 import static io.identifiers.base32.Constants.CHECK_EXTRAS;
 import static io.identifiers.base32.Constants.CHECK_PRIME;
 import static io.identifiers.base32.Constants.PREFIX;
 import static io.identifiers.base32.Constants.SYMBOLS;
-import static io.identifiers.base32.Constants.WORD_SHIFT;
 import static io.identifiers.base32.Constants.WORD_SHIFT_START;
 import static io.identifiers.base32.Constants.WORD_SIZE;
 
@@ -61,7 +64,7 @@ public class Decoder {
         }
 
         int length = encoded.length() - 2;
-        int bytesCount = length * WORD_SIZE / BYTE_SHIFT;
+        int bytesCount = length * WORD_SIZE / BYTE_SIZE;
         int fullWordsEnd = bytesCount / WORD_SIZE * WORD_SIZE;
         byte[] result = new byte[bytesCount];
 
@@ -72,11 +75,11 @@ public class Decoder {
         while (bytePos < fullWordsEnd) {
             long unpacked = 0;
 
-            for (int shift = WORD_SHIFT_START; shift > -1; shift -= WORD_SHIFT) {
+            for (int shift = WORD_SHIFT_START; shift > -1; shift -= WORD_SIZE) {
                 unpacked = unpackChar(encoded, charPos++, unpacked, shift);
             }
 
-            for (int shift = BYTE_SHIFT_START; shift > -1; shift -= BYTE_SHIFT) {
+            for (int shift = BYTE_SHIFT_START; shift > -1; shift -= BYTE_SIZE) {
                 byte aByte = unpackByte(unpacked, shift);
                 result[bytePos++] = aByte;
                 checksum = updateChecksum(checksum, aByte);
@@ -87,11 +90,11 @@ public class Decoder {
         if (bytePos < bytesCount) {
             long unpacked = 0;
 
-            for (int shift = WORD_SHIFT_START; charPos <= length; shift -= WORD_SHIFT) {
+            for (int shift = WORD_SHIFT_START; charPos <= length; shift -= WORD_SIZE) {
                 unpacked = unpackChar(encoded, charPos++, unpacked, shift);
             }
 
-            for (int shift = BYTE_SHIFT_START; bytePos < bytesCount; shift -= BYTE_SHIFT) {
+            for (int shift = BYTE_SHIFT_START; bytePos < bytesCount; shift -= BYTE_SIZE) {
                 byte aByte = unpackByte(unpacked, shift);
                 result[bytePos++] = aByte;
                 checksum = updateChecksum(checksum, aByte);

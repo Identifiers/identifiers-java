@@ -1,5 +1,5 @@
 /*
-  This codec's algorithm is based on Mikael Grev's MiGBase64 algorithm: http://migbase64.sourceforge.net
+  This base32 algorithm is based on Mikael Grev's MiGBase64 algorithm: http://migbase64.sourceforge.net
   which is licensed under the BSD Open Source license.
  */
 package io.identifiers.base32;
@@ -7,13 +7,12 @@ package io.identifiers.base32;
 import java.util.Arrays;
 
 import static io.identifiers.base32.Constants.BYTE_MASK;
-import static io.identifiers.base32.Constants.BYTE_SHIFT;
 import static io.identifiers.base32.Constants.BYTE_SHIFT_START;
+import static io.identifiers.base32.Constants.BYTE_SIZE;
 import static io.identifiers.base32.Constants.CHECK_EXTRAS;
 import static io.identifiers.base32.Constants.CHECK_PRIME;
 import static io.identifiers.base32.Constants.PREFIX;
 import static io.identifiers.base32.Constants.SYMBOLS;
-import static io.identifiers.base32.Constants.WORD_SHIFT;
 import static io.identifiers.base32.Constants.WORD_SHIFT_START;
 import static io.identifiers.base32.Constants.WORD_SIZE;
 
@@ -34,26 +33,26 @@ public class Encoder {
         }
 
         float wordCount = (float) unencoded.length / WORD_SIZE;
-        int charCount = (int) Math.ceil(wordCount * BYTE_SHIFT) + 2;
+        int charCount = (int) Math.ceil(wordCount * BYTE_SIZE) + 2;
         int fullWordsEnd = (int) Math.floor(wordCount) * WORD_SIZE;
         char[] result = new char[charCount];
 
         result[0] = PREFIX_CODE;
 
-        int charPos = 1;
         int bytePos = 0;
+        int charPos = 1;
         long checksum = 0;
 
         while (bytePos < fullWordsEnd) {
             long packed = 0;
 
-            for (int shift = BYTE_SHIFT_START; shift > -1; shift -= BYTE_SHIFT) {
+            for (int shift = BYTE_SHIFT_START; shift > -1; shift -= BYTE_SIZE) {
                 long lByte = toLong(unencoded[bytePos++]);
                 packed = packByte(lByte, packed, shift);
                 checksum += lByte;
             }
 
-            for (int shift = WORD_SHIFT_START; shift > -1; shift -= WORD_SHIFT) {
+            for (int shift = WORD_SHIFT_START; shift > -1; shift -= WORD_SIZE) {
                 result[charPos++] = packChar(packed, shift);
             }
         }
@@ -61,7 +60,8 @@ public class Encoder {
         // remainder
         if (bytePos < unencoded.length) {
             long packed = 0;
-            for (int shift = BYTE_SHIFT_START; bytePos < unencoded.length; shift -= BYTE_SHIFT) {
+
+            for (int shift = BYTE_SHIFT_START; bytePos < unencoded.length; shift -= BYTE_SIZE) {
                 long lByte = toLong(unencoded[bytePos++]);
                 packed = packByte(lByte, packed, shift);
                 checksum += lByte;
@@ -71,19 +71,19 @@ public class Encoder {
             int shift = WORD_SHIFT_START;
 
             result[charPos++] = packChar(packed,shift);
-            result[charPos++] = packChar(packed,shift -= WORD_SHIFT);
+            result[charPos++] = packChar(packed,shift -= WORD_SIZE);
 
             if (remainder > 1) {
-                result[charPos++] = packChar(packed, shift -= WORD_SHIFT);
-                result[charPos++] = packChar(packed, shift -= WORD_SHIFT);
+                result[charPos++] = packChar(packed, shift -= WORD_SIZE);
+                result[charPos++] = packChar(packed, shift -= WORD_SIZE);
             }
 
             if (remainder > 2) {
-                result[charPos++] = packChar(packed, shift -= WORD_SHIFT);
+                result[charPos++] = packChar(packed, shift -= WORD_SIZE);
             }
 
             if (remainder > 3) {
-                result[charPos++] = packChar(packed, shift - WORD_SHIFT);
+                result[charPos++] = packChar(packed, shift - WORD_SIZE);
                 result[charPos++] = packChar(packed, WORD_SIZE);
             }
 
@@ -103,6 +103,6 @@ public class Encoder {
     }
 
     private static char packChar(long packed, int shift) {
-        return CODES[(int) (packed >> shift) & BITS_MASK]; // right shift unsigned?
+        return CODES[(int) (packed >> shift) & BITS_MASK];
     }
 }

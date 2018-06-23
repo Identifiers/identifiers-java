@@ -1,10 +1,13 @@
+/*
+  This base128 algorithm is based on Mikael Grev's MiGBase64 algorithm: http://migbase64.sourceforge.net
+  which is licensed under the BSD Open Source license.
+ */
 package io.identifiers.base128;
 
-import static io.identifiers.base128.Constants.BYTE_SHIFT;
 import static io.identifiers.base128.Constants.BYTE_SHIFT_START;
+import static io.identifiers.base128.Constants.BYTE_SIZE;
 import static io.identifiers.base128.Constants.SYMBOLS;
 import static io.identifiers.base128.Constants.TERMINATOR;
-import static io.identifiers.base128.Constants.WORD_SHIFT;
 import static io.identifiers.base128.Constants.WORD_SHIFT_START;
 import static io.identifiers.base128.Constants.WORD_SIZE;
 
@@ -30,7 +33,7 @@ public final class Decoder {
         }
 
         int length = encoded.length() - 1;
-        int bytesCount = length * WORD_SIZE / BYTE_SHIFT;
+        int bytesCount = length * WORD_SIZE / BYTE_SIZE;
         int fullWordsEnd = bytesCount / WORD_SIZE * WORD_SIZE;
         byte[] result = new byte[bytesCount];
 
@@ -41,11 +44,11 @@ public final class Decoder {
         while (bytePos < fullWordsEnd) {
             long unpacked = 0;
 
-            for (int shift = WORD_SHIFT_START; shift > -1; shift -= WORD_SHIFT) {
+            for (int shift = WORD_SHIFT_START; shift > -1; shift -= WORD_SIZE) {
                 unpacked = unpackChar(encoded, charPos++, unpacked, shift);
             }
 
-            for (int shift = BYTE_SHIFT_START; shift > -1; shift -=  BYTE_SHIFT) {
+            for (int shift = BYTE_SHIFT_START; shift > -1; shift -= BYTE_SIZE) {
                 result[bytePos++] = unpackByte(unpacked, shift);
             }
         }
@@ -53,11 +56,11 @@ public final class Decoder {
         if (bytePos < bytesCount) {
             long unpacked = 0;
 
-            for (int shift = WORD_SHIFT_START; charPos < length; shift -= WORD_SHIFT) {
+            for (int shift = WORD_SHIFT_START; charPos < length; shift -= WORD_SIZE) {
                 unpacked = unpackChar(encoded, charPos++, unpacked, shift);
             }
 
-            for (int shift = BYTE_SHIFT_START; bytePos < bytesCount; shift -= BYTE_SHIFT) {
+            for (int shift = BYTE_SHIFT_START; bytePos < bytesCount; shift -= BYTE_SIZE) {
                 result[bytePos++] = unpackByte(unpacked, shift);
             }
         }
