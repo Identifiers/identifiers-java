@@ -1,8 +1,6 @@
 package benchmarks;
 
 import com.github.javafaker.Faker;
-import io.identifiers.base32.Decoder;
-import io.identifiers.base32.Encoder;
 import org.msgpack.core.MessageBufferPacker;
 import org.msgpack.core.MessagePack;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -22,11 +20,11 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class Base32Benchmark {
+public class CodecBenchmark {
 
     public static void main(String[] args) throws RunnerException {
         Options opts = new OptionsBuilder()
-            .include(Base32Benchmark.class.getName() + ".*")
+            .include(CodecBenchmark.class.getName() + ".*")
             .warmupIterations(3)
             .forks(1)
             .measurementIterations(1)
@@ -74,21 +72,39 @@ public class Base32Benchmark {
         }
     }
 
-    void roundTrip(byte[] bytes) {
-        String encoded = Encoder.encode(bytes);
-        byte[] decoded = Decoder.decode(encoded);
+    void roundTripBase32(byte[] bytes) {
+        String encoded = io.identifiers.base32.Encoder.encode(bytes);
+        byte[] decoded = io.identifiers.base32.Decoder.decode(encoded);
+        if (decoded == null) {
+            throw new RuntimeException(String.format("Could not decode %s", encoded));
+        }
+    }
+
+    void roundTripBase128(byte[] bytes) {
+        String encoded = io.identifiers.base128.Encoder.encode(bytes);
+        byte[] decoded = io.identifiers.base128.Decoder.decode(encoded);
         if (decoded == null) {
             throw new RuntimeException(String.format("Could not decode %s", encoded));
         }
     }
 
     @Benchmark
-    public void timeRandomBytes(BenchmarkState state) {
-        roundTrip(state.randomBytes[(int) Math.floor(Math.random() * 10)]);
+    public void timeBase32RandomBytes(BenchmarkState state) {
+        roundTripBase32(state.randomBytes[(int) Math.floor(Math.random() * 10)]);
     }
 
     @Benchmark
-    public void timeRandomValues(BenchmarkState state) {
-        roundTrip(state.strBytes[(int) Math.floor(Math.random() * 10)]);
+    public void timeBase32RandomValues(BenchmarkState state) {
+        roundTripBase32(state.strBytes[(int) Math.floor(Math.random() * 10)]);
+    }
+
+    @Benchmark
+    public void timeBase128RandomBytes(BenchmarkState state) {
+        roundTripBase128(state.randomBytes[(int) Math.floor(Math.random() * 10)]);
+    }
+
+    @Benchmark
+    public void timeBase128RandomValues(BenchmarkState state) {
+        roundTripBase128(state.strBytes[(int) Math.floor(Math.random() * 10)]);
     }
 }
