@@ -8,18 +8,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DecoderTest {
 
     @Test
-    void handlesEmptyValues() {
+    void handlesEmptyValue() {
         byte[] actual = decode(Constants.PREFIX);
         assertThat(actual).isEmpty();
     }
 
     @Test
     void convertsSingleByteValues() {
+        // m
         byte[] actual = decode("_dm=");
-        assertThat(actual).containsExactly('m');
+        assertThat(actual).containsExactly(109);
 
-        actual = decode("_041");
-        assertThat(actual).containsExactly(1);
+        // 'ÿ'
+        actual = decode("_zw~");
+        assertThat(actual).containsExactly(-1);
     }
 
     @Test

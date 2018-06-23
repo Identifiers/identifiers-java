@@ -18,8 +18,8 @@ class EncoderTest {
         String actual = encode(new byte[] {'m'});
         assertThat(actual).isEqualTo("_dm=");
 
-        actual = encode(new byte[] {1});
-        assertThat(actual).isEqualTo("_041");
+        actual = encode(new byte[] {-1});
+        assertThat(actual).isEqualTo("_zw~");
     }
 
     @Test
