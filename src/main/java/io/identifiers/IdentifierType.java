@@ -1,5 +1,8 @@
 package io.identifiers;
 
+/**
+ * Enumeration of Identifier types with their type codes.
+ */
 public enum IdentifierType {
     STRING(0x0),
     BOOLEAN(0x1),
@@ -11,10 +14,16 @@ public enum IdentifierType {
 
     private final int code;
 
+
     IdentifierType(int code) {
         this.code = code;
     }
 
+    /**
+     * The type code for this type.
+     *
+     * @return the type code.
+     */
     public int code() {
         return code;
     }

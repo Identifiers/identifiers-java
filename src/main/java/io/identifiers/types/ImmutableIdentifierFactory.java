@@ -7,6 +7,7 @@ public class ImmutableIdentifierFactory<T> implements IdentifierFactory<T> {
 
     private final TypeTemplate<T> typeTemplate;
 
+
     public ImmutableIdentifierFactory(TypeTemplate<T> typeTemplate) {
         this.typeTemplate = typeTemplate;
     }

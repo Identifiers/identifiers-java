@@ -3,7 +3,11 @@ package io.identifiers.types;
 import io.identifiers.IdentifierType;
 import org.msgpack.value.ValueFactory;
 
-public class TypeTemplates {
+public final class TypeTemplates {
+
+    private TypeTemplates() {
+        // static class
+    }
 
     public static TypeTemplate<String> forString = new TypeTemplateImpl<>(
             IdentifierType.STRING,
@@ -27,6 +31,6 @@ public class TypeTemplates {
 
     public static TypeTemplate<byte[]> forBytes = new TypeTemplateImpl<>(
             IdentifierType.BYTES,
-            ValueFactory::newBinary,
+            (bytes) -> ValueFactory.newBinary(bytes, true),
             (bytes) -> bytes::clone);
 }

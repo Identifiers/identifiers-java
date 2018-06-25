@@ -18,11 +18,13 @@ class TypeTemplateImpl<T> implements TypeTemplate<T> {
     private final Function<T, Value> encodeƒ;
     private final Function<T, Supplier<T>> valueSupplierƒ;
 
+
     private static <T> Function<T, Supplier<T>> unsupportedSupplier() {
         return (value) -> {
             throw new UnsupportedOperationException(String.format("no supplier available for %s", value));
         };
     }
+
 
     TypeTemplateImpl(
             IdentifierType type,

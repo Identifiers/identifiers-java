@@ -7,6 +7,7 @@ public class SupplyingValueIdentifierFactory<T> implements IdentifierFactory<T> 
 
     private final TypeTemplate<T> typeTemplate;
 
+
     public SupplyingValueIdentifierFactory(TypeTemplate<T> typeTemplate) {
         this.typeTemplate = typeTemplate;
     }
