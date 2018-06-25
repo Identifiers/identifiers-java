@@ -1,16 +1,8 @@
 package io.identifiers;
 
 public interface Identifier<T> {
-    enum TYPE {
-        STRING,
-        BOOLEAN,
-        INTEGER,
-        FLOAT,
-        LONG,
-        BYTES
-    }
 
-    TYPE type();
+    IdentifierType type();
 
     T value();
 

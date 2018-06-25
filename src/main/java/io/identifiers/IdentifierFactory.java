@@ -1,14 +1,16 @@
 package io.identifiers;
 
-import java.util.List;
-import java.util.Map;
+public interface IdentifierFactory<T> {
 
-public interface IdentifierFactory {
-    <T, INPUT> Identifier<T> create(INPUT data);
+    Identifier<T> create(T value);
 
-    <T, INPUT> List<Identifier<T>> createList(Iterable<INPUT> data);
+/*
+    TODO These need to be ListIdentifier and MapIdentifier
 
-    <T, INPUT> Map<String, T> createMap(Iterable<Map.Entry<String, INPUT>> dataEntries);
+    List<Identifier<T>> createList(Iterable<T> value);
 
-    <T, INPUT> Map<String, T> createMap(Map<String, INPUT> dataMap);
+    Map<String, Identifier<T>> createMap(Iterable<Map.Entry<String, T>> valueEntries);
+
+    Map<String, Identifier<T>> createMap(Map<String, T> valueMap);
+*/
 }
