@@ -21,8 +21,6 @@ public enum IdentifierType {
 
     /**
      * The type code for this type.
-     *
-     * @return the type code.
      */
     public int code() {
         return code;

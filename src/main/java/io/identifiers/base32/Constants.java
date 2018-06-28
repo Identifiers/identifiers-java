@@ -4,7 +4,11 @@
  */
 package io.identifiers.base32;
 
-public class Constants {
+public final class Constants {
+
+    private Constants () {
+        // static class
+    }
 
     /**
      * Douglas Crockford's base32 symbols, lowercased.

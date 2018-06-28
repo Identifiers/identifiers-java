@@ -13,7 +13,7 @@ import static io.identifiers.base128.Constants.WORD_SIZE;
 
 import java.util.Arrays;
 
-public final class Decoder {
+public final class Base128Decoder {
 
     private static final long[] CODES = new long[0x100];
 
@@ -26,6 +26,10 @@ public final class Decoder {
 
     private static final byte[] EMPTY_BYTES = new byte[0];
 
+
+    public static boolean maybe(String encoded) {
+        return encoded.length() != 2 && encoded.endsWith(TERMINATOR);
+    }
 
     public static byte[] decode(String encoded) {
         if (encoded.equals(TERMINATOR)) {

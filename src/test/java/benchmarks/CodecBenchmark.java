@@ -1,6 +1,10 @@
 package benchmarks;
 
 import com.github.javafaker.Faker;
+import io.identifiers.base128.Base128Decoder;
+import io.identifiers.base128.Base128Encoder;
+import io.identifiers.base32.Base32Decoder;
+import io.identifiers.base32.Base32Encoder;
 import org.msgpack.core.MessageBufferPacker;
 import org.msgpack.core.MessagePack;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -73,16 +77,16 @@ public class CodecBenchmark {
     }
 
     void roundTripBase32(byte[] bytes) {
-        String encoded = io.identifiers.base32.Encoder.encode(bytes);
-        byte[] decoded = io.identifiers.base32.Decoder.decode(encoded);
+        String encoded = Base32Encoder.encode(bytes);
+        byte[] decoded = Base32Decoder.decode(encoded);
         if (decoded == null) {
             throw new RuntimeException(String.format("Could not decode %s", encoded));
         }
     }
 
     void roundTripBase128(byte[] bytes) {
-        String encoded = io.identifiers.base128.Encoder.encode(bytes);
-        byte[] decoded = io.identifiers.base128.Decoder.decode(encoded);
+        String encoded = Base128Encoder.encode(bytes);
+        byte[] decoded = Base128Decoder.decode(encoded);
         if (decoded == null) {
             throw new RuntimeException(String.format("Could not decode %s", encoded));
         }
