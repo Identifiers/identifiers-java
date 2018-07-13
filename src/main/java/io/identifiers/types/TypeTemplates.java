@@ -42,10 +42,5 @@ final class TypeTemplates {
             IdentifierType.LONG,
             ValueFactory::newInteger));
 
-    static TypeTemplate<byte[]> forBytes = new TypeTemplateImpl<>(
-            IdentifierType.BYTES,
-            new IdentifierEncoder<>(
-                IdentifierType.BYTES,
-                (bytes) -> ValueFactory.newBinary(bytes, true)),
-            (bytes) -> bytes::clone);
+    static TypeTemplate<byte[]> forBytes = new BytesTypeTemplate();
 }

@@ -1,39 +1,19 @@
 package io.identifiers.types;
 
 import io.identifiers.IdentifierType;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 class TypeTemplateImpl<T> implements TypeTemplate<T> {
 
     private final IdentifierType type;
     private final IdentifierEncoder<T> encoder;
-    private final Function<T, Supplier<T>> valueSupplierƒ;
-
-
-    private static <T> Function<T, Supplier<T>> unsupportedSupplier() {
-        return (value) -> {
-            throw new UnsupportedOperationException(String.format("no supplier available for %s", value));
-        };
-    }
 
 
     TypeTemplateImpl(
             IdentifierType type,
             IdentifierEncoder<T> encoder) {
 
-        this(type, encoder, unsupportedSupplier());
-    }
-
-
-    TypeTemplateImpl(
-            IdentifierType type,
-            IdentifierEncoder<T> encoder,
-            Function<T, Supplier<T>> valueSupplierƒ) {
-
         this.type = type;
         this.encoder = encoder;
-        this.valueSupplierƒ = valueSupplierƒ;
     }
 
     @Override
@@ -42,8 +22,8 @@ class TypeTemplateImpl<T> implements TypeTemplate<T> {
     }
 
     @Override
-    public Supplier<T> valueSupplier(T data) {
-        return valueSupplierƒ.apply(data);
+    public T value(final T value) {
+        return value;
     }
 
     @Override
@@ -54,5 +34,20 @@ class TypeTemplateImpl<T> implements TypeTemplate<T> {
     @Override
     public String toHumanString(T value) {
         return encoder.toHumanString(value);
+    }
+
+    @Override
+    public String valueString(final T value) {
+        return value.toString();
+    }
+
+    @Override
+    public int valueHashCode(final T value) {
+        return value.hashCode();
+    }
+
+    @Override
+    public boolean valuesEqual(final T value1, final T value2) {
+        return value1.equals(value2);
     }
 }

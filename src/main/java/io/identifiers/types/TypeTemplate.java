@@ -1,15 +1,20 @@
 package io.identifiers.types;
 
 import io.identifiers.IdentifierType;
-import java.util.function.Supplier;
 
 public interface TypeTemplate<T> {
 
     IdentifierType type();
 
+    T value(T value);
+
     String toDataString(T value);
 
     String toHumanString(T value);
 
-    Supplier<T> valueSupplier(T data);
+    String valueString(T value);
+
+    int valueHashCode(T value);
+
+    boolean valuesEqual(T value1, T value2);
 }

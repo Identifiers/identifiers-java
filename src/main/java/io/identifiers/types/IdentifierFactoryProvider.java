@@ -24,7 +24,7 @@ public final class IdentifierFactoryProvider {
             case LONG:
                 return new ImmutableIdentifierFactory(TypeTemplates.forLong);
             case BYTES:
-                return new SupplyingValueIdentifierFactory(TypeTemplates.forBytes);
+                return new ImmutableIdentifierFactory(TypeTemplates.forBytes);
             default:
                 throw new IllegalArgumentException(String.format("No factory for %s", type));
         }

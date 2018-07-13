@@ -13,6 +13,10 @@ import org.msgpack.core.MessageUnpacker;
 
 public final class IdentifierDecoders {
 
+    private IdentifierDecoders() {
+        // static class
+    }
+
     /**
      * Parse an encoded identifier string into an Identifier instance.
      *
@@ -57,7 +61,9 @@ public final class IdentifierDecoders {
     }
 
     private static Identifier unpackIdentifier(final int typeCode, final MessageUnpacker unpacker) throws IOException {
-        return IdentifierDecoderProvider.findDecoder(typeCode).decode(unpacker);
+        return IdentifierDecoderProvider
+            .findDecoder(typeCode)
+            .decode(unpacker);
     }
 }
 

@@ -66,8 +66,8 @@ final class IdentifierDecoderProvider {
     }
 
     private static <T> IdentifierDecoder composeDecoder(
-        ThrowingFunction<MessageUnpacker, T, IOException> unpackerƒ,
-        Function<T, Identifier<T>> factoryƒ) {
+            ThrowingFunction<MessageUnpacker, T, IOException> unpackerƒ,
+            Function<T, Identifier<T>> factoryƒ) {
 
         return (unpacker) -> factoryƒ.apply(unpackerƒ.apply(unpacker));
     }

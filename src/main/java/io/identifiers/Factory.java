@@ -1,7 +1,6 @@
 package io.identifiers;
 
-import io.identifiers.types.IdentifierDecoders;
-
+import static io.identifiers.types.IdentifierDecoders.decodeIdentifier;
 import static io.identifiers.types.IdentifierFactoryProvider.*;
 
 /**
@@ -50,7 +49,7 @@ public final class Factory {
      * @return an Identifier instance
      * @throws IllegalArgumentException if the string is not an encoded identifier
      */
-    public static <T> Identifier<T> decodefromString(String encodedString) {
-        return IdentifierDecoders.decodeIdentifier(encodedString);
+    public static <T> Identifier<T> decodeFromString(String encodedString) {
+        return decodeIdentifier(encodedString);
     }
 }

@@ -2,12 +2,13 @@ package io.identifiers.types;
 
 import io.identifiers.Identifier;
 import io.identifiers.IdentifierType;
+
 import java.util.Objects;
 
 public class ImmutableIdentifier<T> implements Identifier<T> {
 
     private final TypeTemplate<T> typeTemplate;
-    private final T value;
+    final T value;
 
 
     ImmutableIdentifier(TypeTemplate<T> typeTemplate, T value) {
@@ -22,7 +23,7 @@ public class ImmutableIdentifier<T> implements Identifier<T> {
 
     @Override
     public T value() {
-        return value;
+        return typeTemplate.value(value);
     }
 
     @Override
@@ -37,23 +38,27 @@ public class ImmutableIdentifier<T> implements Identifier<T> {
 
     @Override
     public String toString() {
-        return String.format("ID«%s»: %s", type().name().toLowerCase(), value);
+        return String.format("ID«%s»: %s", type().name().toLowerCase(), typeTemplate.valueString(value));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type(), value);
+        return Objects.hash(type(), typeTemplate.valueHashCode(value));
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;
         }
         if (obj instanceof Identifier) {
             Identifier other = (Identifier) obj;
-            return    other.type() == type()
-                   && other.value().equals(value);
+            if (other.type() == type()) {
+                return typeTemplate.valuesEqual(
+                    value,
+                    ((ImmutableIdentifier<T>) other).value);
+            }
         }
         return false;
     }
