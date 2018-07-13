@@ -5,6 +5,11 @@
 package io.identifiers.base128;
 
 public final class Constants {
+
+    private Constants() {
+        // static class
+    }
+
     static final String  SYMBOLS ="/0123456789?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüý";
     static final String TERMINATOR ="þ";
 
@@ -13,7 +18,7 @@ public final class Constants {
 
     static final long BYTE_MASK = 0xff;
 
-    private static int CHARS_PER_WORD = 0x8;
-    static int BYTE_SHIFT_START = WORD_SIZE * CHARS_PER_WORD - BYTE_SIZE;
-    static int WORD_SHIFT_START = WORD_SIZE * CHARS_PER_WORD - WORD_SIZE;
+    private static final int CHARS_PER_WORD = 0x8;
+    static final int BYTE_SHIFT_START = WORD_SIZE * CHARS_PER_WORD - BYTE_SIZE;
+    static final int WORD_SHIFT_START = WORD_SIZE * CHARS_PER_WORD - WORD_SIZE;
 }

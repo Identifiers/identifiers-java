@@ -2,10 +2,10 @@ package io.identifiers.base32;
 
 import org.junit.jupiter.api.Test;
 
-import static io.identifiers.base32.Encoder.encode;
+import static io.identifiers.base32.Base32Encoder.encode;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class EncoderTest {
+class Base32Base128EncoderTest {
 
     @Test
     void handlesEmptyValues() {

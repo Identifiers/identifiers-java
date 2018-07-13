@@ -14,26 +14,33 @@ final class TypeTemplates {
 
     static TypeTemplate<String> forString = new TypeTemplateImpl<>(
             IdentifierType.STRING,
-            ValueFactory::newString);
+            new IdentifierEncoder<>(
+                IdentifierType.STRING,
+                ValueFactory::newString));
 
     static TypeTemplate<Boolean> forBoolean = new TypeTemplateImpl<>(
             IdentifierType.BOOLEAN,
-            ValueFactory::newBoolean);
+            new IdentifierEncoder<>(
+                IdentifierType.BOOLEAN,
+                ValueFactory::newBoolean));
 
     static TypeTemplate<Integer> forInteger = new TypeTemplateImpl<>(
             IdentifierType.INTEGER,
-            ValueFactory::newInteger);
+            new IdentifierEncoder<>(
+                IdentifierType.INTEGER,
+                ValueFactory::newInteger));
 
     static TypeTemplate<Float> forFloat = new TypeTemplateImpl<>(
             IdentifierType.FLOAT,
-            ValueFactory::newFloat);
+            new IdentifierEncoder<>(
+                IdentifierType.FLOAT,
+                ValueFactory::newFloat));
 
     static TypeTemplate<Long> forLong = new TypeTemplateImpl<>(
             IdentifierType.LONG,
-            ValueFactory::newInteger);
+            new IdentifierEncoder<>(
+            IdentifierType.LONG,
+            ValueFactory::newInteger));
 
-    static TypeTemplate<byte[]> forBytes = new TypeTemplateImpl<>(
-            IdentifierType.BYTES,
-            (bytes) -> ValueFactory.newBinary(bytes, true),
-            (bytes) -> bytes::clone);
+    static TypeTemplate<byte[]> forBytes = new BytesTypeTemplate();
 }

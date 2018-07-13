@@ -16,7 +16,7 @@ import static io.identifiers.base32.Constants.SYMBOLS;
 import static io.identifiers.base32.Constants.WORD_SHIFT_START;
 import static io.identifiers.base32.Constants.WORD_SIZE;
 
-public class Decoder {
+public class Base32Decoder {
 
     private static final long[] CODES = new long[0x100];
     private static final long[] CHECK_CODES = new long[CODES.length];
@@ -57,6 +57,10 @@ public class Decoder {
         CHECK_CODES['U'] = CHECK_CODES['u'];
     }
 
+
+    public static boolean maybe(String encoded) {
+        return encoded.length() != 3 && encoded.startsWith(PREFIX);
+    }
 
     public static byte[] decode(String encoded) {
         if (encoded.equals(PREFIX)) {

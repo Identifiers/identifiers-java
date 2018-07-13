@@ -5,6 +5,7 @@ package io.identifiers;
 
  * @param <T> the value type of the identifier
  */
+@FunctionalInterface
 public interface IdentifierFactory<T> {
 
     /**

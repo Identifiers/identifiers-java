@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Random;
 
-import static io.identifiers.base128.Decoder.decode;
-import static io.identifiers.base128.Encoder.encode;
+import static io.identifiers.base128.Base128Decoder.decode;
+import static io.identifiers.base128.Base128Encoder.encode;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RoundTripTest {
