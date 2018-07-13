@@ -1,7 +1,6 @@
 package io.identifiers.types;
 
 import java.io.IOException;
-import java.util.function.Function;
 
 import io.identifiers.IdentifierType;
 import io.identifiers.base128.Base128Encoder;
@@ -9,23 +8,16 @@ import io.identifiers.base32.Base32Encoder;
 
 import org.msgpack.core.MessageBufferPacker;
 import org.msgpack.core.MessagePack;
-import org.msgpack.core.annotations.VisibleForTesting;
 import org.msgpack.value.Value;
 import org.msgpack.value.ValueFactory;
 import org.msgpack.value.impl.ImmutableArrayValueImpl;
 
-final class IdentifierEncoder<T> {
-
+abstract class IdentifierEncoder<T> {
 
     private final Value typeCodeValue;
-    private final Function<T, Value> encodeƒ;
 
-    IdentifierEncoder(
-        IdentifierType type,
-        Function<T, Value> encodeƒ) {
-
-        this.typeCodeValue = ValueFactory.newInteger(type.code());
-        this.encodeƒ = encodeƒ;
+    IdentifierEncoder(IdentifierType type) {
+        typeCodeValue = ValueFactory.newInteger(type.code());
     }
 
     String toDataString(T value) {
@@ -40,9 +32,9 @@ final class IdentifierEncoder<T> {
         return Base32Encoder.encode(bytes);
     }
 
+    abstract Value encodeValue(T value);
 
-    @VisibleForTesting
-    byte[] toBytes(Value values) {
+    private byte[] toBytes(Value values) {
         try (MessageBufferPacker packer = MessagePack.newDefaultBufferPacker()) {
             packer.packValue(values);
             return packer.toByteArray();
@@ -51,12 +43,10 @@ final class IdentifierEncoder<T> {
         }
     }
 
-    @VisibleForTesting
-    Value toEncodingArray(T value) {
+    private Value toEncodingArray(T value) {
         return new ImmutableArrayValueImpl(new Value[] {
             typeCodeValue,
-            encodeƒ.apply(value)
+            encodeValue(value)
         });
     }
-
 }

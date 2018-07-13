@@ -1,6 +1,8 @@
 package io.identifiers.types;
 
 import io.identifiers.IdentifierType;
+
+import org.msgpack.value.Value;
 import org.msgpack.value.ValueFactory;
 
 /**
@@ -14,33 +16,48 @@ final class TypeTemplates {
 
     static TypeTemplate<String> forString = new TypeTemplateImpl<>(
             IdentifierType.STRING,
-            new IdentifierEncoder<>(
-                IdentifierType.STRING,
-                ValueFactory::newString));
+            new IdentifierEncoder<String>(IdentifierType.STRING) {
+                @Override
+                Value encodeValue(final String value) {
+                    return ValueFactory.newString(value);
+                }
+            });
 
     static TypeTemplate<Boolean> forBoolean = new TypeTemplateImpl<>(
             IdentifierType.BOOLEAN,
-            new IdentifierEncoder<>(
-                IdentifierType.BOOLEAN,
-                ValueFactory::newBoolean));
+            new IdentifierEncoder<Boolean>(IdentifierType.BOOLEAN) {
+                @Override
+                Value encodeValue(final Boolean value) {
+                    return ValueFactory.newBoolean(value);
+                }
+            });
 
     static TypeTemplate<Integer> forInteger = new TypeTemplateImpl<>(
             IdentifierType.INTEGER,
-            new IdentifierEncoder<>(
-                IdentifierType.INTEGER,
-                ValueFactory::newInteger));
+            new IdentifierEncoder<Integer>(IdentifierType.INTEGER) {
+                @Override
+                Value encodeValue(final Integer value) {
+                    return ValueFactory.newInteger(value);
+                }
+            });
 
     static TypeTemplate<Float> forFloat = new TypeTemplateImpl<>(
             IdentifierType.FLOAT,
-            new IdentifierEncoder<>(
-                IdentifierType.FLOAT,
-                ValueFactory::newFloat));
+            new IdentifierEncoder<Float>(IdentifierType.FLOAT) {
+                @Override
+                Value encodeValue(final Float value) {
+                    return ValueFactory.newFloat(value);
+                }
+            });
 
     static TypeTemplate<Long> forLong = new TypeTemplateImpl<>(
             IdentifierType.LONG,
-            new IdentifierEncoder<>(
-            IdentifierType.LONG,
-            ValueFactory::newInteger));
+            new IdentifierEncoder<Long>(IdentifierType.LONG) {
+                @Override
+                Value encodeValue(final Long value) {
+                    return ValueFactory.newInteger(value);
+                }
+            });
 
     static TypeTemplate<byte[]> forBytes = new BytesTypeTemplate();
 }

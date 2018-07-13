@@ -4,14 +4,20 @@ import java.util.Arrays;
 
 import io.identifiers.IdentifierType;
 
+import org.msgpack.value.Value;
 import org.msgpack.value.ValueFactory;
 
 public final class BytesTypeTemplate extends TypeTemplateImpl<byte[]> {
 
     BytesTypeTemplate() {
-        super(IdentifierType.BYTES, new IdentifierEncoder<>(
+        super(
             IdentifierType.BYTES,
-            (byte[] bytes) -> ValueFactory.newBinary(bytes, true)));
+            new IdentifierEncoder<byte[]>(IdentifierType.BYTES) {
+                @Override
+                Value encodeValue(final byte[] bytes) {
+                    return ValueFactory.newBinary(bytes, true);
+                }
+            });
     }
 
     @Override
