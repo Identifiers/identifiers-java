@@ -2,27 +2,21 @@ package io.identifiers.types;
 
 import io.identifiers.IdentifierType;
 
-class TypeTemplateImpl<T> implements TypeTemplate<T> {
+class SingleTypeTemplate<T> implements TypeTemplate<T> {
 
-    private final IdentifierType type;
     private final IdentifierEncoder<T> encoder;
 
-
-    TypeTemplateImpl(
-            IdentifierType type,
-            IdentifierEncoder<T> encoder) {
-
-        this.type = type;
+    SingleTypeTemplate(IdentifierEncoder<T> encoder) {
         this.encoder = encoder;
     }
 
     @Override
     public IdentifierType type() {
-        return type;
+        return encoder.getType();
     }
 
     @Override
-    public T value(final T value) {
+    public T value(T value) {
         return value;
     }
 
@@ -37,17 +31,17 @@ class TypeTemplateImpl<T> implements TypeTemplate<T> {
     }
 
     @Override
-    public String valueString(final T value) {
+    public String valueString(T value) {
         return value.toString();
     }
 
     @Override
-    public int valueHashCode(final T value) {
+    public int valueHashCode(T value) {
         return value.hashCode();
     }
 
     @Override
-    public boolean valuesEqual(final T value1, final T value2) {
+    public boolean valuesEqual(T value1, T value2) {
         return value1.equals(value2);
     }
 }

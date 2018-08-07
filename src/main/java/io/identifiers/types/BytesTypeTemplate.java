@@ -2,22 +2,10 @@ package io.identifiers.types;
 
 import java.util.Arrays;
 
-import io.identifiers.IdentifierType;
+public final class BytesTypeTemplate extends SingleTypeTemplate<byte[]> {
 
-import org.msgpack.value.Value;
-import org.msgpack.value.ValueFactory;
-
-public final class BytesTypeTemplate extends TypeTemplateImpl<byte[]> {
-
-    BytesTypeTemplate() {
-        super(
-            IdentifierType.BYTES,
-            new IdentifierEncoder<byte[]>(IdentifierType.BYTES) {
-                @Override
-                Value encodeValue(final byte[] bytes) {
-                    return ValueFactory.newBinary(bytes, true);
-                }
-            });
+    BytesTypeTemplate(IdentifierEncoder<byte[]> bytesEncoder) {
+        super(bytesEncoder);
     }
 
     @Override

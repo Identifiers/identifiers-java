@@ -182,6 +182,8 @@
     <!-- ******************* BUILD ******************** -->
     <!-- ********************************************** -->
 
+<!-- todo consider https://github.com/Abnaxos/markdown-doclet -->
+
     <build>
         <defaultGoal>clean package install</defaultGoal>
         <plugins>

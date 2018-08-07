@@ -5,10 +5,10 @@ import io.identifiers.IdentifierType;
 
 import java.util.Objects;
 
-public class ImmutableIdentifier<T> implements Identifier<T> {
+class ImmutableIdentifier<T> implements Identifier<T> {
 
     private final TypeTemplate<T> typeTemplate;
-    final T value;
+    private final T value;
 
 
     ImmutableIdentifier(TypeTemplate<T> typeTemplate, T value) {
@@ -53,7 +53,7 @@ public class ImmutableIdentifier<T> implements Identifier<T> {
             return true;
         }
         if (obj instanceof Identifier) {
-            Identifier other = (Identifier) obj;
+            Identifier<?> other = (Identifier<?>) obj;
             if (other.type() == type()) {
                 return typeTemplate.valuesEqual(
                     value,

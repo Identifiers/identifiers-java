@@ -24,7 +24,6 @@ public final class IdentifierDecoders {
      * @return an Identifier instance
      * @throws IllegalArgumentException if the string is not an encoded identifier
      */
-    @SuppressWarnings("unchecked")
     public static <T> Identifier<T> decodeIdentifier(String encodedString) {
         if (Base128Decoder.maybe(encodedString)) {
             return decodeDataString(encodedString);
@@ -35,17 +34,17 @@ public final class IdentifierDecoders {
         throw new IllegalArgumentException(String.format("Cannot decode '%s'", encodedString));
     }
 
-    private static Identifier decodeDataString(String encodedString) {
+    private static <T> Identifier<T> decodeDataString(String encodedString) {
         byte[] bytes = Base128Decoder.decode(encodedString);
         return bytesToIdentifier(bytes);
     }
 
-    private static Identifier decodeHumanString(String encodedString) {
+    private static <T> Identifier<T> decodeHumanString(String encodedString) {
         byte[] bytes = Base32Decoder.decode(encodedString);
         return bytesToIdentifier(bytes);
     }
 
-    private static Identifier bytesToIdentifier(byte[] bytes) {
+    private static <T> Identifier<T> bytesToIdentifier(byte[] bytes) {
         try (MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(bytes)) {
             int typeCode = unpackTypeCode(unpacker);
             return unpackIdentifier(typeCode, unpacker);
@@ -54,13 +53,14 @@ public final class IdentifierDecoders {
         }
     }
 
-    private static int unpackTypeCode(final MessageUnpacker unpacker) throws IOException {
+    private static int unpackTypeCode(MessageUnpacker unpacker) throws IOException {
         int arraySize = unpacker.unpackArrayHeader();
         Assert.state(arraySize == 2, "expected array size of 2, but found %d", arraySize);
         return unpacker.unpackInt();
     }
 
-    private static Identifier unpackIdentifier(final int typeCode, final MessageUnpacker unpacker) throws IOException {
+    @SuppressWarnings("unchecked")
+    private static <T> Identifier<T> unpackIdentifier(int typeCode, MessageUnpacker unpacker) throws IOException {
         return IdentifierDecoderProvider
             .findDecoder(typeCode)
             .decode(unpacker);

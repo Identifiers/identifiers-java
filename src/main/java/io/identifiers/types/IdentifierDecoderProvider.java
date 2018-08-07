@@ -1,29 +1,24 @@
 package io.identifiers.types;
 
-import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 import io.identifiers.Assert;
 import io.identifiers.Factory;
-import io.identifiers.Identifier;
 import io.identifiers.IdentifierType;
-
-import org.msgpack.core.MessageUnpacker;
+import io.identifiers.ListIdentifierFactory;
+import io.identifiers.SingleIdentifierFactory;
 
 final class IdentifierDecoderProvider {
+    IdentifierDecoderProvider() {
+        // static class
+    }
 
-    static IdentifierDecoder findDecoder(final int typeCode) {
+    static IdentifierDecoder findDecoder(int typeCode) {
         IdentifierDecoder decoder = decoderMap.get(typeCode);
         Assert.argumentExists(decoder, "cannot unpack identifier type %s", typeCode);
         return decoder;
-    }
-
-
-    @FunctionalInterface
-    interface ThrowingFunction<T, R, E extends Throwable> {
-        R apply(T t) throws E;
     }
 
     private static final Map<Integer, IdentifierDecoder> decoderMap = new HashMap<>();
@@ -31,44 +26,76 @@ final class IdentifierDecoderProvider {
     static {
         decoderMap.put(
             IdentifierType.STRING.code(), composeDecoder(
-                MessageUnpacker::unpackString,
-                Factory.forString::create));
+                ValueCodecs.stringCodec,
+                Factory.forString));
+
+        decoderMap.put(
+            IdentifierType.STRING_LIST.code(), composeListDecoder(
+                ValueCodecs.stringListCodec,
+                Factory.forString));
 
         decoderMap.put(
             IdentifierType.BOOLEAN.code(), composeDecoder(
-                MessageUnpacker::unpackBoolean,
-                Factory.forBoolean::create));
+                ValueCodecs.booleanCodec,
+                Factory.forBoolean));
+
+        decoderMap.put(
+            IdentifierType.BOOLEAN_LIST.code(), composeListDecoder(
+                ValueCodecs.booleanListCodec,
+                Factory.forBoolean));
 
         decoderMap.put(
             IdentifierType.INTEGER.code(), composeDecoder(
-                MessageUnpacker::unpackInt,
-                Factory.forInteger::create));
+                ValueCodecs.integerCodec,
+                Factory.forInteger));
+
+        decoderMap.put(
+            IdentifierType.INTEGER_LIST.code(), composeListDecoder(
+                ValueCodecs.integerListCodec,
+                Factory.forInteger));
 
         decoderMap.put(
             IdentifierType.FLOAT.code(), composeDecoder(
-                MessageUnpacker::unpackFloat,
-                Factory.forFloat::create));
+                ValueCodecs.floatCodec,
+                Factory.forFloat));
+
+        decoderMap.put(
+            IdentifierType.FLOAT_LIST.code(), composeListDecoder(
+                ValueCodecs.floatListCodec,
+                Factory.forFloat));
 
         decoderMap.put(
             IdentifierType.LONG.code(), composeDecoder(
-                MessageUnpacker::unpackLong,
-                Factory.forLong::create));
+                ValueCodecs.longCodec,
+                Factory.forLong));
+
+        decoderMap.put(
+            IdentifierType.LONG_LIST.code(), composeListDecoder(
+                ValueCodecs.longListCodec,
+                Factory.forLong));
 
         decoderMap.put(
             IdentifierType.BYTES.code(), composeDecoder(
-                (unpacker) -> {
-                    int size = unpacker.unpackBinaryHeader();
-                    byte[] bytes = new byte[size];
-                    unpacker.readPayload(bytes);
-                    return bytes;
-                },
-                Factory.forBytes::create));
+                ValueCodecs.bytesCodec,
+                Factory.forBytes));
+
+        decoderMap.put(
+            IdentifierType.BYTES_LIST.code(), composeListDecoder(
+                ValueCodecs.bytesListCodec,
+                Factory.forBytes));
     }
 
     private static <T> IdentifierDecoder composeDecoder(
-            ThrowingFunction<MessageUnpacker, T, IOException> unpackerƒ,
-            Function<T, Identifier<T>> factoryƒ) {
+            ValueCodec<T> codec,
+            SingleIdentifierFactory<T> factory) {
 
-        return (unpacker) -> factoryƒ.apply(unpackerƒ.apply(unpacker));
+        return (unpacker) -> factory.create(codec.decode(unpacker));
+    }
+
+    private static <T> IdentifierDecoder composeListDecoder(
+            ValueCodec<List<T>> codec,
+            ListIdentifierFactory<T> factory) {
+
+        return (unpacker) -> factory.createList(codec.decode(unpacker));
     }
 }

@@ -8,7 +8,7 @@ public final class Assert {
         }
     }
 
-    public static void state(final boolean state, final String formattedMessage, Object... args) {
+    public static void state(boolean state, String formattedMessage, Object... args) {
         if (!state) {
             throw new IllegalStateException(String.format(formattedMessage, args));
         }

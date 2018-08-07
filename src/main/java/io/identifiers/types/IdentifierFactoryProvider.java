@@ -14,17 +14,23 @@ public final class IdentifierFactoryProvider {
 
         switch (type) {
             case STRING:
-                return new ImmutableIdentifierFactory(TypeTemplates.forString);
+                return new ImmutableIdentifierFactory(
+                    TypeTemplates.forString, ListTypeTemplates.forStringList);
             case BOOLEAN:
-                return new ImmutableIdentifierFactory(TypeTemplates.forBoolean);
+                return new ImmutableIdentifierFactory(
+                    TypeTemplates.forBoolean, ListTypeTemplates.forBooleanList);
             case INTEGER:
-                return new ImmutableIdentifierFactory(TypeTemplates.forInteger);
+                return new ImmutableIdentifierFactory(
+                    TypeTemplates.forInteger, ListTypeTemplates.forIntegerList);
             case FLOAT:
-                return new ImmutableIdentifierFactory(TypeTemplates.forFloat);
+                return new ImmutableIdentifierFactory(
+                    TypeTemplates.forFloat, ListTypeTemplates.forFloatList);
             case LONG:
-                return new ImmutableIdentifierFactory(TypeTemplates.forLong);
+                return new ImmutableIdentifierFactory(
+                    TypeTemplates.forLong, ListTypeTemplates.forLongList);
             case BYTES:
-                return new ImmutableIdentifierFactory(TypeTemplates.forBytes);
+                return new ImmutableIdentifierFactory(
+                    TypeTemplates.forBytes, ListTypeTemplates.forBytesList);
             default:
                 throw new IllegalArgumentException(String.format("No factory for %s", type));
         }
