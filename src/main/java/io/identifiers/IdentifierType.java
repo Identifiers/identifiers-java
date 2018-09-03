@@ -2,12 +2,12 @@ package io.identifiers;
 
 public enum IdentifierType {
 
-    STRING(0x0),
-    BOOLEAN(0x1),
-    INTEGER(0x2),
-    FLOAT(0x3),
-    LONG(0x4),
-    BYTES(0x5),
+    STRING(0x00),
+    BOOLEAN(0x01),
+    INTEGER(0x02),
+    FLOAT(0x03),
+    LONG(0x04),
+    BYTES(0x05),
 
     STRING_LIST(STRING.code | TypeCodeModifiers.LIST_TYPE_CODE),
     BOOLEAN_LIST(BOOLEAN.code | TypeCodeModifiers.LIST_TYPE_CODE),

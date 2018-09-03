@@ -20,12 +20,12 @@ public final class Constants {
     static final String PREFIX = "_";
     static final int CHECK_PRIME = SYMBOLS.length() + CHECK_EXTRAS.length();
 
-    static final int BYTE_SIZE = 0x8;
-    static final int WORD_SIZE = 0x5;
+    static final int BYTE_SIZE = 0x08;
+    static final int WORD_SIZE = 0x05;
 
     static final long BYTE_MASK = 0xff;
 
-    private static final int CHARS_PER_WORD = 0x8;
+    private static final int CHARS_PER_WORD = 0x08;
     static final int BYTE_SHIFT_START = WORD_SIZE * CHARS_PER_WORD - BYTE_SIZE;
     static final int WORD_SHIFT_START = WORD_SIZE * CHARS_PER_WORD - WORD_SIZE;
 }
