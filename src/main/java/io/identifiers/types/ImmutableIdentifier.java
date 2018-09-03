@@ -13,7 +13,8 @@ class ImmutableIdentifier<T> implements Identifier<T> {
 
     ImmutableIdentifier(TypeTemplate<T> typeTemplate, T value) {
         this.typeTemplate = typeTemplate;
-        this.value = value;
+        // template can copy the incoming value as needed for immutability
+        this.value = typeTemplate.value(value);
     }
 
     @Override

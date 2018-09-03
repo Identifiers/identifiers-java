@@ -9,8 +9,13 @@ public final class BytesTypeTemplate extends SingleTypeTemplate<byte[]> {
     }
 
     @Override
+    public boolean isValueMutable() {
+        return true;
+    }
+
+    @Override
     public byte[] value(byte[] value) {
-        return value.clone();
+        return Arrays.copyOf(value, value.length);
     }
 
     @Override

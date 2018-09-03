@@ -11,8 +11,6 @@ import java.util.stream.Collector;
  */
 public interface ListIdentifierFactory<T> {
 
-    ListIdentifier<T> createList(Iterable<T> values);
-
     ListIdentifier<T> createList(Collection<T> values);
 
     ListIdentifier<T> createList(Iterator<T> values);

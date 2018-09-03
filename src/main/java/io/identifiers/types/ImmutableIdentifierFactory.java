@@ -1,18 +1,17 @@
 package io.identifiers.types;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.BinaryOperator;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import io.identifiers.Identifier;
 import io.identifiers.IdentifierFactory;
 import io.identifiers.ListIdentifier;
 
-public class ImmutableIdentifierFactory<T> implements IdentifierFactory<T> {
+class ImmutableIdentifierFactory<T> implements IdentifierFactory<T> {
 
     private final TypeTemplate<T> typeTemplate;
     private final TypeTemplate<List<T>> listTypeTemplate;
@@ -24,55 +23,39 @@ public class ImmutableIdentifierFactory<T> implements IdentifierFactory<T> {
     }
 
     @Override
-    public Identifier<T> create(T value) {
+    public final Identifier<T> create(T value) {
         return new ImmutableIdentifier<>(typeTemplate, value);
     }
 
-
     @Override
-    public ListIdentifier<T> createList(Iterable<T> values) {
-      return createList(values.iterator());
+    public final ListIdentifier<T> createList(Collection<T> values) {
+        return createSizedListIdentifier(values.iterator(), values.size());
     }
 
+    @SafeVarargs
     @Override
-    public ListIdentifier<T> createList(Collection<T> values) {
-        List<T> list = new ArrayList<>(values);
-        return toImmutableListIdentifier(list);
-    }
-
-    @Override
-    public ListIdentifier<T> createList(Iterator<T> values) {
-        List<T> list = new ArrayList<>();
-        while (values.hasNext()) {
-            list.add(values.next());
-        }
-        return toImmutableListIdentifier(list);
+    public final ListIdentifier<T> createList(T... values) {
+        List<T> list = Arrays.asList(values);
+        return createSizedListIdentifier(list.iterator(), values.length);
     }
 
     @Override
-    public ListIdentifier<T> createList(T... values) {
-        List<T> list = Arrays.asList(values.clone());
-        return toImmutableListIdentifier(list);
+    public final ListIdentifier<T> createList(Iterator<T> values) {
+        List<T> copied = ListSupport.copyValuesIntoList(values);
+        return toImmutableListIdentifier(copied);
     }
 
     @Override
-    public Collector<T, ?, ListIdentifier<T>> toListIdentifier() {
-        return Collector.of(
-            ArrayList::new,
-            List::add,
-            listCombiner(),
-            this::toImmutableListIdentifier
-        );
+    public final Collector<T, ?, ListIdentifier<T>> toListIdentifier() {
+        return Collectors.collectingAndThen(Collectors.toList(), this::toImmutableListIdentifier);
     }
 
-    private BinaryOperator<List<T>> listCombiner() {
-        return (left, right) -> {
-            left.addAll(right);
-            return left;
-        };
+    private ListIdentifier<T> createSizedListIdentifier(Iterator<T> values, int size) {
+        List<T> copied = ListSupport.copyValuesIntoList(values, size);
+        return toImmutableListIdentifier(copied);
     }
 
-    private ListIdentifier<T> toImmutableListIdentifier(List<T> list) {
-        return new ImmutableListIdentifier<>(listTypeTemplate, list);
+    private ListIdentifier<T> toImmutableListIdentifier(List<T> values) {
+        return new ImmutableListIdentifier<>(listTypeTemplate, values);
     }
 }

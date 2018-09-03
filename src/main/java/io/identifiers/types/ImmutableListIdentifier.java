@@ -12,13 +12,15 @@ final class ImmutableListIdentifier<T> implements ListIdentifier<T> {
     private final TypeTemplate<List<T>> typeTemplate;
     private final List<T> values;
 
-
     ImmutableListIdentifier(TypeTemplate<List<T>> typeTemplate, List<T> values) {
+        // expects values list to be copied from source list by factory
         this.typeTemplate = typeTemplate;
         assert TypeCodeModifiers.LIST_TYPE_CODE == (typeTemplate.type().code() & TypeCodeModifiers.LIST_TYPE_CODE)
             : String.format("Not a LIST type: %s", typeTemplate);
-        // Factory takes care of copying incoming values as needed
-        this.values = Collections.unmodifiableList(values);
+
+        this.values = typeTemplate.isValueMutable()
+            ? typeTemplate.value(values)
+            : Collections.unmodifiableList(values);
     }
 
     @Override
@@ -28,7 +30,7 @@ final class ImmutableListIdentifier<T> implements ListIdentifier<T> {
 
     @Override
     public List<T> value() {
-        return values;
+        return typeTemplate.value(values);
     }
 
     @Override
@@ -44,7 +46,7 @@ final class ImmutableListIdentifier<T> implements ListIdentifier<T> {
     @Override
     public String toString() {
         return String.format("ID«%s»: %s",
-            type().name().toLowerCase().replace('_', '-'), // kebab-case)
+            type().name().toLowerCase().replace('_', '-'), // kebab-case
             typeTemplate.valueString(values));
     }
 

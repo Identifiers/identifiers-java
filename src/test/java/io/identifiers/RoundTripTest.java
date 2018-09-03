@@ -3,16 +3,13 @@ package io.identifiers;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 
 class RoundTripTest {
 
-    void roundTrip(Identifier id) {
+    private void roundTrip(Identifier id) {
         String encoded = id.toDataString();
         Identifier decoded = Factory.decodeFromString(encoded);
         assertThat(decoded).isEqualTo(id);
@@ -46,7 +43,7 @@ class RoundTripTest {
     @Test
     void testFloat() {
         roundTrip(Factory.forFloat.create(0.0095f));
-        roundTrip(Factory.forFloat.create(new Float(-100.2)));
+        roundTrip(Factory.forFloat.create((float) -100.2));
         roundTrip(Stream.of(0.1f, 22.9974f, -55.17f, 0.0f)
             .collect(Factory.forFloat.toListIdentifier()));
     }
@@ -55,9 +52,8 @@ class RoundTripTest {
     void testLong() {
         roundTrip(Factory.forLong.create(Long.MAX_VALUE));
         roundTrip(Factory.forLong.create(Long.MIN_VALUE));
-        roundTrip(Factory.forLong.create(new Long(100)));
-        Iterable<Long> longs = () -> Arrays.asList(1001L, 222L, -333L, 400004499384L).iterator();
-        roundTrip(Factory.forLong.createList(longs));
+        roundTrip(Factory.forLong.create(100L));
+        roundTrip(Factory.forLong.createList(1001L, 222L, -333L, 400004499384L));
     }
 
     @Test

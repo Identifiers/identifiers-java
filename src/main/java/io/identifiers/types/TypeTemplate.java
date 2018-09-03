@@ -8,6 +8,10 @@ public interface TypeTemplate<T> {
 
     T value(T value);
 
+    default boolean isValueMutable() {
+        return false;
+    }
+
     String toDataString(T value);
 
     String toHumanString(T value);

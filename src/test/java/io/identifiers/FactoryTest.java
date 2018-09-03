@@ -33,16 +33,13 @@ class FactoryTest {
 
     @Test
     void testForBytesFactory() {
-        //todo test for mutability in bytes and bytesList
         createAndAssertIdentifier(Factory.forBytes, IdentifierType.BYTES, new byte[] { 0, -22, 123});
     }
 
-    private <T> Identifier<T> createAndAssertIdentifier(SingleIdentifierFactory<T> factory, IdentifierType expectedType, T expectedValue) {
+    private <T> void createAndAssertIdentifier(SingleIdentifierFactory<T> factory, IdentifierType expectedType, T expectedValue) {
         Identifier<T> actualIdentifier = factory.create(expectedValue);
 
         assertThat(actualIdentifier.type()).isEqualTo(expectedType);
         assertThat(actualIdentifier.value()).isEqualTo(expectedValue);
-
-        return actualIdentifier;
     }
 }

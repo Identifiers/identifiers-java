@@ -1,5 +1,6 @@
 package io.identifiers.types;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,11 +13,14 @@ class ListTypeTemplate<T> implements TypeTemplate<List<T>> {
     private final TypeTemplate<T> valueTypeTemplate;
 
 
-    public ListTypeTemplate(
-            ListIdentifierEncoder<T> listEncoder,
-            TypeTemplate<T> valueTypeTemplate) {
+    ListTypeTemplate(ListIdentifierEncoder<T> listEncoder, TypeTemplate<T> valueTypeTemplate) {
         this.listEncoder = listEncoder;
         this.valueTypeTemplate = valueTypeTemplate;
+    }
+
+    @Override
+    public boolean isValueMutable() {
+        return valueTypeTemplate.isValueMutable();
     }
 
     @Override
@@ -25,8 +29,12 @@ class ListTypeTemplate<T> implements TypeTemplate<List<T>> {
     }
 
     @Override
-    public List<T> value(List<T> value) {
-        return value;
+    public List<T> value(List<T> values) {
+        return valueTypeTemplate.isValueMutable()
+            ? values.stream()
+                .map(valueTypeTemplate::value)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList))
+            : values;
     }
 
     @Override
