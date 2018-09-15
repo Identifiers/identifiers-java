@@ -8,6 +8,7 @@ import io.identifiers.Assert;
 import io.identifiers.Factory;
 import io.identifiers.IdentifierType;
 import io.identifiers.ListIdentifierFactory;
+import io.identifiers.MapIdentifierFactory;
 import io.identifiers.SingleIdentifierFactory;
 
 final class IdentifierDecoderProvider {
@@ -35,6 +36,11 @@ final class IdentifierDecoderProvider {
                 Factory.forString));
 
         decoderMap.put(
+            IdentifierType.STRING_MAP.code(), composeMapDecoder(
+                ValueCodecs.stringMapCodec,
+                Factory.forString));
+
+        decoderMap.put(
             IdentifierType.BOOLEAN.code(), composeDecoder(
                 ValueCodecs.booleanCodec,
                 Factory.forBoolean));
@@ -42,6 +48,11 @@ final class IdentifierDecoderProvider {
         decoderMap.put(
             IdentifierType.BOOLEAN_LIST.code(), composeListDecoder(
                 ValueCodecs.booleanListCodec,
+                Factory.forBoolean));
+
+        decoderMap.put(
+            IdentifierType.BOOLEAN_MAP.code(), composeMapDecoder(
+                ValueCodecs.booleanMapCodec,
                 Factory.forBoolean));
 
         decoderMap.put(
@@ -55,6 +66,11 @@ final class IdentifierDecoderProvider {
                 Factory.forInteger));
 
         decoderMap.put(
+            IdentifierType.INTEGER_MAP.code(), composeMapDecoder(
+                ValueCodecs.integerMapCodec,
+                Factory.forInteger));
+
+        decoderMap.put(
             IdentifierType.FLOAT.code(), composeDecoder(
                 ValueCodecs.floatCodec,
                 Factory.forFloat));
@@ -62,6 +78,11 @@ final class IdentifierDecoderProvider {
         decoderMap.put(
             IdentifierType.FLOAT_LIST.code(), composeListDecoder(
                 ValueCodecs.floatListCodec,
+                Factory.forFloat));
+
+        decoderMap.put(
+            IdentifierType.FLOAT_MAP.code(), composeMapDecoder(
+                ValueCodecs.floatMapCodec,
                 Factory.forFloat));
 
         decoderMap.put(
@@ -75,6 +96,11 @@ final class IdentifierDecoderProvider {
                 Factory.forLong));
 
         decoderMap.put(
+            IdentifierType.LONG_MAP.code(), composeMapDecoder(
+                ValueCodecs.longMapCodec,
+                Factory.forLong));
+
+        decoderMap.put(
             IdentifierType.BYTES.code(), composeDecoder(
                 ValueCodecs.bytesCodec,
                 Factory.forBytes));
@@ -82,6 +108,11 @@ final class IdentifierDecoderProvider {
         decoderMap.put(
             IdentifierType.BYTES_LIST.code(), composeListDecoder(
                 ValueCodecs.bytesListCodec,
+                Factory.forBytes));
+
+        decoderMap.put(
+            IdentifierType.BYTES_MAP.code(), composeMapDecoder(
+                ValueCodecs.bytesMapCodec,
                 Factory.forBytes));
     }
 
@@ -97,5 +128,12 @@ final class IdentifierDecoderProvider {
             ListIdentifierFactory<T> factory) {
 
         return (unpacker) -> factory.createList(codec.decode(unpacker));
+    }
+
+    private static <T> IdentifierDecoder composeMapDecoder(
+            ValueCodec<Map<String, T>> codec,
+            MapIdentifierFactory<T> factory) {
+
+        return (unpacker) -> factory.createMap(codec.decode(unpacker));
     }
 }

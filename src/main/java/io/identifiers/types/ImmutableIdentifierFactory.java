@@ -4,22 +4,29 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import io.identifiers.Identifier;
 import io.identifiers.IdentifierFactory;
 import io.identifiers.ListIdentifier;
+import io.identifiers.MapIdentifier;
 
 class ImmutableIdentifierFactory<T> implements IdentifierFactory<T> {
 
     private final TypeTemplate<T> typeTemplate;
     private final TypeTemplate<List<T>> listTypeTemplate;
+    private final TypeTemplate<SortedMap<String, T>> mapTypeTemplate;
 
 
-    ImmutableIdentifierFactory(TypeTemplate<T> typeTemplate, TypeTemplate<List<T>> listTypeTemplate) {
+    ImmutableIdentifierFactory(TypeTemplate<T> typeTemplate, TypeTemplate<List<T>> listTypeTemplate, TypeTemplate<SortedMap<String, T>> mapTypeTemplate) {
         this.typeTemplate = typeTemplate;
         this.listTypeTemplate = listTypeTemplate;
+        this.mapTypeTemplate = mapTypeTemplate;
     }
 
     @Override
@@ -57,5 +64,28 @@ class ImmutableIdentifierFactory<T> implements IdentifierFactory<T> {
 
     private ListIdentifier<T> toImmutableListIdentifier(List<T> values) {
         return new ImmutableListIdentifier<>(listTypeTemplate, values);
+    }
+
+    @Override
+    public MapIdentifier<T> createMap(Map<String, T> values) {
+        SortedMap<String, T> copied = MapSupport.copyToSortedMap(values);
+        return toImmutableMapIdentifier(copied);
+    }
+
+    @Override
+    public MapIdentifier<T> createMap(Iterator<Map.Entry<String, T>> entries) {
+        SortedMap<String, T> copied = MapSupport.copyToSortedMap(entries);
+        return toImmutableMapIdentifier(copied);
+    }
+
+    @Override
+    public Collector<T, ?, MapIdentifier<T>> toMapIdentifier(Function<T, String> keyFunction) {
+        return Collectors.collectingAndThen(
+            Collectors.toMap(keyFunction, Function.<T>identity(), (e1, e2) -> e1, TreeMap::new),
+            this::toImmutableMapIdentifier);
+    }
+
+    private MapIdentifier<T> toImmutableMapIdentifier(SortedMap<String, T> valueMap) {
+        return new ImmutableMapIdentifier<>(mapTypeTemplate, valueMap);
     }
 }

@@ -3,6 +3,7 @@ package io.identifiers.types;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import io.identifiers.IdentifierType;
 
@@ -30,7 +31,7 @@ class ListTypeTemplate<T> implements TypeTemplate<List<T>> {
 
     @Override
     public List<T> value(List<T> values) {
-        return valueTypeTemplate.isValueMutable()
+        return isValueMutable()
             ? values.stream()
                 .map(valueTypeTemplate::value)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList))
@@ -65,12 +66,8 @@ class ListTypeTemplate<T> implements TypeTemplate<List<T>> {
     public boolean valuesEqual(List<T> values1, List<T> values2) {
         int size = values1.size();
         if (values2.size() == size) {
-            for (int i = 0; i < size; i++) {
-                if (!valueTypeTemplate.valuesEqual(values1.get(i), values2.get(i))) {
-                    return false;
-                }
-            }
-            return true;
+            return IntStream.range(0, size)
+                .allMatch(pos -> valueTypeTemplate.valuesEqual(values1.get(pos), values2.get(pos)));
         }
         return false;
     }

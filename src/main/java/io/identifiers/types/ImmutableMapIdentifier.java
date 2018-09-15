@@ -1,26 +1,27 @@
 package io.identifiers.types;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
 
 import io.identifiers.IdentifierType;
-import io.identifiers.ListIdentifier;
+import io.identifiers.MapIdentifier;
 import io.identifiers.TypeCodeModifiers;
 
-final class ImmutableListIdentifier<T> implements ListIdentifier<T> {
+final class ImmutableMapIdentifier<T> implements MapIdentifier<T> {
 
-    private final TypeTemplate<List<T>> typeTemplate;
-    private final List<T> values;
+    private final TypeTemplate<SortedMap<String, T>> typeTemplate;
+    private final SortedMap<String, T> values;
 
-    ImmutableListIdentifier(TypeTemplate<List<T>> typeTemplate, List<T> values) {
+    ImmutableMapIdentifier(TypeTemplate<SortedMap<String, T>> typeTemplate, SortedMap<String, T> values) {
         this.typeTemplate = typeTemplate;
-        assert TypeCodeModifiers.LIST_TYPE_CODE == (typeTemplate.type().code() & TypeCodeModifiers.LIST_TYPE_CODE)
-            : String.format("Not a LIST type: %s", typeTemplate);
+        assert TypeCodeModifiers.MAP_TYPE_CODE == (typeTemplate.type().code() & TypeCodeModifiers.MAP_TYPE_CODE)
+            : String.format("Not a Map type: %s", typeTemplate);
 
         // expects values list to be copied from source list by factory
         this.values = typeTemplate.isValueMutable()
             ? typeTemplate.value(values)
-            : Collections.unmodifiableList(values);
+            : Collections.unmodifiableSortedMap(values);
     }
 
     @Override
@@ -29,7 +30,7 @@ final class ImmutableListIdentifier<T> implements ListIdentifier<T> {
     }
 
     @Override
-    public List<T> value() {
+    public Map<String, T> value() {
         return typeTemplate.value(values);
     }
 
@@ -61,8 +62,8 @@ final class ImmutableListIdentifier<T> implements ListIdentifier<T> {
         if (obj == this) {
             return true;
         }
-        if (obj instanceof ListIdentifier && ((ListIdentifier) obj).type() == type()) {
-            List<T> otherValues = ((ListIdentifier<T>) obj).value();
+        if (obj instanceof MapIdentifier && ((MapIdentifier) obj).type() == type()) {
+            SortedMap<String, T> otherValues = (SortedMap<String, T>) ((MapIdentifier<T>) obj).value();
             return typeTemplate.valuesEqual(values, otherValues);
         }
         return false;

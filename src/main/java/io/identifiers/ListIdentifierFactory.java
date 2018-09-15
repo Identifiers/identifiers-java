@@ -7,7 +7,7 @@ import java.util.stream.Collector;
 /**
  * Create typed List Identifier instances.
  *
- * @param <T> the value type of the identifier in the list
+ * @param <T> the value type of the identifiers in the list
  */
 public interface ListIdentifierFactory<T> {
 
