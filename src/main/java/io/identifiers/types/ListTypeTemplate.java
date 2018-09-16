@@ -19,6 +19,13 @@ class ListTypeTemplate<T> implements TypeTemplate<List<T>> {
         this.valueTypeTemplate = valueTypeTemplate;
     }
 
+    List<T> initialValues(final List<T> values) {
+        if (isValueMutable()) {
+            values.replaceAll(valueTypeTemplate::value);
+        }
+        return values;
+    }
+
     @Override
     public boolean isValueMutable() {
         return valueTypeTemplate.isValueMutable();

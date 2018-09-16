@@ -5,6 +5,7 @@
 package io.identifiers.base32;
 
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 import static io.identifiers.base32.Constants.BYTE_MASK;
 import static io.identifiers.base32.Constants.BYTE_SHIFT_START;
@@ -18,9 +19,14 @@ import static io.identifiers.base32.Constants.WORD_SIZE;
 
 public class Base32Decoder {
 
+    private Base32Decoder() {
+        // static class
+    }
+
     private static final long[] CODES = new long[0x100];
     private static final long[] CHECK_CODES = new long[CODES.length];
 
+    private static final long ALIAS_START = 0x20;
     private static final char[][] DECODE_ALIASES = {
             "oO".toCharArray(),
             "iIlL".toCharArray()
@@ -28,30 +34,30 @@ public class Base32Decoder {
 
     private static final byte[] EMPTY_BYTES = new byte[0];
 
+
     static {
         Arrays.fill(CODES, -1);
-        for (int i = 0; i < SYMBOLS.length(); i++) {
+        IntStream.range(0, SYMBOLS.length()).forEach(i -> {
             char charCode = SYMBOLS.charAt(i);
             CODES[charCode] = i;
             char upperCode = Character.toUpperCase(charCode);
             if (charCode != upperCode) {
                 CODES[upperCode] = i;
             }
-        }
+        });
 
         // aliases
-        for (int row = 0; row < DECODE_ALIASES.length; row++) {
+        IntStream.range(0, DECODE_ALIASES.length).forEach(row -> {
             long code = CODES[Integer.toString(row).charAt(0)];
             for (char aliasCode : DECODE_ALIASES[row]) {
                 CODES[aliasCode] = code;
             }
-        }
+        });
 
         // checksum
         System.arraycopy(CODES, 0, CHECK_CODES, 0, CODES.length);
-        for (int i = 0; i < CHECK_EXTRAS.length(); i++) {
-            CHECK_CODES[CHECK_EXTRAS.charAt(i)] = 0x20 + i;
-        }
+        IntStream.range(0, CHECK_EXTRAS.length()).forEach(i ->
+            CHECK_CODES[CHECK_EXTRAS.charAt(i)] = ALIAS_START + i);
 
         // alias the 'u' to uppercase
         CHECK_CODES['U'] = CHECK_CODES['u'];

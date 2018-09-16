@@ -17,6 +17,11 @@ import static io.identifiers.base32.Constants.WORD_SHIFT_START;
 import static io.identifiers.base32.Constants.WORD_SIZE;
 
 public class Base32Encoder {
+
+    private Base32Encoder() {
+        // static class
+    }
+
     private static final byte BITS_MASK = 0x1f;
     private static final char PREFIX_CODE = PREFIX.charAt(0);
     private static final char[] CODES = SYMBOLS.toCharArray();

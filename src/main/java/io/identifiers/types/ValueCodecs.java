@@ -2,11 +2,11 @@ package io.identifiers.types;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.stream.IntStream;
 
 import org.msgpack.core.MessageUnpacker;
 import org.msgpack.value.Value;
@@ -112,8 +112,7 @@ final class ValueCodecs {
             public Value encode(List<T> values) {
                 int size = values.size();
                 Value[] encodedValues = new Value[size];
-                IntStream.range(0, size)
-                    .forEach((pos) -> encodedValues[pos] = valueCodec.encode(values.get(pos)));
+                Arrays.setAll(encodedValues, (pos) -> valueCodec.encode(values.get(pos)));
                 return ValueFactory.newArray(encodedValues, true);
             }
 
@@ -135,10 +134,11 @@ final class ValueCodecs {
             public Value encode(final Map<String, T> valueMap) {
                 Set<Map.Entry<String, T>> entries = valueMap.entrySet();
                 Value[] encodedKVs = new Value[entries.size() * 2];
-                int i = 0;
+
+                int pos = 0;
                 for (Map.Entry<String, T> entry : entries) {
-                    encodedKVs[i++] = ValueFactory.newString(entry.getKey());
-                    encodedKVs[i++] = valueCodec.encode(entry.getValue());
+                    encodedKVs[pos++] = ValueFactory.newString(entry.getKey());
+                    encodedKVs[pos++] = valueCodec.encode(entry.getValue());
                 }
                 return ValueFactory.newMap(encodedKVs, true);
             }

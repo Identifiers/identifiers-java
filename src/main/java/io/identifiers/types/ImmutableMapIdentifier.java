@@ -10,18 +10,16 @@ import io.identifiers.TypeCodeModifiers;
 
 final class ImmutableMapIdentifier<T> implements MapIdentifier<T> {
 
-    private final TypeTemplate<SortedMap<String, T>> typeTemplate;
-    private final SortedMap<String, T> values;
+    private final MapTypeTemplate<T> typeTemplate;
+    private final SortedMap<String, T> valueMap;
 
-    ImmutableMapIdentifier(TypeTemplate<SortedMap<String, T>> typeTemplate, SortedMap<String, T> values) {
+    ImmutableMapIdentifier(MapTypeTemplate<T> typeTemplate, SortedMap<String, T> valueMap) {
         this.typeTemplate = typeTemplate;
         assert TypeCodeModifiers.MAP_TYPE_CODE == (typeTemplate.type().code() & TypeCodeModifiers.MAP_TYPE_CODE)
             : String.format("Not a Map type: %s", typeTemplate);
 
         // expects values list to be copied from source list by factory
-        this.values = typeTemplate.isValueMutable()
-            ? typeTemplate.value(values)
-            : Collections.unmodifiableSortedMap(values);
+        this.valueMap = Collections.unmodifiableSortedMap(typeTemplate.initialValueMap(valueMap));
     }
 
     @Override
@@ -31,29 +29,29 @@ final class ImmutableMapIdentifier<T> implements MapIdentifier<T> {
 
     @Override
     public Map<String, T> value() {
-        return typeTemplate.value(values);
+        return typeTemplate.value(valueMap);
     }
 
     @Override
     public String toDataString() {
-        return typeTemplate.toDataString(values);
+        return typeTemplate.toDataString(valueMap);
     }
 
     @Override
     public String toHumanString() {
-        return typeTemplate.toHumanString(values);
+        return typeTemplate.toHumanString(valueMap);
     }
 
     @Override
     public String toString() {
         return String.format("ID«%s»:%s",
             type().name().toLowerCase().replace('_', '-'), // kebab-case
-            typeTemplate.valueString(values));
+            typeTemplate.valueString(valueMap));
     }
 
     @Override
     public int hashCode() {
-        return typeTemplate.valueHashCode(values);
+        return typeTemplate.valueHashCode(valueMap);
     }
 
     @Override
@@ -64,7 +62,7 @@ final class ImmutableMapIdentifier<T> implements MapIdentifier<T> {
         }
         if (obj instanceof MapIdentifier && ((MapIdentifier) obj).type() == type()) {
             SortedMap<String, T> otherValues = (SortedMap<String, T>) ((MapIdentifier<T>) obj).value();
-            return typeTemplate.valuesEqual(values, otherValues);
+            return typeTemplate.valuesEqual(valueMap, otherValues);
         }
         return false;
     }

@@ -1,5 +1,6 @@
 package io.identifiers.types;
 
+import java.util.Arrays;
 import java.util.List;
 
 import io.identifiers.IdentifierType;
@@ -20,9 +21,7 @@ class ListIdentifierEncoder<T> extends AbstractIdentifierEncoder<List<T>> {
     @Override
     public Value encodeValue(List<T> values) {
         Value[] encodedValues = new Value[values.size()];
-        for (int i = 0; i < encodedValues.length; i++) {
-            encodedValues[i] = valueCodec.encode(values.get(i));
-        }
+        Arrays.setAll(encodedValues, i -> valueCodec.encode(values.get(i)));
         return ValueFactory.newArray(encodedValues, true);
     }
 }

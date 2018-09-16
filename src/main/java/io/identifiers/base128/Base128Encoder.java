@@ -12,6 +12,11 @@ import static io.identifiers.base128.Constants.WORD_SHIFT_START;
 import static io.identifiers.base128.Constants.WORD_SIZE;
 
 public class Base128Encoder {
+
+    private Base128Encoder() {
+        // static class
+    }
+
     private static final byte BITS_MASK = 0x7f;
     private static final char[] CODES = SYMBOLS.toCharArray();
     private static final char TERMINATOR_CODE = Constants.TERMINATOR.charAt(0);

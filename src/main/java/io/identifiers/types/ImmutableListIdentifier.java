@@ -9,18 +9,16 @@ import io.identifiers.TypeCodeModifiers;
 
 final class ImmutableListIdentifier<T> implements ListIdentifier<T> {
 
-    private final TypeTemplate<List<T>> typeTemplate;
+    private final ListTypeTemplate<T> typeTemplate;
     private final List<T> values;
 
-    ImmutableListIdentifier(TypeTemplate<List<T>> typeTemplate, List<T> values) {
+    ImmutableListIdentifier(ListTypeTemplate<T> typeTemplate, List<T> values) {
         this.typeTemplate = typeTemplate;
         assert TypeCodeModifiers.LIST_TYPE_CODE == (typeTemplate.type().code() & TypeCodeModifiers.LIST_TYPE_CODE)
             : String.format("Not a LIST type: %s", typeTemplate);
 
         // expects values list to be copied from source list by factory
-        this.values = typeTemplate.isValueMutable()
-            ? typeTemplate.value(values)
-            : Collections.unmodifiableList(values);
+        this.values = Collections.unmodifiableList(typeTemplate.initialValues(values));
     }
 
     @Override

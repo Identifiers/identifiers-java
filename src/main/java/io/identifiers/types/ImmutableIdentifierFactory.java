@@ -19,11 +19,11 @@ import io.identifiers.MapIdentifier;
 class ImmutableIdentifierFactory<T> implements IdentifierFactory<T> {
 
     private final TypeTemplate<T> typeTemplate;
-    private final TypeTemplate<List<T>> listTypeTemplate;
-    private final TypeTemplate<SortedMap<String, T>> mapTypeTemplate;
+    private final ListTypeTemplate<T> listTypeTemplate;
+    private final MapTypeTemplate<T> mapTypeTemplate;
 
 
-    ImmutableIdentifierFactory(TypeTemplate<T> typeTemplate, TypeTemplate<List<T>> listTypeTemplate, TypeTemplate<SortedMap<String, T>> mapTypeTemplate) {
+    ImmutableIdentifierFactory(TypeTemplate<T> typeTemplate, ListTypeTemplate<T> listTypeTemplate, MapTypeTemplate<T> mapTypeTemplate) {
         this.typeTemplate = typeTemplate;
         this.listTypeTemplate = listTypeTemplate;
         this.mapTypeTemplate = mapTypeTemplate;

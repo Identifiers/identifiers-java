@@ -18,6 +18,13 @@ final class MapTypeTemplate<T> implements TypeTemplate<SortedMap<String, T>> {
         this.valueTypeTemplate = valueTypeTemplate;
     }
 
+     SortedMap<String, T> initialValueMap(SortedMap<String, T> map) {
+         if (isValueMutable()) {
+             map.replaceAll((key, value) -> valueTypeTemplate.value(value));
+         }
+         return map;
+     }
+
     @Override
     public boolean isValueMutable() {
         return valueTypeTemplate.isValueMutable();

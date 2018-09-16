@@ -12,16 +12,20 @@ import static io.identifiers.base128.Constants.WORD_SHIFT_START;
 import static io.identifiers.base128.Constants.WORD_SIZE;
 
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 public final class Base128Decoder {
+
+    private Base128Decoder() {
+        // static class
+    }
 
     private static final long[] CODES = new long[0x100];
 
     static {
         Arrays.fill(CODES, -1);
-        for (int i = 0; i < SYMBOLS.length(); i++) {
-            CODES[SYMBOLS.charAt(i)] = i;
-        }
+        IntStream.range(0, SYMBOLS.length()).forEach(i ->
+            CODES[SYMBOLS.charAt(i)] = i);
     }
 
     private static final byte[] EMPTY_BYTES = new byte[0];
