@@ -2,6 +2,10 @@ package io.identifiers;
 
 public final class Assert {
 
+    private Assert() {
+        // static class
+    }
+
     public static void argumentExists(Object arg, String formattedMessage, Object... args) {
         if (arg == null) {
             throw new IllegalArgumentException(String.format(formattedMessage, args));

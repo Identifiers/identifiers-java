@@ -39,7 +39,7 @@ class ImmutableIdentifier<T> implements Identifier<T> {
 
     @Override
     public String toString() {
-        return String.format("ID«%s»:%s", type().name().toLowerCase(), typeTemplate.valueString(value));
+        return String.format("ID«%s»:%s", type(), typeTemplate.valueString(value));
     }
 
     @Override

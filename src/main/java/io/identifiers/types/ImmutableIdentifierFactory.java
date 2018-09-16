@@ -67,8 +67,8 @@ class ImmutableIdentifierFactory<T> implements IdentifierFactory<T> {
     }
 
     @Override
-    public MapIdentifier<T> createMap(Map<String, T> values) {
-        SortedMap<String, T> copied = MapSupport.copyToSortedMap(values);
+    public MapIdentifier<T> createMap(Map<String, T> valueMap) {
+        SortedMap<String, T> copied = MapSupport.copyToSortedMap(valueMap);
         return toImmutableMapIdentifier(copied);
     }
 

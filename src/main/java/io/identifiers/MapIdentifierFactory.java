@@ -12,7 +12,7 @@ import java.util.stream.Collector;
  */
 public interface MapIdentifierFactory<T> {
 
-    MapIdentifier<T> createMap(Map<String, T> values);
+    MapIdentifier<T> createMap(Map<String, T> valueMap);
 
     MapIdentifier<T> createMap(Iterator<Map.Entry<String, T>> entries);
 

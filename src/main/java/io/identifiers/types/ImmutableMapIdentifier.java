@@ -44,9 +44,7 @@ final class ImmutableMapIdentifier<T> implements MapIdentifier<T> {
 
     @Override
     public String toString() {
-        return String.format("ID«%s»:%s",
-            type().name().toLowerCase().replace('_', '-'), // kebab-case
-            typeTemplate.valueString(valueMap));
+        return String.format("ID«%s»:%s", type(), typeTemplate.valueString(valueMap));
     }
 
     @Override
@@ -60,9 +58,10 @@ final class ImmutableMapIdentifier<T> implements MapIdentifier<T> {
         if (obj == this) {
             return true;
         }
-        if (obj instanceof MapIdentifier && ((MapIdentifier) obj).type() == type()) {
-            SortedMap<String, T> otherValues = (SortedMap<String, T>) ((MapIdentifier<T>) obj).value();
-            return typeTemplate.valuesEqual(valueMap, otherValues);
+        if (obj instanceof ImmutableMapIdentifier) {
+            ImmutableMapIdentifier<T> otherMapId = (ImmutableMapIdentifier<T>) obj;
+            return type() == otherMapId.type()
+                && typeTemplate.valuesEqual(valueMap, otherMapId.valueMap);
         }
         return false;
     }

@@ -14,10 +14,4 @@ public interface SingleIdentifierFactory<T> {
      * @return a new identifier instance
      */
     Identifier<T> create(T value);
-/*
-
-    Map<String, Identifier<T>> createMap(Iterable<Map.Entry<String, T>> valueEntries);
-
-    Map<String, Identifier<T>> createMap(Map<String, T> valueMap);
-*/
 }

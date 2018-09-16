@@ -25,10 +25,12 @@ public enum IdentifierType {
 
 
     private final int code;
+    private final String debugName;
 
 
     IdentifierType(int code) {
         this.code = code;
+        this.debugName = name().toLowerCase().replace('_', '-'); // kebab-case
     }
 
     /**
@@ -38,5 +40,11 @@ public enum IdentifierType {
      */
     public int code() {
         return code;
+    }
+
+
+    @Override
+    public String toString() {
+        return debugName;
     }
 }
