@@ -15,6 +15,7 @@ public interface ListIdentifierFactory<T> {
 
     ListIdentifier<T> createList(Iterator<T> values);
 
+    @SuppressWarnings("unchecked")
     ListIdentifier<T> createList(T... values);
 
     Collector<T, ?, ListIdentifier<T>> toListIdentifier();

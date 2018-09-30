@@ -83,6 +83,7 @@ class FactoryTest {
         assertThat(actualIdentifier.value()).isEqualTo(expectedValue);
     }
 
+    @SuppressWarnings("unchecked")
     private <T> void createAndAssertListIdentifier(ListIdentifierFactory<T> factory, IdentifierType expectedType, T... expectedValues) {
         ListIdentifier<T> actualIdentifier = factory.createList(expectedValues);
 
