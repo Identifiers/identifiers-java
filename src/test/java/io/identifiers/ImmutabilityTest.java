@@ -149,7 +149,7 @@ class ImmutabilityTest {
     @Test
     void testForCompositeMapImmutability() {
         Identifier<Boolean> booleanId = Factory.forBoolean.create(true);
-        MapIdentifier<Identifier<?>> mapId = Factory.forComposite.createMap(Collections.singletonMap("K", booleanId));
+        MapIdentifier<Identifier<?>> mapId = Factory.forComposite.createMap(Collections.singletonMap("k", booleanId));
         Identifier<Integer> intId = Factory.forInteger.create(44);
         assertThatThrownBy(() -> mapId.value().put("k", intId)).isInstanceOf(UnsupportedOperationException.class);
     }
