@@ -4,11 +4,11 @@ import io.identifiers.IdentifierType;
 
 import org.msgpack.value.Value;
 
-class SingleIndentifierEncoder<T> extends AbstractIdentifierEncoder<T> {
+final class IdentifierEncoderWithCodec<T> extends AbstractIdentifierEncoder<T> {
 
     private final ValueCodec<T> codec;
 
-    SingleIndentifierEncoder(IdentifierType type, ValueCodec<T> codec) {
+    IdentifierEncoderWithCodec(IdentifierType type, ValueCodec<T> codec) {
         super(type);
         this.codec = codec;
     }

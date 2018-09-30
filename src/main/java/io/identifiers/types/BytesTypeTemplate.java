@@ -2,7 +2,7 @@ package io.identifiers.types;
 
 import java.util.Arrays;
 
-public final class BytesTypeTemplate extends SingleTypeTemplate<byte[]> {
+final class BytesTypeTemplate extends TypeTemplateWithEncoder<byte[]> {
 
     BytesTypeTemplate(IdentifierEncoder<byte[]> bytesEncoder) {
         super(bytesEncoder);

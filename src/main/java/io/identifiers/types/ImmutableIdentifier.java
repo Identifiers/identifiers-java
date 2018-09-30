@@ -5,7 +5,7 @@ import io.identifiers.IdentifierType;
 
 import java.util.Objects;
 
-class ImmutableIdentifier<T> implements Identifier<T> {
+final class ImmutableIdentifier<T> implements Identifier<T> {
 
     private final TypeTemplate<T> typeTemplate;
     private final T value;

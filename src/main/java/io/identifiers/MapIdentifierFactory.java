@@ -16,5 +16,5 @@ public interface MapIdentifierFactory<T> {
 
     MapIdentifier<T> createMap(Iterator<Map.Entry<String, T>> entries);
 
-    Collector<T, ?, MapIdentifier<T>> toMapIdentifier(Function<T, String> keyFunction);
+    Collector<T, ?, MapIdentifier<T>> toMapIdentifier(Function<T, String> keyƒ);
 }

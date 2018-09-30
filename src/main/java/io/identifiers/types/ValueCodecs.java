@@ -3,15 +3,23 @@ package io.identifiers.types;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import io.identifiers.Assert;
+import io.identifiers.Identifier;
+import io.identifiers.IdentifierType;
+
 import org.msgpack.core.MessageUnpacker;
 import org.msgpack.value.Value;
 import org.msgpack.value.ValueFactory;
 
+/**
+ * A ValueCodec contains an identifier type's knowledge of MessagePack.
+ */
 final class ValueCodecs {
 
     private ValueCodecs() {
@@ -104,6 +112,59 @@ final class ValueCodecs {
     };
     static final ValueCodec<List<byte[]>> bytesListCodec = createListCodec(bytesCodec);
     static final ValueCodec<Map<String, byte[]>> bytesMapCodec = createMapCodec(bytesCodec);
+
+    private static final Map<IdentifierType, ValueCodec> codecs = new EnumMap<>(IdentifierType.class);
+    static {
+        codecs.put(IdentifierType.STRING, stringCodec);
+        codecs.put(IdentifierType.STRING_LIST, stringListCodec);
+        codecs.put(IdentifierType.STRING_MAP, stringMapCodec);
+
+        codecs.put(IdentifierType.BOOLEAN, booleanCodec);
+        codecs.put(IdentifierType.BOOLEAN_LIST, booleanListCodec);
+        codecs.put(IdentifierType.BOOLEAN_MAP, booleanMapCodec);
+
+        codecs.put(IdentifierType.INTEGER, integerCodec);
+        codecs.put(IdentifierType.INTEGER_LIST, integerListCodec);
+        codecs.put(IdentifierType.INTEGER_MAP, integerMapCodec);
+
+        codecs.put(IdentifierType.FLOAT, floatCodec);
+        codecs.put(IdentifierType.FLOAT_LIST, floatListCodec);
+        codecs.put(IdentifierType.FLOAT_MAP, floatMapCodec);
+
+        codecs.put(IdentifierType.LONG, longCodec);
+        codecs.put(IdentifierType.LONG_LIST, longListCodec);
+        codecs.put(IdentifierType.LONG_MAP, longMapCodec);
+
+        codecs.put(IdentifierType.BYTES, bytesCodec);
+        codecs.put(IdentifierType.BYTES_LIST, bytesListCodec);
+        codecs.put(IdentifierType.BYTES_MAP, bytesMapCodec);
+    }
+
+    private static final ValueCodec<Identifier<?>> compositeCodec = new ValueCodec<Identifier<?>>() {
+        @Override
+        @SuppressWarnings("unchecked")
+        public Value encode(final Identifier<?> value) {
+            IdentifierType type = value.type();
+            ValueCodec codec = codecs.get(type);
+            Assert.argumentExists(codec, "No codec for type %s", type);
+            /*
+              This is a copy of logic in AbstractIdentifierEncoder but to share it would require some big holes pushed
+              through Identifier, so copying is safer.
+             */
+            return ValueFactory.newArray(new Value[] {
+                ValueFactory.newInteger(type.code()),
+                codec.encode(value.value())
+            }, true);
+        }
+
+        @Override
+        public Identifier<?> decode(final MessageUnpacker unpacker) throws IOException {
+            return IdentifierDecoders.unpackIdentifier(unpacker);
+        }
+    };
+
+    static final ValueCodec<List<Identifier<?>>> compositeListCodec = createListCodec(compositeCodec);
+    static final ValueCodec<Map<String, Identifier<?>>> compositeMapCodec = createMapCodec(compositeCodec);
 
 
     private static <T> ValueCodec<List<T>> createListCodec(ValueCodec<T> valueCodec) {

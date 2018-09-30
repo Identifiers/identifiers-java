@@ -12,6 +12,7 @@ import io.identifiers.MapIdentifierFactory;
 import io.identifiers.SingleIdentifierFactory;
 
 final class IdentifierDecoderProvider {
+
     IdentifierDecoderProvider() {
         // static class
     }
@@ -114,6 +115,16 @@ final class IdentifierDecoderProvider {
             IdentifierType.BYTES_MAP.code(), composeMapDecoder(
                 ValueCodecs.bytesMapCodec,
                 Factory.forBytes));
+
+        decoderMap.put(
+            IdentifierType.COMPOSITE_LIST.code(), composeListDecoder(
+                ValueCodecs.compositeListCodec,
+                Factory.forComposite));
+
+        decoderMap.put(
+            IdentifierType.COMPOSITE_MAP.code(), composeMapDecoder(
+                ValueCodecs.compositeMapCodec,
+                Factory.forComposite));
     }
 
     private static <T> IdentifierDecoder composeDecoder(

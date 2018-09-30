@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 class FactoryTest {
@@ -51,6 +52,28 @@ class FactoryTest {
         createAndAssertIdentifier(Factory.forBytes, IdentifierType.BYTES, new byte[] { 0, -22, 123});
         createAndAssertListIdentifier(Factory.forBytes, IdentifierType.BYTES_LIST, new byte[] { 0, -22, 123 });
         createAndAssertMapIdentifier(Factory.forBytes, IdentifierType.BYTES_MAP, Collections.singletonMap(KEY, new byte[] { 0 }));
+    }
+
+    @Test
+    void testForCompositeListFactory() {
+        Identifier<String> stringId = Factory.forString.create("testing");
+        ListIdentifier<Boolean> booleanListId = Factory.forBoolean.createList(true, false);
+        MapIdentifier<byte[]> bytesMapId = Factory.forBytes.createMap(Collections.singletonMap(KEY, new byte[] { 1, 2, 127, -90 }));
+
+        createAndAssertListIdentifier(Factory.forComposite, IdentifierType.COMPOSITE_LIST, booleanListId, stringId, bytesMapId);
+    }
+
+    @Test
+    void testForCompositeMapFactory() {
+        Identifier<Float> floatId = Factory.forFloat.create(1.2f);
+        ListIdentifier<Long> longListId = Factory.forLong.createList(675754L, -988654L);
+        MapIdentifier<Integer> intMapId = Factory.forInteger.createMap(Collections.singletonMap(KEY, 2));
+        Map<String, Identifier<?>> idMap = new HashMap<>();
+        idMap.put("a", floatId);
+        idMap.put("b", longListId);
+        idMap.put("c", intMapId);
+
+        createAndAssertMapIdentifier(Factory.forComposite, IdentifierType.COMPOSITE_MAP, idMap);
     }
 
     private <T> void createAndAssertIdentifier(SingleIdentifierFactory<T> factory, IdentifierType expectedType, T expectedValue) {

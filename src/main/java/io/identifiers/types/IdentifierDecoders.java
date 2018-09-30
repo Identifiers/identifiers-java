@@ -46,11 +46,15 @@ public final class IdentifierDecoders {
 
     private static <T> Identifier<T> bytesToIdentifier(byte[] bytes) {
         try (MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(bytes)) {
-            int typeCode = unpackTypeCode(unpacker);
-            return unpackIdentifier(typeCode, unpacker);
+            return unpackIdentifier(unpacker);
         } catch (IOException e) {
             throw new IllegalArgumentException(String.format("cannot decode msgPack %s", Arrays.toString(bytes)), e);
         }
+    }
+
+    static <T> Identifier<T> unpackIdentifier(MessageUnpacker unpacker) throws IOException {
+        int typeCode = unpackTypeCode(unpacker);
+        return decodeIdentifier(typeCode, unpacker);
     }
 
     private static int unpackTypeCode(MessageUnpacker unpacker) throws IOException {
@@ -60,7 +64,7 @@ public final class IdentifierDecoders {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> Identifier<T> unpackIdentifier(int typeCode, MessageUnpacker unpacker) throws IOException {
+    private static <T> Identifier<T> decodeIdentifier(int typeCode, MessageUnpacker unpacker) throws IOException {
         return IdentifierDecoderProvider
             .findDecoder(typeCode)
             .decode(unpacker);

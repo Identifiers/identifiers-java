@@ -2,17 +2,22 @@ package io.identifiers.types;
 
 import io.identifiers.IdentifierType;
 
-class SingleTypeTemplate<T> implements TypeTemplate<T> {
+class TypeTemplateWithEncoder<T> implements TypeTemplate<T> {
 
     private final IdentifierEncoder<T> encoder;
 
-    SingleTypeTemplate(IdentifierEncoder<T> encoder) {
+    TypeTemplateWithEncoder(IdentifierEncoder<T> encoder) {
         this.encoder = encoder;
     }
 
     @Override
     public IdentifierType type() {
         return encoder.getType();
+    }
+
+    @Override
+    public boolean isValueMutable() {
+        return false;
     }
 
     @Override

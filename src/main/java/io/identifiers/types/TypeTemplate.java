@@ -2,15 +2,13 @@ package io.identifiers.types;
 
 import io.identifiers.IdentifierType;
 
-public interface TypeTemplate<T> {
+interface TypeTemplate<T> {
 
     IdentifierType type();
 
     T value(T value);
 
-    default boolean isValueMutable() {
-        return false;
-    }
+    boolean isValueMutable();
 
     String toDataString(T value);
 

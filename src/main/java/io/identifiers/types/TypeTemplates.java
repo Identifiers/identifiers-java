@@ -8,21 +8,21 @@ final class TypeTemplates {
         // static class
     }
 
-    static TypeTemplate<String> forString = new SingleTypeTemplate<>(
-        new SingleIndentifierEncoder<>(IdentifierType.STRING, ValueCodecs.stringCodec));
+    static TypeTemplate<String> forString = new TypeTemplateWithEncoder<>(
+        new IdentifierEncoderWithCodec<>(IdentifierType.STRING, ValueCodecs.stringCodec));
 
-    static TypeTemplate<Boolean> forBoolean = new SingleTypeTemplate<>(
-        new SingleIndentifierEncoder<>(IdentifierType.BOOLEAN, ValueCodecs.booleanCodec));
+    static TypeTemplate<Boolean> forBoolean = new TypeTemplateWithEncoder<>(
+        new IdentifierEncoderWithCodec<>(IdentifierType.BOOLEAN, ValueCodecs.booleanCodec));
 
-    static TypeTemplate<Integer> forInteger = new SingleTypeTemplate<>(
-        new SingleIndentifierEncoder<>(IdentifierType.INTEGER, ValueCodecs.integerCodec));
+    static TypeTemplate<Integer> forInteger = new TypeTemplateWithEncoder<>(
+        new IdentifierEncoderWithCodec<>(IdentifierType.INTEGER, ValueCodecs.integerCodec));
 
-    static TypeTemplate<Float> forFloat = new SingleTypeTemplate<>(
-        new SingleIndentifierEncoder<>(IdentifierType.FLOAT, ValueCodecs.floatCodec));
+    static TypeTemplate<Float> forFloat = new TypeTemplateWithEncoder<>(
+        new IdentifierEncoderWithCodec<>(IdentifierType.FLOAT, ValueCodecs.floatCodec));
 
-    static TypeTemplate<Long> forLong = new SingleTypeTemplate<>(
-        new SingleIndentifierEncoder<>(IdentifierType.LONG, ValueCodecs.longCodec));
+    static TypeTemplate<Long> forLong = new TypeTemplateWithEncoder<>(
+        new IdentifierEncoderWithCodec<>(IdentifierType.LONG, ValueCodecs.longCodec));
 
     static TypeTemplate<byte[]> forBytes = new BytesTypeTemplate(
-        new SingleIndentifierEncoder<>(IdentifierType.BYTES, ValueCodecs.bytesCodec));
+        new IdentifierEncoderWithCodec<>(IdentifierType.BYTES, ValueCodecs.bytesCodec));
 }

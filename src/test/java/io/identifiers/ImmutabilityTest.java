@@ -3,10 +3,12 @@ package io.identifiers;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.assertj.core.util.Maps;
 
@@ -133,5 +135,22 @@ class ImmutabilityTest {
         MapIdentifier<byte[]> idMap = Factory.forBytes.createMap(map);
         bytes[0] = 1;
         assertThat(idMap.value().get(key)[0]).isEqualTo((byte) 0);
+    }
+
+    @Test
+    void testForCompositeListImmutability() {
+        byte[] bytes = { 0, 26, -39 };
+        Identifier<byte[]> bytesId = Factory.forBytes.create(bytes);
+        ListIdentifier<Identifier<?>> listId = Factory.forComposite.createList(bytesId);
+        Identifier<String> stringId = Factory.forString.create("ice");
+        assertThatThrownBy(() -> listId.value().set(0, stringId)).isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    @Test
+    void testForCompositeMapImmutability() {
+        Identifier<Boolean> booleanId = Factory.forBoolean.create(true);
+        MapIdentifier<Identifier<?>> mapId = Factory.forComposite.createMap(Collections.singletonMap("K", booleanId));
+        Identifier<Integer> intId = Factory.forInteger.create(44);
+        assertThatThrownBy(() -> mapId.value().put("k", intId)).isInstanceOf(UnsupportedOperationException.class);
     }
 }

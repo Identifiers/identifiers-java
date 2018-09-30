@@ -15,32 +15,34 @@ public final class Factory {
     /**
      * The {@link String} identifier factory.
      */
-    public static final IdentifierFactory<String> forString = createFactory(IdentifierType.STRING);
+    public static final IdentifierFactory<String> forString = typedFactory(IdentifierType.STRING);
 
     /**
      * The {@link Boolean} identifier factory.
      */
-    public static final IdentifierFactory<Boolean> forBoolean = createFactory(IdentifierType.BOOLEAN);
+    public static final IdentifierFactory<Boolean> forBoolean = typedFactory(IdentifierType.BOOLEAN);
 
     /**
      * The {@link Integer} identifier factory.
      */
-    public static final IdentifierFactory<Integer> forInteger = createFactory(IdentifierType.INTEGER);
+    public static final IdentifierFactory<Integer> forInteger = typedFactory(IdentifierType.INTEGER);
 
     /**
      * The {@link Float} identifier factory.
      */
-    public static final IdentifierFactory<Float> forFloat = createFactory(IdentifierType.FLOAT);
+    public static final IdentifierFactory<Float> forFloat = typedFactory(IdentifierType.FLOAT);
 
     /**
      * The {@link Long} identifier factory.
      */
-    public static final IdentifierFactory<Long> forLong = createFactory(IdentifierType.LONG);
+    public static final IdentifierFactory<Long> forLong = typedFactory(IdentifierType.LONG);
 
     /**
      * The byte array identifier factory.
      */
-    public static final IdentifierFactory<byte[]> forBytes = createFactory(IdentifierType.BYTES);
+    public static final IdentifierFactory<byte[]> forBytes = typedFactory(IdentifierType.BYTES);
+
+    public static final CompositeIdentifierFactory forComposite = compositeFactory();
 
     /**
      * Parse an encoded identifier string into an Identifier instance.

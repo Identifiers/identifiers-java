@@ -21,7 +21,10 @@ public enum IdentifierType {
     INTEGER_MAP(INTEGER.code | TypeCodeModifiers.MAP_TYPE_CODE),
     FLOAT_MAP(FLOAT.code | TypeCodeModifiers.MAP_TYPE_CODE),
     LONG_MAP(LONG.code | TypeCodeModifiers.MAP_TYPE_CODE),
-    BYTES_MAP(BYTES.code | TypeCodeModifiers.MAP_TYPE_CODE);
+    BYTES_MAP(BYTES.code | TypeCodeModifiers.MAP_TYPE_CODE),
+
+    COMPOSITE_LIST(TypeCodeModifiers.LIST_TYPE_CODE | TypeCodeModifiers.COMPOSITE_TYPE_CODE),
+    COMPOSITE_MAP(TypeCodeModifiers.MAP_TYPE_CODE | TypeCodeModifiers.COMPOSITE_TYPE_CODE);
 
 
     private final int code;

@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.function.Function;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -72,5 +74,26 @@ class RoundTripTest {
         roundTrip(Factory.forBytes.create(new byte[] {-127, 0, 127}));
         roundTrip(Factory.forBytes.createList(new byte[] {-1, 22, 120, 19}, new byte[] {-127, 0, 127}));
         roundTrip(Factory.forBytes.createMap(Collections.singletonMap(KEY, new byte[] {-127, 127})));
+    }
+
+    @Test
+    void testCompositeList() {
+        roundTrip(Factory.forComposite.createList(Factory.forBoolean.create(true), Factory.forInteger.create(1)));
+        roundTrip(Factory.forComposite.createList(Arrays.asList(Factory.forString.create("one"), Factory.forFloat.create(11f))));
+        List<Identifier<?>> list = Collections.singletonList(Factory.forLong.create(946L));
+        roundTrip(Factory.forComposite.createList(list.iterator()));
+        roundTrip(Stream.of(Factory.forBoolean.create(false))
+            .collect(Factory.forComposite.toListIdentifier()));
+    }
+
+    @Test
+    void testCompositeMap() {
+        Map<String, Identifier<?>> idMap = new HashMap<>();
+        idMap.put("boolean", Factory.forBoolean.create(false));
+        idMap.put("long", Factory.forLong.createList(55L, 100L));
+        roundTrip(Factory.forComposite.createMap(idMap));
+        roundTrip(Factory.forComposite.createMap(idMap.entrySet().iterator()));
+        roundTrip(idMap.values().stream()
+            .collect(Factory.forComposite.toMapIdentifier((id) -> id.type().name())));
     }
 }
