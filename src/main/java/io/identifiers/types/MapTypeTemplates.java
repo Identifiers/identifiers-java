@@ -21,7 +21,7 @@ final class MapTypeTemplates {
             new IdentifierEncoderWithCodec<>(IdentifierType.INTEGER_MAP, ValueCodecs.integerMapCodec),
             TypeTemplates.forInteger);
 
-    static MapTypeTemplate<Float> forFloatMap = new MapTypeTemplateWithEncoder<>(
+    static MapTypeTemplate<Double> forFloatMap = new MapTypeTemplateWithEncoder<>(
             new IdentifierEncoderWithCodec<>(IdentifierType.FLOAT_MAP, ValueCodecs.floatMapCodec),
             TypeTemplates.forFloat);
 

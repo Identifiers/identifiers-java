@@ -21,7 +21,7 @@ final class ListTypeTemplates {
             new IdentifierEncoderWithCodec<>(IdentifierType.INTEGER_LIST, ValueCodecs.integerListCodec),
             TypeTemplates.forInteger);
 
-    static ListTypeTemplate<Float> forFloatList = new ListTypeTemplateWithEncoder<>(
+    static ListTypeTemplate<Double> forFloatList = new ListTypeTemplateWithEncoder<>(
             new IdentifierEncoderWithCodec<>(IdentifierType.FLOAT_LIST, ValueCodecs.floatListCodec),
             TypeTemplates.forFloat);
 

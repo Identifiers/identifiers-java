@@ -74,20 +74,20 @@ class ImmutabilityTest {
 
     @Test
     void testFloatListImmutability() {
-        float expected = 1.1f;
-        List<Float> values = Arrays.asList(expected, 13.244f);
-        ListIdentifier<Float> idList = Factory.forFloat.createList(values);
-        values.set(0, -100f);
+        double expected = 1.1;
+        List<Double> values = Arrays.asList(expected, 13.244);
+        ListIdentifier<Double> idList = Factory.forFloat.createList(values);
+        values.set(0, -100.1);
         assertThat(idList.value()).startsWith(expected);
     }
 
     @Test
     void testFloatMapImmutability() {
         String key = "b";
-        float expected = 1.3f;
-        Map<String, Float> map = Maps.newHashMap(key, expected);
-        MapIdentifier<Float> idList = Factory.forFloat.createMap(map);
-        map.put(key, expected + 1);
+        double expected = 1.3;
+        Map<String, Double> map = Maps.newHashMap(key, expected);
+        MapIdentifier<Double> idList = Factory.forFloat.createMap(map);
+        map.put(key, expected + 1.2);
         assertThat(idList.value()).containsEntry(key, expected);
     }
 

@@ -28,9 +28,9 @@ public final class Factory {
     public static final IdentifierFactory<Integer> forInteger = typedFactory(IdentifierType.INTEGER);
 
     /**
-     * The {@link Float} identifier factory.
+     * The {@link Double} identifier factory.
      */
-    public static final IdentifierFactory<Float> forFloat = typedFactory(IdentifierType.FLOAT);
+    public static final IdentifierFactory<Double> forFloat = typedFactory(IdentifierType.FLOAT);
 
     /**
      * The {@link Long} identifier factory.

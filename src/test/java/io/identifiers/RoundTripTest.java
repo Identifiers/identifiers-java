@@ -51,11 +51,11 @@ class RoundTripTest {
 
     @Test
     void testFloat() {
-        roundTrip(Factory.forFloat.create(0.0095f));
-        roundTrip(Factory.forFloat.create((float) -100.2));
-        roundTrip(Stream.of(0.1f, 22.9974f, -55.17f, 0.0f)
+        roundTrip(Factory.forFloat.create(0.0095));
+        roundTrip(Factory.forFloat.create(-100.2));
+        roundTrip(Stream.of(0.1, 22.9974, -55.17, 0.0)
             .collect(Factory.forFloat.toListIdentifier()));
-        roundTrip(Stream.of(0.0089f)
+        roundTrip(Stream.of(0.0089)
             .collect(Factory.forFloat.toMapIdentifier((v) -> KEY)));
     }
 
@@ -79,7 +79,7 @@ class RoundTripTest {
     @Test
     void testCompositeList() {
         roundTrip(Factory.forComposite.createList(Factory.forBoolean.create(true), Factory.forInteger.create(1)));
-        roundTrip(Factory.forComposite.createList(Arrays.asList(Factory.forString.create("one"), Factory.forFloat.create(11f))));
+        roundTrip(Factory.forComposite.createList(Arrays.asList(Factory.forString.create("one"), Factory.forFloat.create(11.01))));
         List<Identifier<?>> list = Collections.singletonList(Factory.forLong.create(946L));
         roundTrip(Factory.forComposite.createList(list.iterator()));
         roundTrip(Stream.of(Factory.forBoolean.create(false))

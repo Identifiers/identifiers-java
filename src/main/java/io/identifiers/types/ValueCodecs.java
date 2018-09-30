@@ -68,19 +68,19 @@ final class ValueCodecs {
     static final ValueCodec<List<Integer>> integerListCodec = createListCodec(integerCodec);
     static final ValueCodec<Map<String, Integer>> integerMapCodec = createMapCodec(integerCodec);
 
-    static final ValueCodec<Float> floatCodec = new ValueCodec<Float>() {
+    static final ValueCodec<Double> floatCodec = new ValueCodec<Double>() {
         @Override
-        public Value encode(Float value) {
+        public Value encode(Double value) {
             return ValueFactory.newFloat(value);
         }
 
         @Override
-        public Float decode(MessageUnpacker unpacker) throws IOException {
-            return unpacker.unpackFloat();
+        public Double decode(MessageUnpacker unpacker) throws IOException {
+            return unpacker.unpackDouble();
         }
     };
-    static final ValueCodec<List<Float>> floatListCodec = createListCodec(floatCodec);
-    static final ValueCodec<Map<String, Float>> floatMapCodec = createMapCodec(floatCodec);
+    static final ValueCodec<List<Double>> floatListCodec = createListCodec(floatCodec);
+    static final ValueCodec<Map<String, Double>> floatMapCodec = createMapCodec(floatCodec);
 
     static final ValueCodec<Long> longCodec = new ValueCodec<Long>() {
         @Override

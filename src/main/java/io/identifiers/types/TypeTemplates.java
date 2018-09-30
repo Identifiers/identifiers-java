@@ -17,7 +17,7 @@ final class TypeTemplates {
     static TypeTemplate<Integer> forInteger = new TypeTemplateWithEncoder<>(
         new IdentifierEncoderWithCodec<>(IdentifierType.INTEGER, ValueCodecs.integerCodec));
 
-    static TypeTemplate<Float> forFloat = new TypeTemplateWithEncoder<>(
+    static TypeTemplate<Double> forFloat = new TypeTemplateWithEncoder<>(
         new IdentifierEncoderWithCodec<>(IdentifierType.FLOAT, ValueCodecs.floatCodec));
 
     static TypeTemplate<Long> forLong = new TypeTemplateWithEncoder<>(

@@ -35,9 +35,9 @@ class FactoryTest {
 
     @Test
     void testForFloatFactory() {
-        createAndAssertIdentifier(Factory.forFloat, IdentifierType.FLOAT, -0.554f);
-        createAndAssertListIdentifier(Factory.forFloat, IdentifierType.FLOAT_LIST, 1.0f, -2.2f, 9986755.456f);
-        createAndAssertMapIdentifier(Factory.forFloat, IdentifierType.FLOAT_MAP, Collections.singletonMap(KEY, 1.0f));
+        createAndAssertIdentifier(Factory.forFloat, IdentifierType.FLOAT, -0.554);
+        createAndAssertListIdentifier(Factory.forFloat, IdentifierType.FLOAT_LIST, 1.0, -2.2, 9986755.456);
+        createAndAssertMapIdentifier(Factory.forFloat, IdentifierType.FLOAT_MAP, Collections.singletonMap(KEY, 1.0));
     }
 
     @Test
@@ -65,7 +65,7 @@ class FactoryTest {
 
     @Test
     void testForCompositeMapFactory() {
-        Identifier<Float> floatId = Factory.forFloat.create(1.2f);
+        Identifier<Double> floatId = Factory.forFloat.create(1.2);
         ListIdentifier<Long> longListId = Factory.forLong.createList(675754L, -988654L);
         MapIdentifier<Integer> intMapId = Factory.forInteger.createMap(Collections.singletonMap(KEY, 2));
         Map<String, Identifier<?>> idMap = new HashMap<>();
