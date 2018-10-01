@@ -36,7 +36,6 @@ final class ImmutableListIdentifierFactory<T> implements ListIdentifierFactory<T
         return instantiateListIdentifier(copied);
     }
 
-
     @Override
     public final Collector<T, ?, ListIdentifier<T>> toListIdentifier() {
         return Collectors.collectingAndThen(Collectors.toList(), this::instantiateListIdentifier);

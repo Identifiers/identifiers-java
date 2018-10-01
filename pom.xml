@@ -103,16 +103,18 @@
         <!-- =========== UNIT-TESTING ============ -->
         <assertj-core.version>3.11.1</assertj-core.version>
         <javafaker.version>0.16</javafaker.version>
-        <junit.jupiter.version>5.3.1</junit.jupiter.version>
-        <junit.platform.version>1.3.1</junit.platform.version>
         <jmh-core.version>1.21</jmh-core.version>
         <jmh-generator-annprocess.version>1.21</jmh-generator-annprocess.version>
+        <junit.jupiter.version>5.3.1</junit.jupiter.version>
+        <junit.platform.version>1.3.1</junit.platform.version>
+        <minimal-json.version>0.9.5</minimal-json.version>
 
         <!-- =========== MAVEN PLUGINS ============ -->
         <junit-platform-surefire-provider.version>1.2.0</junit-platform-surefire-provider.version>
         <maven-bundle-plugin.version>4.0.0</maven-bundle-plugin.version>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
         <maven-pmd-plugin.version>3.10.0</maven-pmd-plugin.version>
+        <maven-scm-plugin.version>1.11.1</maven-scm-plugin.version>
         <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
         <spotbugs-maven-plugin.version>3.1.7</spotbugs-maven-plugin.version>
     </properties>
@@ -130,6 +132,12 @@
         <!-- ============================================== -->
         <!-- ======= TEST ENVIRONMENT DEPENDENCIES ======== -->
         <!-- ============================================== -->
+        <dependency>
+            <groupId>com.eclipsesource.minimal-json</groupId>
+            <artifactId>minimal-json</artifactId>
+            <version>${minimal-json.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
@@ -187,19 +195,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <version>${maven-bundle-plugin.version}</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <obrRepository>NONE</obrRepository>
-                    <instructions>
-                        <Export-Package>io.identifiers</Export-Package>
-                        <Private-Package>io.identifiers.*</Private-Package>
-                    </instructions>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
@@ -208,6 +203,24 @@
                     <source>8</source>
                     <target>8</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>${maven-scm-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>fetch-tck-files</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>checkout</goal>
+                        </goals>
+                        <configuration>
+                            <connectionUrl>scm:svn:https://github.com/Identifiers/spec/trunk/tck/files</connectionUrl>
+                            <checkoutDirectory>target/tck</checkoutDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -220,6 +233,19 @@
                         <version>${junit-platform-surefire-provider.version}</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>${maven-bundle-plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <obrRepository>NONE</obrRepository>
+                    <instructions>
+                        <Export-Package>io.identifiers</Export-Package>
+                        <Private-Package>io.identifiers.*</Private-Package>
+                    </instructions>
+                </configuration>
             </plugin>
         </plugins>
     </build>
