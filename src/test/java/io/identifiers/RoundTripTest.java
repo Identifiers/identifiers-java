@@ -64,6 +64,7 @@ class RoundTripTest {
         roundTrip(Factory.forLong.create(Long.MAX_VALUE));
         roundTrip(Factory.forLong.create(Long.MIN_VALUE));
         roundTrip(Factory.forLong.create(100L));
+        roundTrip(Factory.forLong.create(9007199254740991L)); //  JS Safe Max Integer 2 ^ 53 −1
         roundTrip(Factory.forLong.createList(1001L, 222L, -333L, 400004499384L));
         roundTrip(Factory.forLong.createMap(Collections.singletonMap(KEY, 1L)));
     }
