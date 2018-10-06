@@ -6,8 +6,8 @@ public final class TypeCodeModifiers {
         // static class
     }
 
-    public static final short LIST_TYPE_CODE = 0x08;
-    public static final short MAP_TYPE_CODE = 0x10;
-    public static final short COMPOSITE_TYPE_CODE =0x40;
-
+    /**
+     * Mask to AND against a type code to find the non-semantic type code.
+     */
+    public static final short SEMANTIC_TYPE_MASK = IdentifierType.SEMANTIC_TYPE - 1;
 }

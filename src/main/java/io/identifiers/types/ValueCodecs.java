@@ -1,6 +1,7 @@
 package io.identifiers.types;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.UUID;
 
 import io.identifiers.Assert;
 import io.identifiers.Identifier;
@@ -113,6 +115,31 @@ final class ValueCodecs {
     static final ValueCodec<List<byte[]>> bytesListCodec = createListCodec(bytesCodec);
     static final ValueCodec<Map<String, byte[]>> bytesMapCodec = createMapCodec(bytesCodec);
 
+    static final ValueCodec<UUID> uuidCodec = new ValueCodec<UUID>() {
+        @Override
+        public Value encode(UUID value) {
+            ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
+            bb.putLong(value.getMostSignificantBits());
+            bb.putLong(value.getLeastSignificantBits());
+            return ValueFactory.newBinary(bb.array());
+        }
+
+        @Override
+        public UUID decode(MessageUnpacker unpacker) throws IOException {
+            int size = unpacker.unpackBinaryHeader();
+            Assert.state(size == 16, "uuid bytes must be 16 bytes in lengthm but found %s", size);
+            byte[] bytes = new byte[size];
+            unpacker.readPayload(bytes);
+            ByteBuffer bb = ByteBuffer.wrap(bytes);
+            long msb = bb.getLong();
+            long lsb = bb.getLong();
+            return new UUID(msb, lsb);
+        }
+    };
+    static final ValueCodec<List<UUID>> uuidListCodec = createListCodec(uuidCodec);
+    static final ValueCodec<Map<String, UUID>> uuidMapCodec = createMapCodec(uuidCodec);
+
+
     private static final Map<IdentifierType, ValueCodec> codecs = new EnumMap<>(IdentifierType.class);
     static {
         codecs.put(IdentifierType.STRING, stringCodec);
@@ -138,6 +165,10 @@ final class ValueCodecs {
         codecs.put(IdentifierType.BYTES, bytesCodec);
         codecs.put(IdentifierType.BYTES_LIST, bytesListCodec);
         codecs.put(IdentifierType.BYTES_MAP, bytesMapCodec);
+
+        codecs.put(IdentifierType.UUID, uuidCodec);
+        codecs.put(IdentifierType.UUID_LIST, uuidListCodec);
+        codecs.put(IdentifierType.UUID_MAP, uuidMapCodec);
     }
 
     private static final ValueCodec<Identifier<?>> compositeCodec = new ValueCodec<Identifier<?>>() {

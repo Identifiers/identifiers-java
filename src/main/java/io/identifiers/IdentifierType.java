@@ -9,22 +9,45 @@ public enum IdentifierType {
     LONG(0x04),
     BYTES(0x05),
 
-    STRING_LIST(STRING.code | TypeCodeModifiers.LIST_TYPE_CODE),
-    BOOLEAN_LIST(BOOLEAN.code | TypeCodeModifiers.LIST_TYPE_CODE),
-    INTEGER_LIST(INTEGER.code | TypeCodeModifiers.LIST_TYPE_CODE),
-    FLOAT_LIST(FLOAT.code | TypeCodeModifiers.LIST_TYPE_CODE),
-    LONG_LIST(LONG.code | TypeCodeModifiers.LIST_TYPE_CODE),
-    BYTES_LIST(BYTES.code | TypeCodeModifiers.LIST_TYPE_CODE),
+    STRING_LIST(calculateListTypeCode(STRING.code)),
+    BOOLEAN_LIST(calculateListTypeCode(BOOLEAN.code)),
+    INTEGER_LIST(calculateListTypeCode(INTEGER.code)),
+    FLOAT_LIST(calculateListTypeCode(FLOAT.code)),
+    LONG_LIST(calculateListTypeCode(LONG.code)),
+    BYTES_LIST(calculateListTypeCode(BYTES.code)),
 
-    STRING_MAP(STRING.code | TypeCodeModifiers.MAP_TYPE_CODE),
-    BOOLEAN_MAP(BOOLEAN.code | TypeCodeModifiers.MAP_TYPE_CODE),
-    INTEGER_MAP(INTEGER.code | TypeCodeModifiers.MAP_TYPE_CODE),
-    FLOAT_MAP(FLOAT.code | TypeCodeModifiers.MAP_TYPE_CODE),
-    LONG_MAP(LONG.code | TypeCodeModifiers.MAP_TYPE_CODE),
-    BYTES_MAP(BYTES.code | TypeCodeModifiers.MAP_TYPE_CODE),
+    STRING_MAP(calculateMapTypeCode(STRING.code)),
+    BOOLEAN_MAP(calculateMapTypeCode(BOOLEAN.code)),
+    INTEGER_MAP(calculateMapTypeCode(INTEGER.code)),
+    FLOAT_MAP(calculateMapTypeCode(FLOAT.code)),
+    LONG_MAP(calculateMapTypeCode(LONG.code)),
+    BYTES_MAP(calculateMapTypeCode(BYTES.code)),
 
-    COMPOSITE_LIST(TypeCodeModifiers.LIST_TYPE_CODE | TypeCodeModifiers.COMPOSITE_TYPE_CODE),
-    COMPOSITE_MAP(TypeCodeModifiers.MAP_TYPE_CODE | TypeCodeModifiers.COMPOSITE_TYPE_CODE);
+    COMPOSITE_LIST(calculateListTypeCode(0x40)),
+    COMPOSITE_MAP(calculateMapTypeCode(0x40)),
+
+    UUID(calculateSemanticTypeCode(BYTES.code, 0)),
+    UUID_LIST(calculateListTypeCode(UUID.code)),
+    UUID_MAP(calculateMapTypeCode(UUID.code));
+
+
+    public static final short LIST_TYPE = 0x08;
+    public static final short MAP_TYPE = 0x10;
+    public static final short SEMANTIC_TYPE = 0x80;
+
+    static int calculateListTypeCode(int baseTypeCode) {
+        return baseTypeCode | LIST_TYPE;
+    }
+
+    static int calculateMapTypeCode(int baseTypeCode) {
+        return baseTypeCode | MAP_TYPE;
+    }
+
+
+    private static final short SEMANTIC_SLOT_SHIFT = 0x8;
+    static int calculateSemanticTypeCode(int baseTypeCode, int slot) {
+        return baseTypeCode | SEMANTIC_TYPE | (slot << SEMANTIC_SLOT_SHIFT);
+    }
 
 
     private final int code;

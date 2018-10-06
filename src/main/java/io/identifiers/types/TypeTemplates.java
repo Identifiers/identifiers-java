@@ -1,5 +1,7 @@
 package io.identifiers.types;
 
+import java.util.UUID;
+
 import io.identifiers.IdentifierType;
 
 final class TypeTemplates {
@@ -25,4 +27,7 @@ final class TypeTemplates {
 
     static TypeTemplate<byte[]> forBytes = new BytesTypeTemplate(
         new IdentifierEncoderWithCodec<>(IdentifierType.BYTES, ValueCodecs.bytesCodec));
+
+    static TypeTemplate<UUID> forUuid = new TypeTemplateWithEncoder<>(
+        new IdentifierEncoderWithCodec<>(IdentifierType.UUID, ValueCodecs.uuidCodec));
 }

@@ -7,7 +7,6 @@ import com.eclipsesource.json.JsonValue;
 import io.identifiers.Factory;
 import io.identifiers.Identifier;
 import io.identifiers.IdentifierType;
-import io.identifiers.TypeCodeModifiers;
 import org.junit.jupiter.api.Test;
 import java.io.FileReader;
 import java.io.IOException;
@@ -85,13 +84,13 @@ class PrimitivesTest {
         Object actual = id.value();
         JsonValue value = test.get("value");
 
-        if (TypeCodeModifiers.LIST_TYPE_CODE == (idType.code() & TypeCodeModifiers.LIST_TYPE_CODE)) {
+        if (IdentifierType.LIST_TYPE == (idType.code() & IdentifierType.LIST_TYPE)) {
             List<Object> expectedList = StreamSupport.stream(value.asArray().spliterator(), false)
                 .map(valueTransformer)
                 .collect(Collectors.toList());
 
             assertThat(expectedList).hasSameElementsAs((Iterable<Object>) actual);
-        } else if (TypeCodeModifiers.MAP_TYPE_CODE == (idType.code() & TypeCodeModifiers.MAP_TYPE_CODE)) {
+        } else if (IdentifierType.MAP_TYPE == (idType.code() & IdentifierType.MAP_TYPE)) {
             Map<String, Object> expectedMap = StreamSupport.stream(value.asObject().spliterator(), false)
                 .collect(Collectors.toMap(
                     JsonObject.Member::getName,

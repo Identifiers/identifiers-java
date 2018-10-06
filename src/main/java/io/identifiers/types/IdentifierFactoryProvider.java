@@ -50,6 +50,11 @@ public final class IdentifierFactoryProvider {
             TypeTemplates.forBytes,
             ListTypeTemplates.forBytesList,
             MapTypeTemplates.forBytesMap));
+
+        factoryMap.put(IdentifierType.UUID, assembleTypedFactory(
+            TypeTemplates.forUuid,
+            ListTypeTemplates.forUuidList,
+            MapTypeTemplates.forUuidMap));
     }
 
     @SuppressWarnings("unchecked")

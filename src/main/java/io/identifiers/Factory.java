@@ -3,6 +3,8 @@ package io.identifiers;
 import static io.identifiers.types.IdentifierDecoders.decodeIdentifier;
 import static io.identifiers.types.IdentifierFactoryProvider.*;
 
+import java.util.UUID;
+
 /**
  * Factory methods to create new {@link Identifier} instances.
  */
@@ -42,7 +44,16 @@ public final class Factory {
      */
     public static final IdentifierFactory<byte[]> forBytes = typedFactory(IdentifierType.BYTES);
 
+    /**
+     * The composite identifier factory.
+     */
     public static final CompositeIdentifierFactory forComposite = compositeFactory();
+
+    /**
+     * The UUID identifier factory.
+     */
+     public static final IdentifierFactory<UUID> forUuid = typedFactory(IdentifierType.UUID);
+
 
     /**
      * Parse an encoded identifier string into an Identifier instance.

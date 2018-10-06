@@ -1,5 +1,7 @@
 package io.identifiers.types;
 
+import java.util.UUID;
+
 import io.identifiers.Identifier;
 import io.identifiers.IdentifierType;
 
@@ -10,30 +12,34 @@ final class ListTypeTemplates {
     }
 
     static ListTypeTemplate<String> forStringList = new ListTypeTemplateWithEncoder<>(
-            new IdentifierEncoderWithCodec<>(IdentifierType.STRING_LIST, ValueCodecs.stringListCodec),
-            TypeTemplates.forString);
+        new IdentifierEncoderWithCodec<>(IdentifierType.STRING_LIST, ValueCodecs.stringListCodec),
+        TypeTemplates.forString);
 
     static ListTypeTemplate<Boolean> forBooleanList = new ListTypeTemplateWithEncoder<>(
-            new IdentifierEncoderWithCodec<>(IdentifierType.BOOLEAN_LIST, ValueCodecs.booleanListCodec),
-            TypeTemplates.forBoolean);
+        new IdentifierEncoderWithCodec<>(IdentifierType.BOOLEAN_LIST, ValueCodecs.booleanListCodec),
+        TypeTemplates.forBoolean);
 
     static ListTypeTemplate<Integer> forIntegerList = new ListTypeTemplateWithEncoder<>(
-            new IdentifierEncoderWithCodec<>(IdentifierType.INTEGER_LIST, ValueCodecs.integerListCodec),
-            TypeTemplates.forInteger);
+        new IdentifierEncoderWithCodec<>(IdentifierType.INTEGER_LIST, ValueCodecs.integerListCodec),
+        TypeTemplates.forInteger);
 
     static ListTypeTemplate<Double> forFloatList = new ListTypeTemplateWithEncoder<>(
-            new IdentifierEncoderWithCodec<>(IdentifierType.FLOAT_LIST, ValueCodecs.floatListCodec),
-            TypeTemplates.forFloat);
+        new IdentifierEncoderWithCodec<>(IdentifierType.FLOAT_LIST, ValueCodecs.floatListCodec),
+        TypeTemplates.forFloat);
 
     static ListTypeTemplate<Long> forLongList = new ListTypeTemplateWithEncoder<>(
-            new IdentifierEncoderWithCodec<>(IdentifierType.LONG_LIST, ValueCodecs.longListCodec),
-            TypeTemplates.forLong);
+        new IdentifierEncoderWithCodec<>(IdentifierType.LONG_LIST, ValueCodecs.longListCodec),
+        TypeTemplates.forLong);
 
     static ListTypeTemplate<byte[]> forBytesList = new ListTypeTemplateWithEncoder<>(
-            new IdentifierEncoderWithCodec<>(IdentifierType.BYTES_LIST, ValueCodecs.bytesListCodec),
-            TypeTemplates.forBytes);
+        new IdentifierEncoderWithCodec<>(IdentifierType.BYTES_LIST, ValueCodecs.bytesListCodec),
+        TypeTemplates.forBytes);
 
     @SuppressWarnings("unchecked")
     static ListTypeTemplate<Identifier<?>> forCompositeList = new CompositeListTypeTemplate(
-            new IdentifierEncoderWithCodec(IdentifierType.COMPOSITE_LIST, ValueCodecs.compositeListCodec));
+        new IdentifierEncoderWithCodec(IdentifierType.COMPOSITE_LIST, ValueCodecs.compositeListCodec));
+
+    static ListTypeTemplate<UUID> forUuidList = new ListTypeTemplateWithEncoder<>(
+        new IdentifierEncoderWithCodec<>(IdentifierType.UUID_LIST, ValueCodecs.uuidListCodec),
+        TypeTemplates.forUuid);
 }

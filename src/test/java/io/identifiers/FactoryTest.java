@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 class FactoryTest {
 
@@ -74,6 +75,15 @@ class FactoryTest {
         idMap.put("c", intMapId);
 
         createAndAssertMapIdentifier(Factory.forComposite, IdentifierType.COMPOSITE_MAP, idMap);
+    }
+
+    @Test
+    void testForUuidFactory() {
+        UUID u1 = UUID.fromString("b796846a-c98c-11e8-a8d5-f2801f1b9fd1");
+        UUID u2 = UUID.fromString("369c0ead-31e0-4ec6-b1e3-1e0da47af4ef");
+        createAndAssertIdentifier(Factory.forUuid, IdentifierType.UUID, u1);
+        createAndAssertListIdentifier(Factory.forUuid, IdentifierType.UUID_LIST, u1, u2);
+        createAndAssertMapIdentifier(Factory.forUuid, IdentifierType.UUID_MAP, Collections.singletonMap(KEY, u2));
     }
 
     private <T> void createAndAssertIdentifier(SingleIdentifierFactory<T> factory, IdentifierType expectedType, T expectedValue) {

@@ -5,7 +5,6 @@ import java.util.List;
 
 import io.identifiers.IdentifierType;
 import io.identifiers.ListIdentifier;
-import io.identifiers.TypeCodeModifiers;
 
 final class ImmutableListIdentifier<T> implements ListIdentifier<T> {
 
@@ -14,9 +13,6 @@ final class ImmutableListIdentifier<T> implements ListIdentifier<T> {
 
     ImmutableListIdentifier(ListTypeTemplate<T> typeTemplate, List<T> values) {
         this.typeTemplate = typeTemplate;
-        assert TypeCodeModifiers.LIST_TYPE_CODE == (typeTemplate.type().code() & TypeCodeModifiers.LIST_TYPE_CODE)
-            : String.format("Not a LIST type: %s", typeTemplate);
-
         // expects values list to be copied from source list by factory
         this.values = Collections.unmodifiableList(typeTemplate.initialValues(values));
     }

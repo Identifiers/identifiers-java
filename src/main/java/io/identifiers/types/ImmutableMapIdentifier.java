@@ -6,7 +6,6 @@ import java.util.SortedMap;
 
 import io.identifiers.IdentifierType;
 import io.identifiers.MapIdentifier;
-import io.identifiers.TypeCodeModifiers;
 
 final class ImmutableMapIdentifier<T> implements MapIdentifier<T> {
 
@@ -15,9 +14,6 @@ final class ImmutableMapIdentifier<T> implements MapIdentifier<T> {
 
     ImmutableMapIdentifier(MapTypeTemplate<T> typeTemplate, SortedMap<String, T> valueMap) {
         this.typeTemplate = typeTemplate;
-        assert TypeCodeModifiers.MAP_TYPE_CODE == (typeTemplate.type().code() & TypeCodeModifiers.MAP_TYPE_CODE)
-            : String.format("Not a Map type: %s", typeTemplate);
-
         // expects values list to be copied from source list by factory
         this.valueMap = Collections.unmodifiableSortedMap(typeTemplate.initialValueMap(valueMap));
     }
