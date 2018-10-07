@@ -26,37 +26,37 @@ final class CompositeIdentifierFactoryImpl implements CompositeIdentifierFactory
     }
 
     @Override
-    public ListIdentifier<Identifier<?>> createList(Collection<Identifier<?>> values) {
+    public final ListIdentifier<Identifier<?>> createList(Collection<Identifier<?>> values) {
         return listFactory.createList(values);
     }
 
     @Override
-    public ListIdentifier<Identifier<?>> createList(Iterator<Identifier<?>> values) {
+    public final ListIdentifier<Identifier<?>> createList(Iterator<Identifier<?>> values) {
         return listFactory.createList(values);
     }
 
     @Override
-    public ListIdentifier<Identifier<?>> createList(Identifier<?>... values) {
+    public final ListIdentifier<Identifier<?>> createList(Identifier<?>... values) {
         return listFactory.createList(values);
     }
 
     @Override
-    public Collector<Identifier<?>, ?, ListIdentifier<Identifier<?>>> toListIdentifier() {
+    public final Collector<Identifier<?>, ?, ListIdentifier<Identifier<?>>> toListIdentifier() {
         return listFactory.toListIdentifier();
     }
 
     @Override
-    public MapIdentifier<Identifier<?>> createMap(Map<String, Identifier<?>> valueMap) {
+    public final MapIdentifier<Identifier<?>> createMap(Map<String, Identifier<?>> valueMap) {
         return mapFactory.createMap(valueMap);
     }
 
     @Override
-    public MapIdentifier<Identifier<?>> createMap(Iterator<Map.Entry<String, Identifier<?>>> entries) {
+    public final MapIdentifier<Identifier<?>> createMap(Iterator<Map.Entry<String, Identifier<?>>> entries) {
         return mapFactory.createMap(entries);
     }
 
     @Override
-    public Collector<Identifier<?>, ?, MapIdentifier<Identifier<?>>> toMapIdentifier(Function<Identifier<?>, String> keyƒ) {
+    public final Collector<Identifier<?>, ?, MapIdentifier<Identifier<?>>> toMapIdentifier(Function<Identifier<?>, String> keyƒ) {
         return mapFactory.toMapIdentifier(keyƒ);
     }
 }

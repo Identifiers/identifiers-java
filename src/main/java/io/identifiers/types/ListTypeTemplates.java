@@ -1,5 +1,6 @@
 package io.identifiers.types;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import io.identifiers.Identifier;
@@ -42,4 +43,8 @@ final class ListTypeTemplates {
     static ListTypeTemplate<UUID> forUuidList = new ListTypeTemplateWithEncoder<>(
         new IdentifierEncoderWithCodec<>(IdentifierType.UUID_LIST, ValueCodecs.uuidListCodec),
         TypeTemplates.forUuid);
+
+    static ListTypeTemplate<Instant> forDatetimeList = new ListTypeTemplateWithEncoder<>(
+        new IdentifierEncoderWithCodec<>(IdentifierType.DATETIME_LIST, ValueCodecs.datetimeListCodec),
+        TypeTemplates.forDatetime);
 }

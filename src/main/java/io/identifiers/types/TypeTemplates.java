@@ -1,5 +1,6 @@
 package io.identifiers.types;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import io.identifiers.IdentifierType;
@@ -30,4 +31,7 @@ final class TypeTemplates {
 
     static TypeTemplate<UUID> forUuid = new TypeTemplateWithEncoder<>(
         new IdentifierEncoderWithCodec<>(IdentifierType.UUID, ValueCodecs.uuidCodec));
+
+    static TypeTemplate<Instant> forDatetime = new TypeTemplateWithEncoder<>(
+        new IdentifierEncoderWithCodec<>(IdentifierType.DATETIME, ValueCodecs.datetimeCodec));
 }

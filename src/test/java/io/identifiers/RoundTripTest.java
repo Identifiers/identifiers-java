@@ -2,11 +2,13 @@ package io.identifiers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -96,5 +98,23 @@ class RoundTripTest {
         roundTrip(Factory.forComposite.createMap(idMap.entrySet().iterator()));
         roundTrip(idMap.values().stream()
             .collect(Factory.forComposite.toMapIdentifier((id) -> id.type().name())));
+    }
+
+    @Test
+    void testUuid() {
+        roundTrip(Factory.forUuid.create(UUID.fromString("00000000-0000-0000-0000-000000000000")));
+        roundTrip(Factory.forUuid.createList(Arrays.asList(
+            UUID.fromString("fca45722-ca53-11e8-a8d5-f2801f1b9fd1"),
+            UUID.fromString("1682e1c2-ca54-11e8-a8d5-f2801f1b9fd1"))));
+        roundTrip(Factory.forUuid.createMap(Collections.singletonMap(KEY, UUID.fromString("8db37c28-975f-4085-8a7c-e98dd0cbfd55"))));
+    }
+
+    @Test
+    void testDatetime() {
+        roundTrip(Factory.forDatetime.create(Instant.ofEpochSecond(0)));
+        roundTrip(Factory.forDatetime.createList(Arrays.asList(
+            Instant.ofEpochSecond(1000),
+            Instant.ofEpochSecond(2000))));
+        roundTrip(Factory.forDatetime.createMap(Collections.singletonMap(KEY, Instant.ofEpochSecond(786748494455L))));
     }
 }

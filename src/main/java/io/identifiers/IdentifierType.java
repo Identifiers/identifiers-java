@@ -28,7 +28,11 @@ public enum IdentifierType {
 
     UUID(calculateSemanticTypeCode(BYTES.code, 0)),
     UUID_LIST(calculateListTypeCode(UUID.code)),
-    UUID_MAP(calculateMapTypeCode(UUID.code));
+    UUID_MAP(calculateMapTypeCode(UUID.code)),
+
+    DATETIME(calculateSemanticTypeCode(LONG.code, 1)),
+    DATETIME_LIST(calculateListTypeCode(DATETIME.code)),
+    DATETIME_MAP(calculateMapTypeCode(DATETIME.code));
 
 
     public static final short LIST_TYPE = 0x08;

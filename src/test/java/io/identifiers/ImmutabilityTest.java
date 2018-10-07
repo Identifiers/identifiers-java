@@ -2,10 +2,11 @@ package io.identifiers;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -13,6 +14,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.assertj.core.util.Maps;
 
 class ImmutabilityTest {
+
+    private static final String KEY = "a-key";
 
     @Test
     void testStringListImmutability() {
@@ -25,12 +28,11 @@ class ImmutabilityTest {
 
     @Test
     void testStringMapImmutability() {
-        String key = "b";
         String expected = "a";
-        Map<String, String> map = Maps.newHashMap(key, expected);
-        MapIdentifier<String> idList = Factory.forString.createMap(map);
-        map.put(key, "z");
-        assertThat(idList.value()).containsEntry(key, expected);
+        Map<String, String> map = Maps.newHashMap(KEY, expected);
+        MapIdentifier<String> idMap = Factory.forString.createMap(map);
+        map.put(KEY, "z");
+        assertThat(idMap.value()).containsEntry(KEY, expected);
     }
 
     @Test
@@ -44,12 +46,11 @@ class ImmutabilityTest {
 
     @Test
     void testBooleanMapImmutability() {
-        String key = "b";
         boolean expected = true;
-        Map<String, Boolean> map = Maps.newHashMap(key, expected);
-        MapIdentifier<Boolean> idList = Factory.forBoolean.createMap(map);
-        map.put(key, !expected);
-        assertThat(idList.value()).containsEntry(key, expected);
+        Map<String, Boolean> map = Maps.newHashMap(KEY, expected);
+        MapIdentifier<Boolean> idMap = Factory.forBoolean.createMap(map);
+        map.put(KEY, !expected);
+        assertThat(idMap.value()).containsEntry(KEY, expected);
     }
 
     @Test
@@ -63,13 +64,12 @@ class ImmutabilityTest {
 
 
     @Test
-    void testIntegeMapImmutability() {
-        String key = "b";
+    void testIntegerMapImmutability() {
         int expected = 0;
-        Map<String, Integer> map = Maps.newHashMap(key, expected);
-        MapIdentifier<Integer> idList = Factory.forInteger.createMap(map);
-        map.put(key, 1);
-        assertThat(idList.value()).containsEntry(key, expected);
+        Map<String, Integer> map = Maps.newHashMap(KEY, expected);
+        MapIdentifier<Integer> idMap = Factory.forInteger.createMap(map);
+        map.put(KEY, 1);
+        assertThat(idMap.value()).containsEntry(KEY, expected);
     }
 
     @Test
@@ -83,12 +83,11 @@ class ImmutabilityTest {
 
     @Test
     void testFloatMapImmutability() {
-        String key = "b";
         double expected = 1.3;
-        Map<String, Double> map = Maps.newHashMap(key, expected);
-        MapIdentifier<Double> idList = Factory.forFloat.createMap(map);
-        map.put(key, expected + 1.2);
-        assertThat(idList.value()).containsEntry(key, expected);
+        Map<String, Double> map = Maps.newHashMap(KEY, expected);
+        MapIdentifier<Double> idMap = Factory.forFloat.createMap(map);
+        map.put(KEY, expected + 1.2);
+        assertThat(idMap.value()).containsEntry(KEY, expected);
     }
 
     @Test
@@ -102,12 +101,11 @@ class ImmutabilityTest {
 
     @Test
     void testLongMapImmutability() {
-        String key = "b";
         long expected = 1;
-        Map<String, Long> map = Maps.newHashMap(key, expected);
-        MapIdentifier<Long> idList = Factory.forLong.createMap(map);
-        map.put(key, expected - 1);
-        assertThat(idList.value()).containsEntry(key, expected);
+        Map<String, Long> map = Maps.newHashMap(KEY, expected);
+        MapIdentifier<Long> idMap = Factory.forLong.createMap(map);
+        map.put(KEY, expected - 1);
+        assertThat(idMap.value()).containsEntry(KEY, expected);
     }
 
     @Test
@@ -129,12 +127,11 @@ class ImmutabilityTest {
 
     @Test
     void testForBytesMapImmutability() {
-        String key = "a";
         byte[] bytes = { 0, 26, -39 };
-        Map<String, byte[]> map = Maps.newHashMap(key, bytes);
+        Map<String, byte[]> map = Maps.newHashMap(KEY, bytes);
         MapIdentifier<byte[]> idMap = Factory.forBytes.createMap(map);
         bytes[0] = 1;
-        assertThat(idMap.value().get(key)[0]).isEqualTo((byte) 0);
+        assertThat(idMap.value().get(KEY)[0]).isEqualTo((byte) 0);
     }
 
     @Test
@@ -149,8 +146,45 @@ class ImmutabilityTest {
     @Test
     void testForCompositeMapImmutability() {
         Identifier<Boolean> booleanId = Factory.forBoolean.create(true);
-        MapIdentifier<Identifier<?>> mapId = Factory.forComposite.createMap(Collections.singletonMap("k", booleanId));
+        MapIdentifier<Identifier<?>> mapId = Factory.forComposite.createMap(Maps.newHashMap(KEY, booleanId));
         Identifier<Integer> intId = Factory.forInteger.create(44);
-        assertThatThrownBy(() -> mapId.value().put("k", intId)).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> mapId.value().put(KEY, intId)).isInstanceOf(UnsupportedOperationException.class);
+    }
+
+
+    @Test
+    void testUuidListImmutability() {
+        UUID expected = UUID.fromString("7af7d312-b148-42b4-a20c-0f0e38ed5f0b");
+        List<UUID> values = Arrays.asList(expected, UUID.randomUUID(), UUID.randomUUID());
+        ListIdentifier<UUID> idList = Factory.forUuid.createList(values);
+        values.set(0, UUID.randomUUID());
+        assertThat(idList.value()).startsWith(expected);
+    }
+
+    @Test
+    void testUuidMapImmutability() {
+        UUID expected = UUID.fromString("ca059f89-8fbd-446a-bbaa-be1fdfc5ed42");
+        Map<String, UUID> map = Maps.newHashMap(KEY, expected);
+        MapIdentifier<UUID> idMap = Factory.forUuid.createMap(map);
+        map.put(KEY, UUID.randomUUID());
+        assertThat(idMap.value()).containsEntry(KEY, expected);
+    }
+
+    @Test
+    void testDatetimeListImmutability() {
+        Instant expected = Instant.ofEpochSecond(0);
+        List<Instant> values = Arrays.asList(expected, Instant.now());
+        ListIdentifier<Instant> idList = Factory.forDatetime.createList(values);
+        values.set(0, Instant.ofEpochSecond(1));
+        assertThat(idList.value()).startsWith(expected);
+    }
+
+    @Test
+    void testDatetimeMapImmutability() {
+        Instant expected = Instant.ofEpochSecond(0);
+        Map<String, Instant> map = Maps.newHashMap(KEY, expected);
+        MapIdentifier<Instant> idMap = Factory.forDatetime.createMap(map);
+        map.put(KEY, Instant.now());
+        assertThat(idMap.value()).containsEntry(KEY, expected);
     }
 }

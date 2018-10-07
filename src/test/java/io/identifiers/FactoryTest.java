@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -81,10 +82,22 @@ class FactoryTest {
     void testForUuidFactory() {
         UUID u1 = UUID.fromString("b796846a-c98c-11e8-a8d5-f2801f1b9fd1");
         UUID u2 = UUID.fromString("369c0ead-31e0-4ec6-b1e3-1e0da47af4ef");
+
         createAndAssertIdentifier(Factory.forUuid, IdentifierType.UUID, u1);
         createAndAssertListIdentifier(Factory.forUuid, IdentifierType.UUID_LIST, u1, u2);
         createAndAssertMapIdentifier(Factory.forUuid, IdentifierType.UUID_MAP, Collections.singletonMap(KEY, u2));
     }
+
+    @Test
+    void testForDatetimeFactory() {
+        Instant i1 = Instant.ofEpochMilli(-1000000);
+        Instant i2 = Instant.parse("2018-10-07T15:36:49.152Z");
+
+        createAndAssertIdentifier(Factory.forDatetime, IdentifierType.DATETIME, i1);
+        createAndAssertListIdentifier(Factory.forDatetime, IdentifierType.DATETIME_LIST, i1, i2);
+        createAndAssertMapIdentifier(Factory.forDatetime, IdentifierType.DATETIME_MAP, Collections.singletonMap(KEY, i2));
+    }
+
 
     private <T> void createAndAssertIdentifier(SingleIdentifierFactory<T> factory, IdentifierType expectedType, T expectedValue) {
         Identifier<T> actualIdentifier = factory.create(expectedValue);

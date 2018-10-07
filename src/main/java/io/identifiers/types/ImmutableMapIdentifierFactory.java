@@ -20,19 +20,19 @@ final class ImmutableMapIdentifierFactory<T> implements MapIdentifierFactory<T> 
     }
 
     @Override
-    public MapIdentifier<T> createMap(Map<String, T> valueMap) {
+    public final MapIdentifier<T> createMap(Map<String, T> valueMap) {
         SortedMap<String, T> copied = MapSupport.copyToSortedMap(valueMap);
         return instantiateMapIdentifier(copied);
     }
 
     @Override
-    public MapIdentifier<T> createMap(Iterator<Map.Entry<String, T>> entries) {
+    public final MapIdentifier<T> createMap(Iterator<Map.Entry<String, T>> entries) {
         SortedMap<String, T> copied = MapSupport.copyToSortedMap(entries);
         return instantiateMapIdentifier(copied);
     }
 
     @Override
-    public Collector<T, ?, MapIdentifier<T>> toMapIdentifier(Function<T, String> keyƒ) {
+    public final Collector<T, ?, MapIdentifier<T>> toMapIdentifier(Function<T, String> keyƒ) {
         return Collectors.collectingAndThen(
             Collectors.toMap(keyƒ, Function.<T>identity(), (e1, e2) -> e1, TreeMap::new),
             this::instantiateMapIdentifier);

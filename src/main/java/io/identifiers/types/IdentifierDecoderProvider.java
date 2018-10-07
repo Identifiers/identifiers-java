@@ -26,105 +26,64 @@ final class IdentifierDecoderProvider {
     private static final Map<Integer, IdentifierDecoder> decoderMap = new HashMap<>();
 
     static {
-        decoderMap.put(
-            IdentifierType.STRING.code(), composeDecoder(
-                ValueCodecs.stringCodec,
-                Factory.forString));
+        addItemDecoder(IdentifierType.STRING, ValueCodecs.stringCodec,Factory.forString);
+        addListDecoder(IdentifierType.STRING_LIST, ValueCodecs.stringListCodec, Factory.forString);
+        addMapDecoder(IdentifierType.STRING_MAP, ValueCodecs.stringMapCodec, Factory.forString);
 
-        decoderMap.put(
-            IdentifierType.STRING_LIST.code(), composeListDecoder(
-                ValueCodecs.stringListCodec,
-                Factory.forString));
+        addItemDecoder(IdentifierType.BOOLEAN, ValueCodecs.booleanCodec, Factory.forBoolean);
+        addListDecoder(IdentifierType.BOOLEAN_LIST, ValueCodecs.booleanListCodec, Factory.forBoolean);
+        addMapDecoder(IdentifierType.BOOLEAN_MAP, ValueCodecs.booleanMapCodec, Factory.forBoolean);
 
-        decoderMap.put(
-            IdentifierType.STRING_MAP.code(), composeMapDecoder(
-                ValueCodecs.stringMapCodec,
-                Factory.forString));
+        addItemDecoder(IdentifierType.INTEGER, ValueCodecs.integerCodec, Factory.forInteger);
+        addListDecoder(IdentifierType.INTEGER_LIST, ValueCodecs.integerListCodec, Factory.forInteger);
+        addMapDecoder(IdentifierType.INTEGER_MAP, ValueCodecs.integerMapCodec, Factory.forInteger);
 
-        decoderMap.put(
-            IdentifierType.BOOLEAN.code(), composeDecoder(
-                ValueCodecs.booleanCodec,
-                Factory.forBoolean));
+        addItemDecoder(IdentifierType.FLOAT, ValueCodecs.floatCodec, Factory.forFloat);
+        addListDecoder(IdentifierType.FLOAT_LIST, ValueCodecs.floatListCodec, Factory.forFloat);
+        addMapDecoder(IdentifierType.FLOAT_MAP, ValueCodecs.floatMapCodec, Factory.forFloat);
 
-        decoderMap.put(
-            IdentifierType.BOOLEAN_LIST.code(), composeListDecoder(
-                ValueCodecs.booleanListCodec,
-                Factory.forBoolean));
+        addItemDecoder(IdentifierType.LONG, ValueCodecs.longCodec, Factory.forLong);
+        addListDecoder(IdentifierType.LONG_LIST, ValueCodecs.longListCodec, Factory.forLong);
+        addMapDecoder(IdentifierType.LONG_MAP, ValueCodecs.longMapCodec, Factory.forLong);
 
-        decoderMap.put(
-            IdentifierType.BOOLEAN_MAP.code(), composeMapDecoder(
-                ValueCodecs.booleanMapCodec,
-                Factory.forBoolean));
+        addItemDecoder(IdentifierType.BYTES, ValueCodecs.bytesCodec, Factory.forBytes);
+        addListDecoder(IdentifierType.BYTES_LIST, ValueCodecs.bytesListCodec, Factory.forBytes);
+        addMapDecoder(IdentifierType.BYTES_MAP, ValueCodecs.bytesMapCodec, Factory.forBytes);
 
-        decoderMap.put(
-            IdentifierType.INTEGER.code(), composeDecoder(
-                ValueCodecs.integerCodec,
-                Factory.forInteger));
+        addListDecoder(IdentifierType.COMPOSITE_LIST, ValueCodecs.compositeListCodec, Factory.forComposite);
+        addMapDecoder(IdentifierType.COMPOSITE_MAP, ValueCodecs.compositeMapCodec, Factory.forComposite);
 
-        decoderMap.put(
-            IdentifierType.INTEGER_LIST.code(), composeListDecoder(
-                ValueCodecs.integerListCodec,
-                Factory.forInteger));
+        addItemDecoder(IdentifierType.UUID, ValueCodecs.uuidCodec, Factory.forUuid);
+        addListDecoder(IdentifierType.UUID_LIST, ValueCodecs.uuidListCodec, Factory.forUuid);
+        addMapDecoder(IdentifierType.UUID_MAP, ValueCodecs.uuidMapCodec, Factory.forUuid);
 
-        decoderMap.put(
-            IdentifierType.INTEGER_MAP.code(), composeMapDecoder(
-                ValueCodecs.integerMapCodec,
-                Factory.forInteger));
+        addItemDecoder(IdentifierType.DATETIME, ValueCodecs.datetimeCodec, Factory.forDatetime);
+        addListDecoder(IdentifierType.DATETIME_LIST, ValueCodecs.datetimeListCodec, Factory.forDatetime);
+        addMapDecoder(IdentifierType.DATETIME_MAP, ValueCodecs.datetimeMapCodec, Factory.forDatetime);
+    }
 
-        decoderMap.put(
-            IdentifierType.FLOAT.code(), composeDecoder(
-                ValueCodecs.floatCodec,
-                Factory.forFloat));
+    private static <T> void addItemDecoder(
+            IdentifierType type,
+            ValueCodec<T> codec,
+            SingleIdentifierFactory<T> factory) {
 
-        decoderMap.put(
-            IdentifierType.FLOAT_LIST.code(), composeListDecoder(
-                ValueCodecs.floatListCodec,
-                Factory.forFloat));
+        decoderMap.put(type.code(), composeDecoder(codec, factory));
+    }
 
-        decoderMap.put(
-            IdentifierType.FLOAT_MAP.code(), composeMapDecoder(
-                ValueCodecs.floatMapCodec,
-                Factory.forFloat));
+    private static <T> void addListDecoder(
+            IdentifierType type,
+            ValueCodec<List<T>> codec,
+            ListIdentifierFactory<T> factory) {
 
-        decoderMap.put(
-            IdentifierType.LONG.code(), composeDecoder(
-                ValueCodecs.longCodec,
-                Factory.forLong));
+        decoderMap.put(type.code(), composeListDecoder(codec, factory));
+    }
 
-        decoderMap.put(
-            IdentifierType.LONG_LIST.code(), composeListDecoder(
-                ValueCodecs.longListCodec,
-                Factory.forLong));
+    private static <T> void addMapDecoder(
+            IdentifierType type,
+            ValueCodec<Map<String, T>> codec,
+            MapIdentifierFactory<T> factory) {
 
-        decoderMap.put(
-            IdentifierType.LONG_MAP.code(), composeMapDecoder(
-                ValueCodecs.longMapCodec,
-                Factory.forLong));
-
-        decoderMap.put(
-            IdentifierType.BYTES.code(), composeDecoder(
-                ValueCodecs.bytesCodec,
-                Factory.forBytes));
-
-        decoderMap.put(
-            IdentifierType.BYTES_LIST.code(), composeListDecoder(
-                ValueCodecs.bytesListCodec,
-                Factory.forBytes));
-
-        decoderMap.put(
-            IdentifierType.BYTES_MAP.code(), composeMapDecoder(
-                ValueCodecs.bytesMapCodec,
-                Factory.forBytes));
-
-        decoderMap.put(
-            IdentifierType.COMPOSITE_LIST.code(), composeListDecoder(
-                ValueCodecs.compositeListCodec,
-                Factory.forComposite));
-
-        decoderMap.put(
-            IdentifierType.COMPOSITE_MAP.code(), composeMapDecoder(
-                ValueCodecs.compositeMapCodec,
-                Factory.forComposite));
+        decoderMap.put(type.code(), composeMapDecoder(codec, factory));
     }
 
     private static <T> IdentifierDecoder composeDecoder(

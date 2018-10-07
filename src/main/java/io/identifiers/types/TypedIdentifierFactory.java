@@ -31,42 +31,43 @@ final class TypedIdentifierFactory<T> implements IdentifierFactory<T> {
     }
 
     @Override
-    public Identifier<T> create(T value) {
+    public final Identifier<T> create(T value) {
         return singleFactory.create(value);
     }
 
     @Override
-    public ListIdentifier<T> createList(Collection<T> values) {
+    public final ListIdentifier<T> createList(Collection<T> values) {
         return listFactory.createList(values);
     }
 
     @Override
-    public ListIdentifier<T> createList(Iterator<T> values) {
+    public final ListIdentifier<T> createList(Iterator<T> values) {
         return listFactory.createList(values);
     }
 
     @Override
-    public ListIdentifier<T> createList(T... values) {
+    @SafeVarargs
+    public final ListIdentifier<T> createList(T... values) {
         return listFactory.createList(values);
     }
 
     @Override
-    public Collector<T, ?, ListIdentifier<T>> toListIdentifier() {
+    public final Collector<T, ?, ListIdentifier<T>> toListIdentifier() {
         return listFactory.toListIdentifier();
     }
 
     @Override
-    public MapIdentifier<T> createMap(Map<String, T> valueMap) {
+    public final MapIdentifier<T> createMap(Map<String, T> valueMap) {
         return mapFactory.createMap(valueMap);
     }
 
     @Override
-    public MapIdentifier<T> createMap(Iterator<Map.Entry<String, T>> entries) {
+    public final MapIdentifier<T> createMap(Iterator<Map.Entry<String, T>> entries) {
         return mapFactory.createMap(entries);
     }
 
     @Override
-    public Collector<T, ?, MapIdentifier<T>> toMapIdentifier(Function<T, String> keyƒ) {
+    public final Collector<T, ?, MapIdentifier<T>> toMapIdentifier(Function<T, String> keyƒ) {
         return mapFactory.toMapIdentifier(keyƒ);
     }
 }

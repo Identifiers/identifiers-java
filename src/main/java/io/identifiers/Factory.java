@@ -3,6 +3,7 @@ package io.identifiers;
 import static io.identifiers.types.IdentifierDecoders.decodeIdentifier;
 import static io.identifiers.types.IdentifierFactoryProvider.*;
 
+import java.time.Instant;
 import java.util.UUID;
 
 /**
@@ -53,6 +54,11 @@ public final class Factory {
      * The UUID identifier factory.
      */
      public static final IdentifierFactory<UUID> forUuid = typedFactory(IdentifierType.UUID);
+
+    /**
+     * The Datetime identifier factory.
+     */
+     public static final IdentifierFactory<Instant> forDatetime = typedFactory(IdentifierType.DATETIME);
 
 
     /**

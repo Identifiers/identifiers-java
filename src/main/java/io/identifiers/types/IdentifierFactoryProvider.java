@@ -21,40 +21,45 @@ public final class IdentifierFactoryProvider {
     private static final Map<IdentifierType, IdentifierFactory<?>> factoryMap = new EnumMap<>(IdentifierType.class);
 
     static {
-        factoryMap.put(IdentifierType.STRING, assembleTypedFactory(
+        addTypedFactory(IdentifierType.STRING,
             TypeTemplates.forString,
             ListTypeTemplates.forStringList,
-            MapTypeTemplates.forStringMap));
+            MapTypeTemplates.forStringMap);
 
-        factoryMap.put(IdentifierType.BOOLEAN, assembleTypedFactory(
+        addTypedFactory(IdentifierType.BOOLEAN,
             TypeTemplates.forBoolean,
             ListTypeTemplates.forBooleanList,
-            MapTypeTemplates.forBooleanMap));
+            MapTypeTemplates.forBooleanMap);
 
-        factoryMap.put(IdentifierType.INTEGER, assembleTypedFactory(
+        addTypedFactory(IdentifierType.INTEGER,
             TypeTemplates.forInteger,
             ListTypeTemplates.forIntegerList,
-            MapTypeTemplates.forIntegerMap));
+            MapTypeTemplates.forIntegerMap);
 
-        factoryMap.put(IdentifierType.FLOAT, assembleTypedFactory(
+        addTypedFactory(IdentifierType.FLOAT,
             TypeTemplates.forFloat,
             ListTypeTemplates.forFloatList,
-            MapTypeTemplates.forFloatMap));
+            MapTypeTemplates.forFloatMap);
 
-        factoryMap.put(IdentifierType.LONG, assembleTypedFactory(
+        addTypedFactory(IdentifierType.LONG,
             TypeTemplates.forLong,
             ListTypeTemplates.forLongList,
-            MapTypeTemplates.forLongMap));
+            MapTypeTemplates.forLongMap);
 
-        factoryMap.put(IdentifierType.BYTES, assembleTypedFactory(
+        addTypedFactory(IdentifierType.BYTES,
             TypeTemplates.forBytes,
             ListTypeTemplates.forBytesList,
-            MapTypeTemplates.forBytesMap));
+            MapTypeTemplates.forBytesMap);
 
-        factoryMap.put(IdentifierType.UUID, assembleTypedFactory(
+        addTypedFactory(IdentifierType.UUID,
             TypeTemplates.forUuid,
             ListTypeTemplates.forUuidList,
-            MapTypeTemplates.forUuidMap));
+            MapTypeTemplates.forUuidMap);
+
+        addTypedFactory(IdentifierType.DATETIME,
+            TypeTemplates.forDatetime,
+            ListTypeTemplates.forDatetimeList,
+            MapTypeTemplates.forDatetimeMap);
     }
 
     @SuppressWarnings("unchecked")
@@ -64,7 +69,17 @@ public final class IdentifierFactoryProvider {
         return factory;
     }
 
-    private static <T> IdentifierFactory<T> assembleTypedFactory(
+    @SuppressWarnings("unchecked")
+    public static CompositeIdentifierFactory compositeFactory() {
+        MapIdentifierFactory<Identifier<?>> mapFactory = new ImmutableMapIdentifierFactory(MapTypeTemplates.forCompositeMap);
+        ListIdentifierFactory<Identifier<?>> listFactory = new ImmutableListIdentifierFactory(ListTypeTemplates.forCompositeList);
+
+        return new CompositeIdentifierFactoryImpl(listFactory, mapFactory);
+    }
+
+
+    private static <T> void addTypedFactory(
+            IdentifierType type,
             TypeTemplate<T> singleTemplate,
             ListTypeTemplate<T> listTemplate,
             MapTypeTemplate<T> mapTemplate) {
@@ -72,15 +87,8 @@ public final class IdentifierFactoryProvider {
         SingleIdentifierFactory<T> singleFactory = new ImmutableIdentifierFactory<>(singleTemplate);
         ListIdentifierFactory<T> listFactory = new ImmutableListIdentifierFactory<>(listTemplate);
         MapIdentifierFactory<T> mapFactory = new ImmutableMapIdentifierFactory<>(mapTemplate);
+        IdentifierFactory<T> factory = new TypedIdentifierFactory<>(singleFactory, listFactory, mapFactory);
 
-        return new TypedIdentifierFactory<>(singleFactory, listFactory, mapFactory);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static CompositeIdentifierFactory compositeFactory() {
-        MapIdentifierFactory<Identifier<?>> mapFactory = new ImmutableMapIdentifierFactory(MapTypeTemplates.forCompositeMap);
-        ListIdentifierFactory<Identifier<?>> listFactory = new ImmutableListIdentifierFactory(ListTypeTemplates.forCompositeList);
-
-        return new CompositeIdentifierFactoryImpl(listFactory, mapFactory);
+        factoryMap.put(type, factory);
     }
 }

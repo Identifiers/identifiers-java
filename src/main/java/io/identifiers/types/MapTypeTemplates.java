@@ -1,5 +1,6 @@
 package io.identifiers.types;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import io.identifiers.Identifier;
@@ -42,4 +43,8 @@ final class MapTypeTemplates {
     static MapTypeTemplate<UUID> forUuidMap = new MapTypeTemplateWithEncoder<>(
         new IdentifierEncoderWithCodec<>(IdentifierType.UUID_MAP, ValueCodecs.uuidMapCodec),
         TypeTemplates.forUuid);
+
+    static MapTypeTemplate<Instant> forDatetimeMap = new MapTypeTemplateWithEncoder<>(
+        new IdentifierEncoderWithCodec<>(IdentifierType.DATETIME_MAP, ValueCodecs.datetimeMapCodec),
+        TypeTemplates.forDatetime);
 }

@@ -1,7 +1,7 @@
 package io.identifiers.types;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -14,130 +14,56 @@ import java.util.UUID;
 import io.identifiers.Assert;
 import io.identifiers.Identifier;
 import io.identifiers.IdentifierType;
+import io.identifiers.types.codecs.UUIDValueCodec;
+import io.identifiers.types.codecs.BooleanValueCodec;
+import io.identifiers.types.codecs.BytesValueCodec;
+import io.identifiers.types.codecs.DatetimeValueCodec;
+import io.identifiers.types.codecs.FloatValueCodec;
+import io.identifiers.types.codecs.IntegerValueCodec;
+import io.identifiers.types.codecs.LongValueCodec;
+import io.identifiers.types.codecs.StringValueCodec;
 
 import org.msgpack.core.MessageUnpacker;
 import org.msgpack.value.Value;
 import org.msgpack.value.ValueFactory;
 
-/**
- * A ValueCodec contains an identifier type's knowledge of MessagePack.
- */
 final class ValueCodecs {
 
     private ValueCodecs() {
         //static class
     }
 
-    static final ValueCodec<String> stringCodec = new ValueCodec<String>() {
-        @Override
-        public Value encode(String value) {
-            return ValueFactory.newString(value);
-        }
-
-        @Override
-        public String decode(MessageUnpacker unpacker) throws IOException {
-            return unpacker.unpackString();
-        }
-    };
+    static final ValueCodec<String> stringCodec = new StringValueCodec();
     static final ValueCodec<List<String>> stringListCodec = createListCodec(stringCodec);
     static final ValueCodec<Map<String, String>> stringMapCodec = createMapCodec(stringCodec);
 
-    static final ValueCodec<Boolean> booleanCodec = new ValueCodec<Boolean>() {
-        @Override
-        public Value encode(Boolean value) {
-            return ValueFactory.newBoolean(value);
-        }
-
-        @Override
-        public Boolean decode(MessageUnpacker unpacker) throws IOException {
-            return unpacker.unpackBoolean();
-        }
-    };
+    static final ValueCodec<Boolean> booleanCodec = new BooleanValueCodec();
     static final ValueCodec<List<Boolean>> booleanListCodec = createListCodec(booleanCodec);
     static final ValueCodec<Map<String, Boolean>> booleanMapCodec = createMapCodec(booleanCodec);
 
-    static final ValueCodec<Integer> integerCodec = new ValueCodec<Integer>() {
-        @Override
-        public Value encode(Integer value) {
-            return ValueFactory.newInteger(value);
-        }
-
-        @Override
-        public Integer decode(MessageUnpacker unpacker) throws IOException {
-            return unpacker.unpackInt();
-        }
-    };
+    static final ValueCodec<Integer> integerCodec = new IntegerValueCodec();
     static final ValueCodec<List<Integer>> integerListCodec = createListCodec(integerCodec);
     static final ValueCodec<Map<String, Integer>> integerMapCodec = createMapCodec(integerCodec);
 
-    static final ValueCodec<Double> floatCodec = new ValueCodec<Double>() {
-        @Override
-        public Value encode(Double value) {
-            return ValueFactory.newFloat(value);
-        }
-
-        @Override
-        public Double decode(MessageUnpacker unpacker) throws IOException {
-            return unpacker.unpackDouble();
-        }
-    };
+    static final ValueCodec<Double> floatCodec = new FloatValueCodec();
     static final ValueCodec<List<Double>> floatListCodec = createListCodec(floatCodec);
     static final ValueCodec<Map<String, Double>> floatMapCodec = createMapCodec(floatCodec);
 
-    static final ValueCodec<Long> longCodec = new ValueCodec<Long>() {
-        @Override
-        public Value encode(Long value) {
-            return ValueFactory.newInteger(value);
-        }
-
-        @Override
-        public Long decode(MessageUnpacker unpacker) throws IOException {
-            return unpacker.unpackLong();
-        }
-    };
+    static final ValueCodec<Long> longCodec = new LongValueCodec();
     static final ValueCodec<List<Long>> longListCodec = createListCodec(longCodec);
     static final ValueCodec<Map<String, Long>> longMapCodec = createMapCodec(longCodec);
 
-    static ValueCodec<byte[]> bytesCodec = new ValueCodec<byte[]>() {
-        @Override
-        public Value encode(byte[] bytes) {
-            return ValueFactory.newBinary(bytes, true);
-        }
-
-        @Override
-        public byte[] decode(MessageUnpacker unpacker) throws IOException {
-            int size = unpacker.unpackBinaryHeader();
-            byte[] bytes = new byte[size];
-            unpacker.readPayload(bytes);
-            return bytes;
-        }
-    };
+    static ValueCodec<byte[]> bytesCodec = new BytesValueCodec();
     static final ValueCodec<List<byte[]>> bytesListCodec = createListCodec(bytesCodec);
     static final ValueCodec<Map<String, byte[]>> bytesMapCodec = createMapCodec(bytesCodec);
 
-    static final ValueCodec<UUID> uuidCodec = new ValueCodec<UUID>() {
-        @Override
-        public Value encode(UUID value) {
-            ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
-            bb.putLong(value.getMostSignificantBits());
-            bb.putLong(value.getLeastSignificantBits());
-            return ValueFactory.newBinary(bb.array());
-        }
-
-        @Override
-        public UUID decode(MessageUnpacker unpacker) throws IOException {
-            int size = unpacker.unpackBinaryHeader();
-            Assert.state(size == 16, "uuid bytes must be 16 bytes in lengthm but found %s", size);
-            byte[] bytes = new byte[size];
-            unpacker.readPayload(bytes);
-            ByteBuffer bb = ByteBuffer.wrap(bytes);
-            long msb = bb.getLong();
-            long lsb = bb.getLong();
-            return new UUID(msb, lsb);
-        }
-    };
+    static final ValueCodec<UUID> uuidCodec = new UUIDValueCodec();
     static final ValueCodec<List<UUID>> uuidListCodec = createListCodec(uuidCodec);
     static final ValueCodec<Map<String, UUID>> uuidMapCodec = createMapCodec(uuidCodec);
+
+    static final ValueCodec<Instant> datetimeCodec = new DatetimeValueCodec();
+    static final ValueCodec<List<Instant>> datetimeListCodec = createListCodec(datetimeCodec);
+    static final ValueCodec<Map<String, Instant>> datetimeMapCodec = createMapCodec(datetimeCodec);
 
 
     private static final Map<IdentifierType, ValueCodec> codecs = new EnumMap<>(IdentifierType.class);
@@ -169,31 +95,13 @@ final class ValueCodecs {
         codecs.put(IdentifierType.UUID, uuidCodec);
         codecs.put(IdentifierType.UUID_LIST, uuidListCodec);
         codecs.put(IdentifierType.UUID_MAP, uuidMapCodec);
+
+        codecs.put(IdentifierType.DATETIME, datetimeCodec);
+        codecs.put(IdentifierType.DATETIME_LIST, datetimeListCodec);
+        codecs.put(IdentifierType.DATETIME_MAP, datetimeMapCodec);
     }
 
-    private static final ValueCodec<Identifier<?>> compositeCodec = new ValueCodec<Identifier<?>>() {
-        @Override
-        @SuppressWarnings("unchecked")
-        public Value encode(final Identifier<?> value) {
-            IdentifierType type = value.type();
-            ValueCodec codec = codecs.get(type);
-            Assert.argumentExists(codec, "No codec for type %s", type);
-            /*
-              This is a copy of logic in AbstractIdentifierEncoder but to share it would require some big holes pushed
-              through Identifier, so copying is safer.
-             */
-            return ValueFactory.newArray(new Value[] {
-                ValueFactory.newInteger(type.code()),
-                codec.encode(value.value())
-            }, true);
-        }
-
-        @Override
-        public Identifier<?> decode(final MessageUnpacker unpacker) throws IOException {
-            return IdentifierDecoders.unpackIdentifier(unpacker);
-        }
-    };
-
+    private static final ValueCodec<Identifier<?>> compositeCodec = new CompositeIdentifierValueCodec(codecs);
     static final ValueCodec<List<Identifier<?>>> compositeListCodec = createListCodec(compositeCodec);
     static final ValueCodec<Map<String, Identifier<?>>> compositeMapCodec = createMapCodec(compositeCodec);
 
@@ -247,5 +155,35 @@ final class ValueCodecs {
                 return valueMap;
             }
         };
+    }
+
+    private static class CompositeIdentifierValueCodec implements ValueCodec<Identifier<?>> {
+
+        private final Map<IdentifierType, ValueCodec> codecs;
+
+        CompositeIdentifierValueCodec(Map<IdentifierType, ValueCodec> codecs) {
+            this.codecs = codecs;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public Value encode(Identifier<?> value) {
+            IdentifierType type = value.type();
+            ValueCodec codec = codecs.get(type);
+            Assert.argumentExists(codec, "No codec for type %s", type);
+            /*
+              This is a copy of logic in AbstractIdentifierEncoder but to share it would require some big holes pushed
+              through Identifier, so copying is safer.
+             */
+            return ValueFactory.newArray(new Value[] {
+                ValueFactory.newInteger(type.code()),
+                codec.encode(value.value())
+            }, true);
+        }
+
+        @Override
+        public Identifier<?> decode(MessageUnpacker unpacker) throws IOException {
+            return IdentifierDecoders.unpackIdentifier(unpacker);
+        }
     }
 }

@@ -5,7 +5,10 @@ import java.io.IOException;
 import org.msgpack.core.MessageUnpacker;
 import org.msgpack.value.Value;
 
-interface ValueCodec<T> {
+/**
+ * A ValueCodec contains an identifier type's knowledge of MessagePack.
+ */
+public interface ValueCodec<T> {
 
     Value encode(T value);
 
