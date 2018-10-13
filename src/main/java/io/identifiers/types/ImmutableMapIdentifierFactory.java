@@ -13,9 +13,9 @@ import io.identifiers.MapIdentifierFactory;
 
 final class ImmutableMapIdentifierFactory<T> implements MapIdentifierFactory<T> {
 
-    private final MapTypeTemplate<T> mapTypeTemplate;
+    private final TypeTemplate<Map<String, T>> mapTypeTemplate;
 
-    ImmutableMapIdentifierFactory(final MapTypeTemplate<T> mapTypeTemplate) {
+    ImmutableMapIdentifierFactory(final TypeTemplate<Map<String, T>> mapTypeTemplate) {
         this.mapTypeTemplate = mapTypeTemplate;
     }
 
@@ -38,7 +38,7 @@ final class ImmutableMapIdentifierFactory<T> implements MapIdentifierFactory<T> 
             this::instantiateMapIdentifier);
     }
 
-    private MapIdentifier<T> instantiateMapIdentifier(SortedMap<String, T> valueMap) {
+    private MapIdentifier<T> instantiateMapIdentifier(Map<String, T> valueMap) {
         return new ImmutableMapIdentifier<>(mapTypeTemplate, valueMap);
     }
 

@@ -12,9 +12,9 @@ import io.identifiers.ListIdentifierFactory;
 
 final class ImmutableListIdentifierFactory<T> implements ListIdentifierFactory<T> {
 
-    private final ListTypeTemplate<T> listTypeTemplate;
+    private final TypeTemplate<List<T>> listTypeTemplate;
 
-    ImmutableListIdentifierFactory(ListTypeTemplate<T> listTypeTemplate) {
+    ImmutableListIdentifierFactory(TypeTemplate<List<T>> listTypeTemplate) {
         this.listTypeTemplate = listTypeTemplate;
     }
 

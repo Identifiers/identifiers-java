@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 import io.identifiers.IdentifierType;
 
 
-final class ListTypeTemplateWithEncoder<T> implements ListTypeTemplate<T> {
+final class ListTypeTemplateWithEncoder<T> implements TypeTemplate<List<T>> {
 
     private final IdentifierEncoder<List<T>> listEncoder;
     private final TypeTemplate<T> valueTypeTemplate;
@@ -20,11 +20,12 @@ final class ListTypeTemplateWithEncoder<T> implements ListTypeTemplate<T> {
     }
 
     @Override
-    public List<T> initialValues(List<T> values) {
+    public List<T> initialValue(List<T> values) {
+        // expects values list to be copied from source list by factory
         if (isValueMutable()) {
             values.replaceAll(valueTypeTemplate::value);
         }
-        return values;
+        return Collections.unmodifiableList(values);
     }
 
     @Override

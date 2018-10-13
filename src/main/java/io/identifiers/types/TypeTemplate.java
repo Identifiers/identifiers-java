@@ -2,12 +2,15 @@ package io.identifiers.types;
 
 import io.identifiers.IdentifierType;
 
-interface TypeTemplate<T> {
+public interface TypeTemplate<T> {
+
+    T initialValue(T value);
 
     IdentifierType type();
 
     T value(T value);
 
+    // todo consider removing this method and providing different type templates for immutable and mutable values
     boolean isValueMutable();
 
     String toDataString(T value);

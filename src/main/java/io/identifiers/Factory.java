@@ -1,7 +1,8 @@
 package io.identifiers;
 
-import static io.identifiers.types.IdentifierDecoders.decodeIdentifier;
-import static io.identifiers.types.IdentifierFactoryProvider.*;
+import static io.identifiers.types.IdentifierDecoderSupport.decodeIdentifier;
+import static io.identifiers.types.IdentifierFactoryProvider.compositeFactory;
+import static io.identifiers.types.IdentifierFactoryProvider.typedFactory;
 
 import java.time.Instant;
 import java.util.UUID;

@@ -19,7 +19,7 @@ import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class PrimitivesTest {
+class PrimitivesTCKTest {
     private static final String PRIMITIVES_DIR = "target/tck/primitives/";
 
     @Test
@@ -84,13 +84,13 @@ class PrimitivesTest {
         Object actual = id.value();
         JsonValue value = test.get("value");
 
-        if (IdentifierType.LIST_TYPE == (idType.code() & IdentifierType.LIST_TYPE)) {
+        if (IdentifierType.Modifiers.LIST_TYPE == (idType.code() & IdentifierType.Modifiers.LIST_TYPE)) {
             List<Object> expectedList = StreamSupport.stream(value.asArray().spliterator(), false)
                 .map(valueTransformer)
                 .collect(Collectors.toList());
 
             assertThat(expectedList).hasSameElementsAs((Iterable<Object>) actual);
-        } else if (IdentifierType.MAP_TYPE == (idType.code() & IdentifierType.MAP_TYPE)) {
+        } else if (IdentifierType.Modifiers.MAP_TYPE == (idType.code() & IdentifierType.Modifiers.MAP_TYPE)) {
             Map<String, Object> expectedMap = StreamSupport.stream(value.asObject().spliterator(), false)
                 .collect(Collectors.toMap(
                     JsonObject.Member::getName,

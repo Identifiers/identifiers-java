@@ -9,6 +9,11 @@ final class BytesTypeTemplate extends TypeTemplateWithEncoder<byte[]> {
     }
 
     @Override
+    public byte[] initialValue(byte[] value) {
+        return value(value);
+    }
+
+    @Override
     public boolean isValueMutable() {
         return true;
     }

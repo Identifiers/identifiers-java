@@ -1,6 +1,7 @@
 package io.identifiers.types;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.UUID;
 
 import io.identifiers.Identifier;
@@ -12,39 +13,29 @@ final class MapTypeTemplates {
         // static class
     }
 
-    static MapTypeTemplate<String> forStringMap = new MapTypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.STRING_MAP, ValueCodecs.stringMapCodec),
-        TypeTemplates.forString);
+    static TypeTemplate<Map<String, String>> forStringMap = createTemplate(IdentifierType.STRING_MAP, TypeTemplates.forString);
 
-    static MapTypeTemplate<Boolean> forBooleanMap = new MapTypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.BOOLEAN_MAP, ValueCodecs.booleanMapCodec),
-        TypeTemplates.forBoolean);
+    static TypeTemplate<Map<String, Boolean>> forBooleanMap = createTemplate(IdentifierType.BOOLEAN_MAP, TypeTemplates.forBoolean);
 
-    static MapTypeTemplate<Integer> forIntegerMap = new MapTypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.INTEGER_MAP, ValueCodecs.integerMapCodec),
-        TypeTemplates.forInteger);
+    static TypeTemplate<Map<String, Integer>> forIntegerMap = createTemplate(IdentifierType.INTEGER_MAP, TypeTemplates.forInteger);
 
-    static MapTypeTemplate<Double> forFloatMap = new MapTypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.FLOAT_MAP, ValueCodecs.floatMapCodec),
-        TypeTemplates.forFloat);
+    static TypeTemplate<Map<String, Double>> forFloatMap = createTemplate(IdentifierType.FLOAT_MAP, TypeTemplates.forFloat);
 
-    static MapTypeTemplate<Long> forLongMap = new MapTypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.LONG_MAP, ValueCodecs.longMapCodec),
-        TypeTemplates.forLong);
+    static TypeTemplate<Map<String, Long>> forLongMap = createTemplate(IdentifierType.LONG_MAP, TypeTemplates.forLong);
 
-    static MapTypeTemplate<byte[]> forBytesMap = new MapTypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.BYTES_MAP, ValueCodecs.bytesMapCodec),
-        TypeTemplates.forBytes);
+    static TypeTemplate<Map<String, byte[]>> forBytesMap = createTemplate(IdentifierType.BYTES_MAP, TypeTemplates.forBytes);
 
     @SuppressWarnings("unchecked")
-    static MapTypeTemplate<Identifier<?>> forCompositeMap = new CompositeMapTypeTemplate(
-        new IdentifierEncoderWithCodec(IdentifierType.COMPOSITE_MAP, ValueCodecs.compositeMapCodec));
+    static TypeTemplate<Map<String, Identifier<?>>> forCompositeMap = new ImmutableValueMapTypeTemplate(
+        new IdentifierEncoderWithCodec(IdentifierType.COMPOSITE_MAP, ValueCodecProvider.getCodec(IdentifierType.COMPOSITE_MAP)));
 
-    static MapTypeTemplate<UUID> forUuidMap = new MapTypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.UUID_MAP, ValueCodecs.uuidMapCodec),
-        TypeTemplates.forUuid);
+    static TypeTemplate<Map<String, UUID>> forUuidMap = createTemplate(IdentifierType.UUID_MAP, TypeTemplates.forUuid);
 
-    static MapTypeTemplate<Instant> forDatetimeMap = new MapTypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.DATETIME_MAP, ValueCodecs.datetimeMapCodec),
-        TypeTemplates.forDatetime);
+    static TypeTemplate<Map<String, Instant>> forDatetimeMap = createTemplate(IdentifierType.DATETIME_MAP, TypeTemplates.forDatetime);
+
+
+    private static <T> TypeTemplate<Map<String, T>> createTemplate(IdentifierType type, TypeTemplate<T> valueTemplate) {
+        IdentifierEncoder<Map<String, T>> encoder = new IdentifierEncoderWithCodec<>(type, ValueCodecProvider.getCodec(type));
+        return new MapTypeTemplateWithEncoder<>(encoder, valueTemplate);
+    }
 }

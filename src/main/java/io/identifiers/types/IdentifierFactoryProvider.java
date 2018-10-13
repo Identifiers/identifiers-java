@@ -1,6 +1,7 @@
 package io.identifiers.types;
 
-import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.identifiers.Assert;
@@ -18,7 +19,7 @@ public final class IdentifierFactoryProvider {
         // static class
     }
 
-    private static final Map<IdentifierType, IdentifierFactory<?>> factoryMap = new EnumMap<>(IdentifierType.class);
+    private static final Map<IdentifierType, IdentifierFactory<?>> factoryMap = new HashMap<>();
 
     static {
         addTypedFactory(IdentifierType.STRING,
@@ -81,8 +82,8 @@ public final class IdentifierFactoryProvider {
     private static <T> void addTypedFactory(
             IdentifierType type,
             TypeTemplate<T> singleTemplate,
-            ListTypeTemplate<T> listTemplate,
-            MapTypeTemplate<T> mapTemplate) {
+            TypeTemplate<List<T>> listTemplate,
+            TypeTemplate<Map<String, T>> mapTemplate) {
 
         SingleIdentifierFactory<T> singleFactory = new ImmutableIdentifierFactory<>(singleTemplate);
         ListIdentifierFactory<T> listFactory = new ImmutableListIdentifierFactory<>(listTemplate);

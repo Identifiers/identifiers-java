@@ -1,6 +1,7 @@
 package io.identifiers.types;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 import io.identifiers.Identifier;
@@ -12,39 +13,30 @@ final class ListTypeTemplates {
         // static class
     }
 
-    static ListTypeTemplate<String> forStringList = new ListTypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.STRING_LIST, ValueCodecs.stringListCodec),
-        TypeTemplates.forString);
+    // todo: collapse all the template creation into a single TypeTemplateProvider class
+    static TypeTemplate<List<String>> forStringList = createTemplate(IdentifierType.STRING_LIST, TypeTemplates.forString);
 
-    static ListTypeTemplate<Boolean> forBooleanList = new ListTypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.BOOLEAN_LIST, ValueCodecs.booleanListCodec),
-        TypeTemplates.forBoolean);
+    static TypeTemplate<List<Boolean>> forBooleanList = createTemplate(IdentifierType.BOOLEAN_LIST, TypeTemplates.forBoolean);
 
-    static ListTypeTemplate<Integer> forIntegerList = new ListTypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.INTEGER_LIST, ValueCodecs.integerListCodec),
-        TypeTemplates.forInteger);
+    static TypeTemplate<List<Integer>> forIntegerList = createTemplate(IdentifierType.INTEGER_LIST, TypeTemplates.forInteger);
 
-    static ListTypeTemplate<Double> forFloatList = new ListTypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.FLOAT_LIST, ValueCodecs.floatListCodec),
-        TypeTemplates.forFloat);
+    static TypeTemplate<List<Double>> forFloatList = createTemplate(IdentifierType.FLOAT_LIST, TypeTemplates.forFloat);
 
-    static ListTypeTemplate<Long> forLongList = new ListTypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.LONG_LIST, ValueCodecs.longListCodec),
-        TypeTemplates.forLong);
+    static TypeTemplate<List<Long>> forLongList = createTemplate(IdentifierType.LONG_LIST, TypeTemplates.forLong);
 
-    static ListTypeTemplate<byte[]> forBytesList = new ListTypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.BYTES_LIST, ValueCodecs.bytesListCodec),
-        TypeTemplates.forBytes);
+    static TypeTemplate<List<byte[]>> forBytesList = createTemplate(IdentifierType.BYTES_LIST, TypeTemplates.forBytes);
 
     @SuppressWarnings("unchecked")
-    static ListTypeTemplate<Identifier<?>> forCompositeList = new CompositeListTypeTemplate(
-        new IdentifierEncoderWithCodec(IdentifierType.COMPOSITE_LIST, ValueCodecs.compositeListCodec));
+    static TypeTemplate<List<Identifier<?>>> forCompositeList = new ImmutableValueListTypeTemplate(
+        new IdentifierEncoderWithCodec(IdentifierType.COMPOSITE_LIST, ValueCodecProvider.getCodec(IdentifierType.COMPOSITE_LIST)));
 
-    static ListTypeTemplate<UUID> forUuidList = new ListTypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.UUID_LIST, ValueCodecs.uuidListCodec),
-        TypeTemplates.forUuid);
+    static TypeTemplate<List<UUID>> forUuidList = createTemplate(IdentifierType.UUID_LIST, TypeTemplates.forUuid);
 
-    static ListTypeTemplate<Instant> forDatetimeList = new ListTypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.DATETIME_LIST, ValueCodecs.datetimeListCodec),
-        TypeTemplates.forDatetime);
+    static TypeTemplate<List<Instant>> forDatetimeList = createTemplate(IdentifierType.DATETIME_LIST, TypeTemplates.forDatetime);
+
+
+    private static <T> TypeTemplate<List<T>> createTemplate(IdentifierType type, TypeTemplate<T> valueTemplate) {
+        IdentifierEncoder<List<T>> encoder = new IdentifierEncoderWithCodec<>(type, ValueCodecProvider.getCodec(type));
+        return new ListTypeTemplateWithEncoder<>(encoder, valueTemplate);
+    }
 }

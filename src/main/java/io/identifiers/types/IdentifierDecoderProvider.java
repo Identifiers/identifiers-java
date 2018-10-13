@@ -1,5 +1,7 @@
 package io.identifiers.types;
 
+import static io.identifiers.IdentifierType.Modifiers.SEMANTIC_TYPE;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,77 +15,127 @@ import io.identifiers.SingleIdentifierFactory;
 
 final class IdentifierDecoderProvider {
 
+    /**
+     * Mask to AND against a type code to find the non-semantic type code.
+     */
+    private static final int SEMANTIC_TYPE_FLAG = SEMANTIC_TYPE - 1;
+
+    private static final Map<Integer, IdentifierDecoder> decoderMap = new HashMap<>();
+    private static final Map<Integer, IdentifierType> identifierTypeMap = new HashMap<>();
+
     IdentifierDecoderProvider() {
         // static class
     }
 
-    static IdentifierDecoder findDecoder(int typeCode) {
+    static IdentifierDecoder findDecoder(Integer typeCode) {
         IdentifierDecoder decoder = decoderMap.get(typeCode);
+        if (decoder == null) {
+            Assert.state(typeCode >= SEMANTIC_TYPE_FLAG, "No decoder for typeCode %s found.", typeCode);
+            decoder = createUnknownCodec(typeCode);
+        }
+
         Assert.argumentExists(decoder, "cannot unpack identifier type %s", typeCode);
         return decoder;
     }
 
-    private static final Map<Integer, IdentifierDecoder> decoderMap = new HashMap<>();
+    @SuppressWarnings("unchecked")
+    private static IdentifierDecoder createUnknownCodec(Integer typeCode) {
+
+        /*
+            aspects of an UnknownIdentifier codec:
+            1. Presents IdentifierType name: "unknown-basetype", code: unknownTypeCode
+            2. Decoded value is the same values as base type--list, map, composite, including mutability management
+            3. toString:  "ID<<unknown-base-type>>: base type value toString"
+            4. toData/HumanString: [unknownTypeCode, encoded base value]
+         */
+
+        Integer baseTypeCode = typeCode & SEMANTIC_TYPE_FLAG;
+        IdentifierType baseType = identifierTypeMap.get(baseTypeCode);
+        Assert.argumentExists(baseType, "Cannot find base type code %d", baseTypeCode);
+
+        // 1.
+        String unknownName = String.format("unknown-%s", baseType.toString());
+        IdentifierType unknownType = new IdentifierType(unknownName, typeCode);
+
+        // 2, 3, 4: baseCodec will know how to decode/encode the value. It does not know about the identifier type
+        ValueCodec<?> baseCodec = ValueCodecProvider.getCodec(baseType);
+        IdentifierEncoder<?> unknownIdentifierEncoder = new IdentifierEncoderWithCodec<>(unknownType, baseCodec);
+        TypeTemplate unknownTypeTemplate = new TypeTemplateWithEncoder(unknownIdentifierEncoder);
+
+        IdentifierDecoder unknownDecoder = unpacker -> {
+            Object decodedValue = baseCodec.decode(unpacker);
+            return new ImmutableIdentifier<>(unknownTypeTemplate, decodedValue);
+        };
+
+        decoderMap.put(typeCode, unknownDecoder);
+        return findDecoder(typeCode);
+    }
+
 
     static {
-        addItemDecoder(IdentifierType.STRING, ValueCodecs.stringCodec,Factory.forString);
-        addListDecoder(IdentifierType.STRING_LIST, ValueCodecs.stringListCodec, Factory.forString);
-        addMapDecoder(IdentifierType.STRING_MAP, ValueCodecs.stringMapCodec, Factory.forString);
+        addItemDecoder(IdentifierType.STRING, Factory.forString);
+        addListDecoder(IdentifierType.STRING_LIST, Factory.forString);
+        addMapDecoder(IdentifierType.STRING_MAP, Factory.forString);
 
-        addItemDecoder(IdentifierType.BOOLEAN, ValueCodecs.booleanCodec, Factory.forBoolean);
-        addListDecoder(IdentifierType.BOOLEAN_LIST, ValueCodecs.booleanListCodec, Factory.forBoolean);
-        addMapDecoder(IdentifierType.BOOLEAN_MAP, ValueCodecs.booleanMapCodec, Factory.forBoolean);
+        addItemDecoder(IdentifierType.BOOLEAN, Factory.forBoolean);
+        addListDecoder(IdentifierType.BOOLEAN_LIST, Factory.forBoolean);
+        addMapDecoder(IdentifierType.BOOLEAN_MAP, Factory.forBoolean);
 
-        addItemDecoder(IdentifierType.INTEGER, ValueCodecs.integerCodec, Factory.forInteger);
-        addListDecoder(IdentifierType.INTEGER_LIST, ValueCodecs.integerListCodec, Factory.forInteger);
-        addMapDecoder(IdentifierType.INTEGER_MAP, ValueCodecs.integerMapCodec, Factory.forInteger);
+        addItemDecoder(IdentifierType.INTEGER, Factory.forInteger);
+        addListDecoder(IdentifierType.INTEGER_LIST, Factory.forInteger);
+        addMapDecoder(IdentifierType.INTEGER_MAP, Factory.forInteger);
 
-        addItemDecoder(IdentifierType.FLOAT, ValueCodecs.floatCodec, Factory.forFloat);
-        addListDecoder(IdentifierType.FLOAT_LIST, ValueCodecs.floatListCodec, Factory.forFloat);
-        addMapDecoder(IdentifierType.FLOAT_MAP, ValueCodecs.floatMapCodec, Factory.forFloat);
+        addItemDecoder(IdentifierType.FLOAT, Factory.forFloat);
+        addListDecoder(IdentifierType.FLOAT_LIST, Factory.forFloat);
+        addMapDecoder(IdentifierType.FLOAT_MAP, Factory.forFloat);
 
-        addItemDecoder(IdentifierType.LONG, ValueCodecs.longCodec, Factory.forLong);
-        addListDecoder(IdentifierType.LONG_LIST, ValueCodecs.longListCodec, Factory.forLong);
-        addMapDecoder(IdentifierType.LONG_MAP, ValueCodecs.longMapCodec, Factory.forLong);
+        addItemDecoder(IdentifierType.LONG, Factory.forLong);
+        addListDecoder(IdentifierType.LONG_LIST, Factory.forLong);
+        addMapDecoder(IdentifierType.LONG_MAP, Factory.forLong);
 
-        addItemDecoder(IdentifierType.BYTES, ValueCodecs.bytesCodec, Factory.forBytes);
-        addListDecoder(IdentifierType.BYTES_LIST, ValueCodecs.bytesListCodec, Factory.forBytes);
-        addMapDecoder(IdentifierType.BYTES_MAP, ValueCodecs.bytesMapCodec, Factory.forBytes);
+        addItemDecoder(IdentifierType.BYTES, Factory.forBytes);
+        addListDecoder(IdentifierType.BYTES_LIST, Factory.forBytes);
+        addMapDecoder(IdentifierType.BYTES_MAP, Factory.forBytes);
 
-        addListDecoder(IdentifierType.COMPOSITE_LIST, ValueCodecs.compositeListCodec, Factory.forComposite);
-        addMapDecoder(IdentifierType.COMPOSITE_MAP, ValueCodecs.compositeMapCodec, Factory.forComposite);
+        addListDecoder(IdentifierType.COMPOSITE_LIST, Factory.forComposite);
+        addMapDecoder(IdentifierType.COMPOSITE_MAP, Factory.forComposite);
 
-        addItemDecoder(IdentifierType.UUID, ValueCodecs.uuidCodec, Factory.forUuid);
-        addListDecoder(IdentifierType.UUID_LIST, ValueCodecs.uuidListCodec, Factory.forUuid);
-        addMapDecoder(IdentifierType.UUID_MAP, ValueCodecs.uuidMapCodec, Factory.forUuid);
+        addItemDecoder(IdentifierType.UUID, Factory.forUuid);
+        addListDecoder(IdentifierType.UUID_LIST, Factory.forUuid);
+        addMapDecoder(IdentifierType.UUID_MAP, Factory.forUuid);
 
-        addItemDecoder(IdentifierType.DATETIME, ValueCodecs.datetimeCodec, Factory.forDatetime);
-        addListDecoder(IdentifierType.DATETIME_LIST, ValueCodecs.datetimeListCodec, Factory.forDatetime);
-        addMapDecoder(IdentifierType.DATETIME_MAP, ValueCodecs.datetimeMapCodec, Factory.forDatetime);
+        addItemDecoder(IdentifierType.DATETIME, Factory.forDatetime);
+        addListDecoder(IdentifierType.DATETIME_LIST, Factory.forDatetime);
+        addMapDecoder(IdentifierType.DATETIME_MAP, Factory.forDatetime);
     }
 
     private static <T> void addItemDecoder(
             IdentifierType type,
-            ValueCodec<T> codec,
             SingleIdentifierFactory<T> factory) {
 
-        decoderMap.put(type.code(), composeDecoder(codec, factory));
+        ValueCodec<T> codec = ValueCodecProvider.getCodec(type);
+        addDecoder(type, composeDecoder(codec, factory));
     }
 
     private static <T> void addListDecoder(
             IdentifierType type,
-            ValueCodec<List<T>> codec,
             ListIdentifierFactory<T> factory) {
 
-        decoderMap.put(type.code(), composeListDecoder(codec, factory));
+        ValueCodec<List<T>> codec = ValueCodecProvider.getCodec(type);
+        addDecoder(type, composeListDecoder(codec, factory));
     }
 
     private static <T> void addMapDecoder(
             IdentifierType type,
-            ValueCodec<Map<String, T>> codec,
             MapIdentifierFactory<T> factory) {
 
-        decoderMap.put(type.code(), composeMapDecoder(codec, factory));
+        ValueCodec<Map<String, T>> codec = ValueCodecProvider.getCodec(type);
+        addDecoder(type, composeMapDecoder(codec, factory));
+    }
+
+    private static void addDecoder(IdentifierType type, IdentifierDecoder decoder) {
+        identifierTypeMap.put(type.code(), type);
+        decoderMap.put(type.code(), decoder);
     }
 
     private static <T> IdentifierDecoder composeDecoder(

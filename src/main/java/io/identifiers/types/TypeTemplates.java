@@ -11,27 +11,28 @@ final class TypeTemplates {
         // static class
     }
 
-    static TypeTemplate<String> forString = new TypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.STRING, ValueCodecs.stringCodec));
+    static TypeTemplate<String> forString = createTypeTemplate(IdentifierType.STRING);
 
-    static TypeTemplate<Boolean> forBoolean = new TypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.BOOLEAN, ValueCodecs.booleanCodec));
+    static TypeTemplate<Boolean> forBoolean = createTypeTemplate(IdentifierType.BOOLEAN);
 
-    static TypeTemplate<Integer> forInteger = new TypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.INTEGER, ValueCodecs.integerCodec));
+    static TypeTemplate<Integer> forInteger = createTypeTemplate(IdentifierType.INTEGER);
 
-    static TypeTemplate<Double> forFloat = new TypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.FLOAT, ValueCodecs.floatCodec));
+    static TypeTemplate<Double> forFloat = createTypeTemplate(IdentifierType.FLOAT);
 
-    static TypeTemplate<Long> forLong = new TypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.LONG, ValueCodecs.longCodec));
+    static TypeTemplate<Long> forLong = createTypeTemplate(IdentifierType.LONG);
 
-    static TypeTemplate<byte[]> forBytes = new BytesTypeTemplate(
-        new IdentifierEncoderWithCodec<>(IdentifierType.BYTES, ValueCodecs.bytesCodec));
+    static TypeTemplate<byte[]> forBytes = new BytesTypeTemplate(createEncoder(IdentifierType.BYTES));
 
-    static TypeTemplate<UUID> forUuid = new TypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.UUID, ValueCodecs.uuidCodec));
+    static TypeTemplate<UUID> forUuid = createTypeTemplate(IdentifierType.UUID);
 
-    static TypeTemplate<Instant> forDatetime = new TypeTemplateWithEncoder<>(
-        new IdentifierEncoderWithCodec<>(IdentifierType.DATETIME, ValueCodecs.datetimeCodec));
+    static TypeTemplate<Instant> forDatetime = createTypeTemplate(IdentifierType.DATETIME);
+
+
+    private static <T> TypeTemplate<T> createTypeTemplate(IdentifierType type) {
+        return new TypeTemplateWithEncoder<>(createEncoder(type));
+    }
+
+    private static <T> IdentifierEncoder<T> createEncoder(IdentifierType type) {
+        return new IdentifierEncoderWithCodec<>(type, ValueCodecProvider.getCodec(type));
+    }
 }

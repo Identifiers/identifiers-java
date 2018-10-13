@@ -2,7 +2,7 @@ package io.identifiers.types;
 
 import io.identifiers.IdentifierType;
 
-interface IdentifierEncoder<T> {
+public interface IdentifierEncoder<T> {
 
     IdentifierType getType();
 

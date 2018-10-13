@@ -25,11 +25,11 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
 
-class CompositesTest {
+class CompositesTCKTest {
 
     private static final String COMPOSITES_DIR = "target/tck/composites/";
 
-    private Map<String, Function<? super JsonValue, ?>> valueTransformers = new HashMap<>();
+    private final Map<String, Function<? super JsonValue, ?>> valueTransformers = new HashMap<>();
     {
         valueTransformers.put("string", JsonValue::asString);
         valueTransformers.put("boolean", JsonValue::asBoolean);
@@ -43,21 +43,22 @@ class CompositesTest {
         // need to provide semantic types too
     }
 
-    private Function<? super JsonValue, ?> valueTransformer = jsonValue -> {
+    private final Function<? super JsonValue, ?> valueTransformer = jsonValue -> {
         JsonObject jsonObject = jsonValue.asObject();
         String type = jsonObject.get("type").asString();
         Function<? super JsonValue, ?> transformer = valueTransformers.get(type);
-        assertThat(transformer).isNotNull(); // String.format("no transformer for type %s", type)
+        assertThat(transformer).overridingErrorMessage("no transformer for type %s", type)
+            .isNotNull();
         return transformer.apply(jsonObject.get("value"));
     };
 
-    @Test @Disabled("need to implement semantic IDs first")
+    @Test @Disabled("TCK a bit broken with msgpack-lite treating number as either int or float (plus geos not implemented)")
     void testList() throws IOException {
         JsonArray tests = getTck("list");
         testTck(tests);
     }
 
-    void testTck(JsonArray tests) {
+    void testTck(Iterable<JsonValue> tests) {
         tests.forEach(test -> {
             JsonObject testObject = test.asObject();
             roundTripTest(testObject, true);
@@ -76,13 +77,13 @@ class CompositesTest {
         Object actual = id.value();
         JsonValue value = test.get("value");
 
-        if (IdentifierType.LIST_TYPE == (idType.code() & IdentifierType.LIST_TYPE)) {
+        if (IdentifierType.Modifiers.LIST_TYPE == (idType.code() & IdentifierType.Modifiers.LIST_TYPE)) {
             List<Object> expectedList = StreamSupport.stream(value.asArray().spliterator(), false)
                 .map(valueTransformer)
                 .collect(Collectors.toList());
 
             assertThat(expectedList).hasSameElementsAs((Iterable<Object>) actual);
-        } else if (IdentifierType.MAP_TYPE == (idType.code() & IdentifierType.MAP_TYPE)) {
+        } else if (IdentifierType.Modifiers.MAP_TYPE == (idType.code() & IdentifierType.Modifiers.MAP_TYPE)) {
             Map<String, Object> expectedMap = StreamSupport.stream(value.asObject().spliterator(), false)
                 .collect(Collectors.toMap(
                     JsonObject.Member::getName,

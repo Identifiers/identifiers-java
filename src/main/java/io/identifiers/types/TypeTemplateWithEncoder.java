@@ -11,6 +11,11 @@ class TypeTemplateWithEncoder<T> implements TypeTemplate<T> {
     }
 
     @Override
+    public T initialValue(T value) {
+        return value;
+    }
+
+    @Override
     public IdentifierType type() {
         return encoder.getType();
     }

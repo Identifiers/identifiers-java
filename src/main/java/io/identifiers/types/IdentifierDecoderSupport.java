@@ -11,9 +11,9 @@ import io.identifiers.base32.Base32Decoder;
 import org.msgpack.core.MessagePack;
 import org.msgpack.core.MessageUnpacker;
 
-public final class IdentifierDecoders {
+public final class IdentifierDecoderSupport {
 
-    private IdentifierDecoders() {
+    private IdentifierDecoderSupport() {
         // static class
     }
 
@@ -53,18 +53,18 @@ public final class IdentifierDecoders {
     }
 
     static <T> Identifier<T> unpackIdentifier(MessageUnpacker unpacker) throws IOException {
-        int typeCode = unpackTypeCode(unpacker);
+        Integer typeCode = unpackTypeCode(unpacker);
         return decodeIdentifier(typeCode, unpacker);
     }
 
-    private static int unpackTypeCode(MessageUnpacker unpacker) throws IOException {
+    private static Integer unpackTypeCode(MessageUnpacker unpacker) throws IOException {
         int arraySize = unpacker.unpackArrayHeader();
         Assert.state(arraySize == 2, "expected array size of 2, but found %d", arraySize);
         return unpacker.unpackInt();
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> Identifier<T> decodeIdentifier(int typeCode, MessageUnpacker unpacker) throws IOException {
+    private static <T> Identifier<T> decodeIdentifier(Integer typeCode, MessageUnpacker unpacker) throws IOException {
         return IdentifierDecoderProvider
             .findDecoder(typeCode)
             .decode(unpacker);
