@@ -53,6 +53,7 @@ class RoundTripTest {
 
     @Test
     void testFloat() {
+        roundTrip(Factory.forFloat.create(1.0));
         roundTrip(Factory.forFloat.create(0.0095));
         roundTrip(Factory.forFloat.create(-100.2));
         roundTrip(Stream.of(0.1, 22.9974, -55.17, 0.0)
