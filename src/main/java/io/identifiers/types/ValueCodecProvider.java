@@ -11,6 +11,7 @@ import java.util.TreeMap;
 
 import io.identifiers.Identifier;
 import io.identifiers.IdentifierType;
+import io.identifiers.types.codecs.GeoValueCodec;
 import io.identifiers.types.codecs.UUIDValueCodec;
 import io.identifiers.types.codecs.BooleanValueCodec;
 import io.identifiers.types.codecs.BytesValueCodec;
@@ -37,26 +38,50 @@ final class ValueCodecProvider {
         addCodec(IdentifierType.STRING, new StringValueCodec());
         addCodec(IdentifierType.STRING_LIST, createListCodec(IdentifierType.STRING));
         addCodec(IdentifierType.STRING_MAP, createMapCodec(IdentifierType.STRING));
+        addCodec(IdentifierType.STRING_LIST_LIST, createListCodec(IdentifierType.STRING_LIST));
+        addCodec(IdentifierType.STRING_MAP_LIST, createListCodec(IdentifierType.STRING_MAP));
+        addCodec(IdentifierType.STRING_LIST_MAP, createMapCodec(IdentifierType.STRING_LIST));
+        addCodec(IdentifierType.STRING_MAP_MAP, createMapCodec(IdentifierType.STRING_MAP));
 
         addCodec(IdentifierType.BOOLEAN, new BooleanValueCodec());
         addCodec(IdentifierType.BOOLEAN_LIST, createListCodec(IdentifierType.BOOLEAN));
         addCodec(IdentifierType.BOOLEAN_MAP, createMapCodec(IdentifierType.BOOLEAN));
+        addCodec(IdentifierType.BOOLEAN_LIST_LIST, createListCodec(IdentifierType.BOOLEAN_LIST));
+        addCodec(IdentifierType.BOOLEAN_MAP_LIST, createListCodec(IdentifierType.BOOLEAN_MAP));
+        addCodec(IdentifierType.BOOLEAN_LIST_MAP, createMapCodec(IdentifierType.BOOLEAN_LIST));
+        addCodec(IdentifierType.BOOLEAN_MAP_MAP, createMapCodec(IdentifierType.BOOLEAN_MAP));
 
         addCodec(IdentifierType.INTEGER, new IntegerValueCodec());
         addCodec(IdentifierType.INTEGER_LIST, createListCodec(IdentifierType.INTEGER));
         addCodec(IdentifierType.INTEGER_MAP, createMapCodec(IdentifierType.INTEGER));
+        addCodec(IdentifierType.INTEGER_LIST_LIST, createListCodec(IdentifierType.INTEGER_LIST));
+        addCodec(IdentifierType.INTEGER_MAP_LIST, createListCodec(IdentifierType.INTEGER_MAP));
+        addCodec(IdentifierType.INTEGER_LIST_MAP, createMapCodec(IdentifierType.INTEGER_LIST));
+        addCodec(IdentifierType.INTEGER_MAP_MAP, createMapCodec(IdentifierType.INTEGER_MAP));
 
         addCodec(IdentifierType.FLOAT, new FloatValueCodec());
         addCodec(IdentifierType.FLOAT_LIST, createListCodec(IdentifierType.FLOAT));
         addCodec(IdentifierType.FLOAT_MAP, createMapCodec(IdentifierType.FLOAT));
+        addCodec(IdentifierType.FLOAT_LIST_LIST, createListCodec(IdentifierType.FLOAT_LIST));
+        addCodec(IdentifierType.FLOAT_MAP_LIST, createListCodec(IdentifierType.FLOAT_MAP));
+        addCodec(IdentifierType.FLOAT_LIST_MAP, createMapCodec(IdentifierType.FLOAT_LIST));
+        addCodec(IdentifierType.FLOAT_MAP_MAP, createMapCodec(IdentifierType.FLOAT_MAP));
 
         addCodec(IdentifierType.LONG, new LongValueCodec());
         addCodec(IdentifierType.LONG_LIST, createListCodec(IdentifierType.LONG));
         addCodec(IdentifierType.LONG_MAP, createMapCodec(IdentifierType.LONG));
+        addCodec(IdentifierType.LONG_LIST_LIST, createListCodec(IdentifierType.LONG_LIST));
+        addCodec(IdentifierType.LONG_MAP_LIST, createListCodec(IdentifierType.LONG_MAP));
+        addCodec(IdentifierType.LONG_LIST_MAP, createMapCodec(IdentifierType.LONG_LIST));
+        addCodec(IdentifierType.LONG_MAP_MAP, createMapCodec(IdentifierType.LONG_MAP));
 
         addCodec(IdentifierType.BYTES, new BytesValueCodec());
         addCodec(IdentifierType.BYTES_LIST, createListCodec(IdentifierType.BYTES));
         addCodec(IdentifierType.BYTES_MAP, createMapCodec(IdentifierType.BYTES));
+        addCodec(IdentifierType.BYTES_LIST_LIST, createListCodec(IdentifierType.BYTES_LIST));
+        addCodec(IdentifierType.BYTES_MAP_LIST, createListCodec(IdentifierType.BYTES_MAP));
+        addCodec(IdentifierType.BYTES_LIST_MAP, createMapCodec(IdentifierType.BYTES_LIST));
+        addCodec(IdentifierType.BYTES_MAP_MAP, createMapCodec(IdentifierType.BYTES_MAP));
 
         ValueCodec<Identifier<?>> compositeCodec = new CompositeIdentifierValueCodec();
         addCodec(IdentifierType.COMPOSITE_LIST, createListCodec(compositeCodec));
@@ -69,6 +94,10 @@ final class ValueCodecProvider {
         addCodec(IdentifierType.DATETIME, new DatetimeValueCodec());
         addCodec(IdentifierType.DATETIME_LIST, createListCodec(IdentifierType.DATETIME));
         addCodec(IdentifierType.DATETIME_MAP, createMapCodec(IdentifierType.DATETIME));
+
+        addCodec(IdentifierType.GEO, new GeoValueCodec());
+        addCodec(IdentifierType.GEO_LIST, createListCodec(IdentifierType.GEO));
+        addCodec(IdentifierType.GEO_MAP, createMapCodec(IdentifierType.GEO));
     }
 
     static <T> ValueCodec<T> getCodec(IdentifierType type) {

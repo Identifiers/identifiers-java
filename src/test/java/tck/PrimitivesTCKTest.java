@@ -49,16 +49,28 @@ class PrimitivesTCKTest {
     @Test
     void testLong() throws IOException {
         JsonArray tests = getTck("long");
-        Function<JsonValue, Object> valueTransformer = jv -> {
+        Function<JsonValue, Object> valueTransformer = (jv) -> {
             String str = jv.asString();
             return Long.parseLong(str);
         };
         testTck(tests, valueTransformer);
     }
 
+    @Test
+    void testBytes() throws IOException {
+        JsonArray tests = getTck("bytes");
+        Function<JsonValue, Object> valueTransformer = (jv) -> jv.asArray().values().stream()
+                .map(JsonValue::asInt)
+                .map(b -> (byte) (b & 0xff))
+                .toArray(Byte[]::new);
+        testTck(tests, valueTransformer);
+    }
+
     private JsonArray getTck(String testName) throws IOException {
         JsonArray tests;
-        try (Reader reader = new FileReader(String.format("%s%s.json", PRIMITIVES_DIR, testName))) {
+        String filename = String.format("%s%s.json", PRIMITIVES_DIR, testName);
+        System.out.printf("loading TCK %s%n", filename);
+        try (Reader reader = new FileReader(filename)) {
             JsonValue tck = Json.parse(reader);
             tests = tck.asArray();
         }
@@ -85,18 +97,16 @@ class PrimitivesTCKTest {
         JsonValue value = test.get("value");
 
         if (IdentifierType.Modifiers.LIST_TYPE == (idType.code() & IdentifierType.Modifiers.LIST_TYPE)) {
-            List<Object> expectedList = StreamSupport.stream(value.asArray().spliterator(), false)
+            List<Object> expectedList = value.asArray().values().stream()
                 .map(valueTransformer)
                 .collect(Collectors.toList());
-
-            assertThat(expectedList).hasSameElementsAs((Iterable<Object>) actual);
+            assertThat((List<Object>) actual).containsExactlyElementsOf(expectedList);
         } else if (IdentifierType.Modifiers.MAP_TYPE == (idType.code() & IdentifierType.Modifiers.MAP_TYPE)) {
             Map<String, Object> expectedMap = StreamSupport.stream(value.asObject().spliterator(), false)
                 .collect(Collectors.toMap(
                     JsonObject.Member::getName,
                     t -> valueTransformer.apply(t.getValue())));
-
-            assertThat(actual).isEqualTo(expectedMap);
+            assertThat((Map<String, Object>) actual).containsAllEntriesOf(expectedMap);
         }
         else {
             Object expected = valueTransformer.apply(value);

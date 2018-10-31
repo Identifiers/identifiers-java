@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import io.identifiers.semantic.Geo;
+
 class FactoryTest {
 
     private static final String KEY = "aKey";
@@ -96,6 +98,16 @@ class FactoryTest {
         createAndAssertIdentifier(Factory.forDatetime, IdentifierType.DATETIME, i1);
         createAndAssertListIdentifier(Factory.forDatetime, IdentifierType.DATETIME_LIST, i1, i2);
         createAndAssertMapIdentifier(Factory.forDatetime, IdentifierType.DATETIME_MAP, Collections.singletonMap(KEY, i2));
+    }
+
+    @Test
+    void testForGeoFactory() {
+        Geo g1 = new Geo(-10.0068585, 2.6567749332);
+        Geo g2 = new Geo(-90, 180);
+
+        createAndAssertIdentifier(Factory.forGeo, IdentifierType.GEO, g1);
+        createAndAssertListIdentifier(Factory.forGeo, IdentifierType.GEO_LIST, g1, g2);
+        createAndAssertMapIdentifier(Factory.forGeo, IdentifierType.GEO_MAP, Collections.singletonMap(KEY, g2));
     }
 
 

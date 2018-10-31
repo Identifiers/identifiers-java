@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 import io.identifiers.IdentifierType;
+import io.identifiers.semantic.Geo;
 
 final class TypeTemplates {
 
@@ -26,6 +27,8 @@ final class TypeTemplates {
     static TypeTemplate<UUID> forUuid = createTypeTemplate(IdentifierType.UUID);
 
     static TypeTemplate<Instant> forDatetime = createTypeTemplate(IdentifierType.DATETIME);
+
+    static TypeTemplate<Geo> forGeo = createTypeTemplate(IdentifierType.GEO);
 
 
     private static <T> TypeTemplate<T> createTypeTemplate(IdentifierType type) {

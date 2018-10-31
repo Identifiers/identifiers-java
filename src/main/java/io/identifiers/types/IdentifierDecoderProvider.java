@@ -18,7 +18,7 @@ final class IdentifierDecoderProvider {
     /**
      * Mask to AND against a type code to find the non-semantic type code.
      */
-    private static final int SEMANTIC_TYPE_FLAG = SEMANTIC_TYPE - 1;
+    private static final int SEMANTIC_TYPE_MASK = SEMANTIC_TYPE - 1;
 
     private static final Map<Integer, IdentifierDecoder> decoderMap = new HashMap<>();
     private static final Map<Integer, IdentifierType> identifierTypeMap = new HashMap<>();
@@ -30,7 +30,7 @@ final class IdentifierDecoderProvider {
     static IdentifierDecoder findDecoder(Integer typeCode) {
         IdentifierDecoder decoder = decoderMap.get(typeCode);
         if (decoder == null) {
-            Assert.state(typeCode >= SEMANTIC_TYPE_FLAG, "No decoder for typeCode %s found.", typeCode);
+            Assert.state(typeCode >= SEMANTIC_TYPE, "No decoder for typeCode %s found.", typeCode);
             decoder = createUnknownCodec(typeCode);
         }
 
@@ -40,7 +40,6 @@ final class IdentifierDecoderProvider {
 
     @SuppressWarnings("unchecked")
     private static IdentifierDecoder createUnknownCodec(Integer typeCode) {
-
         /*
             aspects of an UnknownIdentifier codec:
             1. Presents IdentifierType name: "unknown-basetype", code: unknownTypeCode
@@ -49,7 +48,7 @@ final class IdentifierDecoderProvider {
             4. toData/HumanString: [unknownTypeCode, encoded base value]
          */
 
-        Integer baseTypeCode = typeCode & SEMANTIC_TYPE_FLAG;
+        Integer baseTypeCode = typeCode & SEMANTIC_TYPE_MASK;
         IdentifierType baseType = identifierTypeMap.get(baseTypeCode);
         Assert.argumentExists(baseType, "Cannot find base type code %d", baseTypeCode);
 
@@ -76,26 +75,50 @@ final class IdentifierDecoderProvider {
         addItemDecoder(IdentifierType.STRING, Factory.forString);
         addListDecoder(IdentifierType.STRING_LIST, Factory.forString);
         addMapDecoder(IdentifierType.STRING_MAP, Factory.forString);
+        addListDecoder(IdentifierType.STRING_LIST_LIST, Factory.forString);
+        addListDecoder(IdentifierType.STRING_MAP_LIST, Factory.forString);
+        addMapDecoder(IdentifierType.STRING_LIST_MAP, Factory.forString);
+        addMapDecoder(IdentifierType.STRING_MAP_MAP, Factory.forString);
 
         addItemDecoder(IdentifierType.BOOLEAN, Factory.forBoolean);
         addListDecoder(IdentifierType.BOOLEAN_LIST, Factory.forBoolean);
         addMapDecoder(IdentifierType.BOOLEAN_MAP, Factory.forBoolean);
+        addListDecoder(IdentifierType.BOOLEAN_LIST_LIST, Factory.forBoolean);
+        addListDecoder(IdentifierType.BOOLEAN_MAP_LIST, Factory.forBoolean);
+        addMapDecoder(IdentifierType.BOOLEAN_LIST_MAP, Factory.forBoolean);
+        addMapDecoder(IdentifierType.BOOLEAN_MAP_MAP, Factory.forBoolean);
 
         addItemDecoder(IdentifierType.INTEGER, Factory.forInteger);
         addListDecoder(IdentifierType.INTEGER_LIST, Factory.forInteger);
         addMapDecoder(IdentifierType.INTEGER_MAP, Factory.forInteger);
+        addListDecoder(IdentifierType.INTEGER_LIST_LIST, Factory.forInteger);
+        addListDecoder(IdentifierType.INTEGER_MAP_LIST, Factory.forInteger);
+        addMapDecoder(IdentifierType.INTEGER_LIST_MAP, Factory.forInteger);
+        addMapDecoder(IdentifierType.INTEGER_MAP_MAP, Factory.forInteger);
 
         addItemDecoder(IdentifierType.FLOAT, Factory.forFloat);
         addListDecoder(IdentifierType.FLOAT_LIST, Factory.forFloat);
         addMapDecoder(IdentifierType.FLOAT_MAP, Factory.forFloat);
+        addListDecoder(IdentifierType.FLOAT_LIST_LIST, Factory.forFloat);
+        addListDecoder(IdentifierType.FLOAT_MAP_LIST, Factory.forFloat);
+        addMapDecoder(IdentifierType.FLOAT_LIST_MAP, Factory.forFloat);
+        addMapDecoder(IdentifierType.FLOAT_MAP_MAP, Factory.forFloat);
 
         addItemDecoder(IdentifierType.LONG, Factory.forLong);
         addListDecoder(IdentifierType.LONG_LIST, Factory.forLong);
         addMapDecoder(IdentifierType.LONG_MAP, Factory.forLong);
+        addListDecoder(IdentifierType.LONG_LIST_LIST, Factory.forLong);
+        addListDecoder(IdentifierType.LONG_MAP_LIST, Factory.forLong);
+        addMapDecoder(IdentifierType.LONG_LIST_MAP, Factory.forLong);
+        addMapDecoder(IdentifierType.LONG_MAP_MAP, Factory.forLong);
 
         addItemDecoder(IdentifierType.BYTES, Factory.forBytes);
         addListDecoder(IdentifierType.BYTES_LIST, Factory.forBytes);
         addMapDecoder(IdentifierType.BYTES_MAP, Factory.forBytes);
+        addListDecoder(IdentifierType.BYTES_LIST_LIST, Factory.forBytes);
+        addListDecoder(IdentifierType.BYTES_MAP_LIST, Factory.forBytes);
+        addMapDecoder(IdentifierType.BYTES_LIST_MAP, Factory.forBytes);
+        addMapDecoder(IdentifierType.BYTES_MAP_MAP, Factory.forBytes);
 
         addListDecoder(IdentifierType.COMPOSITE_LIST, Factory.forComposite);
         addMapDecoder(IdentifierType.COMPOSITE_MAP, Factory.forComposite);
@@ -107,6 +130,10 @@ final class IdentifierDecoderProvider {
         addItemDecoder(IdentifierType.DATETIME, Factory.forDatetime);
         addListDecoder(IdentifierType.DATETIME_LIST, Factory.forDatetime);
         addMapDecoder(IdentifierType.DATETIME_MAP, Factory.forDatetime);
+
+        addItemDecoder(IdentifierType.GEO, Factory.forGeo);
+        addListDecoder(IdentifierType.GEO_LIST, Factory.forGeo);
+        addMapDecoder(IdentifierType.GEO_MAP, Factory.forGeo);
     }
 
     private static <T> void addItemDecoder(

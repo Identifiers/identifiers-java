@@ -66,10 +66,36 @@ public class IdentifierType {
     public static final IdentifierType LONG_MAP = mapType(LONG);
     public static final IdentifierType BYTES_MAP = mapType(BYTES);
 
-    public static final IdentifierType COMPOSITE_LIST = new IdentifierType("composite-list",
-        Modifiers.calculateListTypeCode(Modifiers.COMPOSITE_TYPE));
-    public static final IdentifierType COMPOSITE_MAP = new IdentifierType("composite-map",
-        Modifiers.calculateMapTypeCode(Modifiers.COMPOSITE_TYPE));
+    public static final IdentifierType STRING_LIST_LIST = listType(STRING_LIST);
+    public static final IdentifierType BOOLEAN_LIST_LIST = listType(BOOLEAN_LIST);
+    public static final IdentifierType INTEGER_LIST_LIST = listType(INTEGER_LIST);
+    public static final IdentifierType FLOAT_LIST_LIST = listType(FLOAT_LIST);
+    public static final IdentifierType LONG_LIST_LIST = listType(LONG_LIST);
+    public static final IdentifierType BYTES_LIST_LIST = listType(BYTES_LIST);
+
+    public static final IdentifierType STRING_LIST_MAP = mapType(STRING_LIST);
+    public static final IdentifierType BOOLEAN_LIST_MAP = mapType(BOOLEAN_LIST);
+    public static final IdentifierType INTEGER_LIST_MAP = mapType(INTEGER_LIST);
+    public static final IdentifierType FLOAT_LIST_MAP = mapType(FLOAT_LIST);
+    public static final IdentifierType LONG_LIST_MAP = mapType(LONG_LIST);
+    public static final IdentifierType BYTES_LIST_MAP = mapType(BYTES_LIST);
+
+    public static final IdentifierType STRING_MAP_LIST = listType(STRING_MAP);
+    public static final IdentifierType BOOLEAN_MAP_LIST = listType(BOOLEAN_MAP);
+    public static final IdentifierType INTEGER_MAP_LIST = listType(INTEGER_MAP);
+    public static final IdentifierType FLOAT_MAP_LIST = listType(FLOAT_MAP);
+    public static final IdentifierType LONG_MAP_LIST = listType(LONG_MAP);
+    public static final IdentifierType BYTES_MAP_LIST = listType(BYTES_MAP);
+
+    public static final IdentifierType STRING_MAP_MAP = mapType(STRING_MAP);
+    public static final IdentifierType BOOLEAN_MAP_MAP = mapType(BOOLEAN_MAP);
+    public static final IdentifierType INTEGER_MAP_MAP = mapType(INTEGER_MAP);
+    public static final IdentifierType FLOAT_MAP_MAP = mapType(FLOAT_MAP);
+    public static final IdentifierType LONG_MAP_MAP = mapType(LONG_MAP);
+    public static final IdentifierType BYTES_MAP_MAP = mapType(BYTES_MAP);
+
+    public static final IdentifierType COMPOSITE_LIST = new IdentifierType("composite-list", 0x38);
+    public static final IdentifierType COMPOSITE_MAP = new IdentifierType("composite-map", 0x58);
 
     public static final IdentifierType UUID = new IdentifierType("uuid", Modifiers.semanticTypeCode(BYTES, 0));
     public static final IdentifierType UUID_LIST = listType(UUID);
@@ -98,7 +124,8 @@ public class IdentifierType {
         public static final int MAP_TYPE = 0x10;
         public static final int SEMANTIC_TYPE = 0x80;
 
-        private static final int COMPOSITE_TYPE = 0x40;
+        private static final int LIST_OF = 0x20;
+        private static final int MAP_OF = 0x40;
         private static final int SEMANTIC_SLOT_SHIFT = 0x8;
 
         private Modifiers() {
@@ -117,12 +144,24 @@ public class IdentifierType {
             return baseType.code | SEMANTIC_TYPE | (slot << SEMANTIC_SLOT_SHIFT);
         }
 
-        private static int calculateListTypeCode(final int typeCode) {
-            return typeCode | LIST_TYPE;
+        private static int calculateListTypeCode(int typeCode) {
+            Assert.state((typeCode & LIST_OF) == 0,
+                "Cannot create a List of List of Something. typeCode: %d", typeCode);
+            Assert.state((typeCode & MAP_OF) == 0,
+                "Cannot create a List of Map of of Something. typeCode: %d", typeCode);
+            return typeCode | (isStructural(typeCode) ? LIST_OF : LIST_TYPE);
         }
 
-        private static int calculateMapTypeCode(final int typeCode) {
-            return typeCode | MAP_TYPE;
+        private static int calculateMapTypeCode(int typeCode) {
+            Assert.state((typeCode & LIST_OF) == 0,
+                    "Cannot create a Map of List of Something. typeCode: %d", typeCode);
+            Assert.state((typeCode & MAP_OF) == 0,
+                    "Cannot create a Map of Map of of Something. typeCode: %d", typeCode);
+            return typeCode | (isStructural(typeCode) ? MAP_OF : MAP_TYPE);
+        }
+
+        private static boolean isStructural(int typeCode) {
+            return (typeCode & LIST_TYPE) > 0 || (typeCode & MAP_TYPE) > 0;
         }
     }
 }
