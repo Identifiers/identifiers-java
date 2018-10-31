@@ -11,6 +11,7 @@ import java.util.TreeMap;
 
 import io.identifiers.Identifier;
 import io.identifiers.IdentifierType;
+import io.identifiers.types.codecs.GeoValueCodec;
 import io.identifiers.types.codecs.UUIDValueCodec;
 import io.identifiers.types.codecs.BooleanValueCodec;
 import io.identifiers.types.codecs.BytesValueCodec;
@@ -93,6 +94,10 @@ final class ValueCodecProvider {
         addCodec(IdentifierType.DATETIME, new DatetimeValueCodec());
         addCodec(IdentifierType.DATETIME_LIST, createListCodec(IdentifierType.DATETIME));
         addCodec(IdentifierType.DATETIME_MAP, createMapCodec(IdentifierType.DATETIME));
+
+        addCodec(IdentifierType.GEO, new GeoValueCodec());
+        addCodec(IdentifierType.GEO_LIST, createListCodec(IdentifierType.GEO));
+        addCodec(IdentifierType.GEO_MAP, createMapCodec(IdentifierType.GEO));
     }
 
     static <T> ValueCodec<T> getCodec(IdentifierType type) {

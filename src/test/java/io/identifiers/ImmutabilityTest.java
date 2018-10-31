@@ -11,6 +11,8 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import io.identifiers.semantic.Geo;
+
 import org.assertj.core.util.Maps;
 
 class ImmutabilityTest {
@@ -185,6 +187,24 @@ class ImmutabilityTest {
         Map<String, Instant> map = Maps.newHashMap(KEY, expected);
         MapIdentifier<Instant> idMap = Factory.forDatetime.createMap(map);
         map.put(KEY, Instant.now());
+        assertThat(idMap.value()).containsEntry(KEY, expected);
+    }
+
+    @Test
+    void testGeoListImmutability() {
+        Geo expected = new Geo(0, 0);
+        List<Geo> values = Arrays.asList(expected, new Geo(-10, 10));
+        ListIdentifier<Geo> idList = Factory.forGeo.createList(values);
+        values.set(0, new Geo(-1, -1));
+        assertThat(idList.value()).startsWith(expected);
+    }
+
+    @Test
+    void testGeoMapImmutability() {
+        Geo expected = new Geo(0, 0);
+        Map<String, Geo> map = Maps.newHashMap(KEY, expected);
+        MapIdentifier<Geo> idMap = Factory.forGeo.createMap(map);
+        map.put(KEY, new Geo(-1, -12));
         assertThat(idMap.value()).containsEntry(KEY, expected);
     }
 }

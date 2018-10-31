@@ -13,6 +13,8 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 
+import io.identifiers.semantic.Geo;
+
 class RoundTripTest {
 
     private static final String KEY = "aKey";
@@ -117,5 +119,14 @@ class RoundTripTest {
             Instant.ofEpochSecond(1000),
             Instant.ofEpochSecond(2000))));
         roundTrip(Factory.forDatetime.createMap(Collections.singletonMap(KEY, Instant.ofEpochSecond(786748494455L))));
+    }
+
+    @Test
+    void testGeo() {
+        roundTrip(Factory.forGeo.create(new Geo(0, 0)));
+        roundTrip(Factory.forGeo.createList(Arrays.asList(
+            new Geo(1, 1),
+            new Geo(2, 2))));
+        roundTrip(Factory.forGeo.createMap(Collections.singletonMap(KEY, new Geo (88.88, 77.77))));
     }
 }

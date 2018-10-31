@@ -7,6 +7,8 @@ import static io.identifiers.types.IdentifierFactoryProvider.typedFactory;
 import java.time.Instant;
 import java.util.UUID;
 
+import io.identifiers.semantic.Geo;
+
 /**
  * Factory methods to create new {@link Identifier} instances.
  */
@@ -60,6 +62,11 @@ public final class Factory {
      * The Datetime identifier factory.
      */
      public static final IdentifierFactory<Instant> forDatetime = typedFactory(IdentifierType.DATETIME);
+
+    /**
+     * The Geo identifier factory.
+     */
+     public static final IdentifierFactory<Geo> forGeo = typedFactory(IdentifierType.GEO);
 
 
     /**

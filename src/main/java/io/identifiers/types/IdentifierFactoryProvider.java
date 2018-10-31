@@ -61,6 +61,11 @@ public final class IdentifierFactoryProvider {
             TypeTemplates.forDatetime,
             ListTypeTemplates.forDatetimeList,
             MapTypeTemplates.forDatetimeMap);
+
+        addTypedFactory(IdentifierType.GEO,
+            TypeTemplates.forGeo,
+            ListTypeTemplates.forGeoList,
+            MapTypeTemplates.forGeoMap);
     }
 
     @SuppressWarnings("unchecked")

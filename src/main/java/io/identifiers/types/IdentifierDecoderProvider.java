@@ -130,6 +130,10 @@ final class IdentifierDecoderProvider {
         addItemDecoder(IdentifierType.DATETIME, Factory.forDatetime);
         addListDecoder(IdentifierType.DATETIME_LIST, Factory.forDatetime);
         addMapDecoder(IdentifierType.DATETIME_MAP, Factory.forDatetime);
+
+        addItemDecoder(IdentifierType.GEO, Factory.forGeo);
+        addListDecoder(IdentifierType.GEO_LIST, Factory.forGeo);
+        addMapDecoder(IdentifierType.GEO_MAP, Factory.forGeo);
     }
 
     private static <T> void addItemDecoder(

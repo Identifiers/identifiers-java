@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import io.identifiers.Identifier;
 import io.identifiers.IdentifierType;
+import io.identifiers.semantic.Geo;
 
 final class MapTypeTemplates {
 
@@ -32,6 +33,8 @@ final class MapTypeTemplates {
     static TypeTemplate<Map<String, UUID>> forUuidMap = createTemplate(IdentifierType.UUID_MAP, TypeTemplates.forUuid);
 
     static TypeTemplate<Map<String, Instant>> forDatetimeMap = createTemplate(IdentifierType.DATETIME_MAP, TypeTemplates.forDatetime);
+
+    static TypeTemplate<Map<String, Geo>> forGeoMap = createTemplate(IdentifierType.GEO_MAP, TypeTemplates.forGeo);
 
 
     private static <T> TypeTemplate<Map<String, T>> createTemplate(IdentifierType type, TypeTemplate<T> valueTemplate) {

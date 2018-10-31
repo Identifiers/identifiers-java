@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import io.identifiers.Identifier;
 import io.identifiers.IdentifierType;
+import io.identifiers.semantic.Geo;
 
 final class ListTypeTemplates {
 
@@ -33,6 +34,8 @@ final class ListTypeTemplates {
     static TypeTemplate<List<UUID>> forUuidList = createTemplate(IdentifierType.UUID_LIST, TypeTemplates.forUuid);
 
     static TypeTemplate<List<Instant>> forDatetimeList = createTemplate(IdentifierType.DATETIME_LIST, TypeTemplates.forDatetime);
+
+    static TypeTemplate<List<Geo>> forGeoList = createTemplate(IdentifierType.GEO_LIST, TypeTemplates.forGeo);
 
 
     private static <T> TypeTemplate<List<T>> createTemplate(IdentifierType type, TypeTemplate<T> valueTemplate) {

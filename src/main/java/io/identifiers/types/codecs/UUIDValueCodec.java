@@ -10,11 +10,11 @@ import io.identifiers.types.ValueCodec;
 import org.msgpack.core.MessageUnpacker;
 import org.msgpack.value.Value;
 
-public class UUIDValueCodec implements ValueCodec<UUID> {
+public final class UUIDValueCodec implements ValueCodec<UUID> {
 
     private static final int BYTES_LENGTH = 16;
 
-    private final BytesValueCodec bytesCodec = new BytesValueCodec();
+    private final ValueCodec<byte[]> bytesCodec = new BytesValueCodec();
 
     @Override
     public Value encode(UUID value) {
