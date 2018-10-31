@@ -96,12 +96,12 @@ class PrimitivesTCKTest {
         Object actual = id.value();
         JsonValue value = test.get("value");
 
-        if (IdentifierType.Modifiers.LIST_TYPE == (idType.code() & IdentifierType.Modifiers.LIST_TYPE)) {
+        if (actual instanceof List) {
             List<Object> expectedList = value.asArray().values().stream()
                 .map(valueTransformer)
                 .collect(Collectors.toList());
             assertThat((List<Object>) actual).containsExactlyElementsOf(expectedList);
-        } else if (IdentifierType.Modifiers.MAP_TYPE == (idType.code() & IdentifierType.Modifiers.MAP_TYPE)) {
+        } else if (actual instanceof Map) {
             Map<String, Object> expectedMap = StreamSupport.stream(value.asObject().spliterator(), false)
                 .collect(Collectors.toMap(
                     JsonObject.Member::getName,
@@ -113,12 +113,6 @@ class PrimitivesTCKTest {
             assertThat(actual).isEqualTo(expected);
         }
 
-        if (isHuman) {
-            String toString = id.toHumanString();
-            assertThat(toString).isEqualTo(test.get("human").asString());
-        } else {
-            String toString = id.toDataString();
-            assertThat(toString).isEqualTo(encoded);
-        }
+        TckUtil.testStringEncoding(test, isHuman, encoded, id);
     }
 }

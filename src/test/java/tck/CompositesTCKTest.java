@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +27,31 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 
-import org.assertj.core.util.Arrays;
-
 
 class CompositesTCKTest {
 
     private static final String COMPOSITES_DIR = "target/tck/composites/";
+
+    @Test
+    void testList() throws IOException {
+        JsonArray tests = getTck("list");
+        testTck(tests);
+    }
+
+    @Test
+    void testMap() throws IOException {
+        JsonArray tests = getTck("map");
+        testTck(tests);
+    }
+
+    void testTck(Iterable<JsonValue> tests) {
+        tests.forEach(test -> {
+            JsonObject testObject = test.asObject();
+            roundTripTest(testObject, true);
+            roundTripTest(testObject, false);
+        });
+    }
+
 
     private final Map<String, Function<? super JsonValue, ?>> valueTransformers = new HashMap<>();
     {
@@ -47,7 +67,7 @@ class CompositesTCKTest {
             new ByteArrayEquals(
                 jv.asArray().values().stream()
                     .map(JsonValue::asInt)
-                    .map(b -> (byte) (b & 0xff))
+                    .map((b) -> (byte) (b & 0xff))
                     .toArray(Byte[]::new)));
 
         // semantic types
@@ -102,20 +122,6 @@ class CompositesTCKTest {
         return input.substring(0, input.length() - ending.length());
     }
 
-    @Test
-    void testList() throws IOException {
-        JsonArray tests = getTck("list");
-        testTck(tests);
-    }
-
-    void testTck(Iterable<JsonValue> tests) {
-        tests.forEach(test -> {
-            JsonObject testObject = test.asObject();
-            roundTripTest(testObject, true);
-            roundTripTest(testObject, false);
-        });
-    }
-
     @SuppressWarnings("unchecked")
     void roundTripTest(JsonObject test, boolean isHuman) {
         String encoded = test.get(isHuman ? "mixedHuman" : "data").asString();
@@ -128,24 +134,17 @@ class CompositesTCKTest {
         Object actual = id.value();
         JsonValue value = test.get("value");
 
-        if (IdentifierType.Modifiers.LIST_TYPE == (idType.code() & IdentifierType.Modifiers.LIST_TYPE)) {
-            assertListValue((List<Identifier>) actual, value);
-        } else if (IdentifierType.Modifiers.MAP_TYPE == (idType.code() & IdentifierType.Modifiers.MAP_TYPE)) {
-            assertMapValue((Map<String, Object>) actual, value);
+        if (actual instanceof List) {
+            assertListValue((List<Identifier<?>>) actual, value);
+        } else if (actual instanceof Map) {
+            assertMapValue((Map<String, Identifier<?>>) actual, value);
         } else {
             throw new IllegalArgumentException(String.format("Cannot process type %s", idType));
         }
-
-        if (isHuman) {
-            String toString = id.toHumanString();
-            assertThat(toString).isEqualTo(test.get("human").asString());
-        } else {
-            String toString = id.toDataString();
-            assertThat(toString).isEqualTo(encoded);
-        }
+        TckUtil.testStringEncoding(test, isHuman, encoded, id);
     }
 
-    private void assertListValue(final List<Identifier> actual, final JsonValue value) {
+    private void assertListValue(List<Identifier<?>> actual, JsonValue value) {
         List<Object> expectedList = collectToList(valueTransformer).apply(value);
         List<Object> actualList = actual.stream()
             .map(Identifier::value)
@@ -154,13 +153,17 @@ class CompositesTCKTest {
         assertThat(actualList).containsExactlyElementsOf(expectedList);
     }
 
-    private void assertMapValue(final Map<String, Object> actual, final JsonValue value) {
+    private void assertMapValue(Map<String, Identifier<?>> actual, JsonValue value) {
         Map<String, Object> expectedMap = collectToMap(valueTransformer).apply(value);
-        assertThat(actual).containsAllEntriesOf(expectedMap);
+        Map<String, Object> actualMap = actual.entrySet().stream()
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                entry -> maybeWrapByteArrays(entry.getValue().value())));
+        assertThat(actualMap).containsAllEntriesOf(expectedMap); //bug actual map is a map of IDs, not values
     }
 
     private Object maybeWrapByteArrays(Object value) {
-        if (Arrays.isArray(value)) {
+        if (org.assertj.core.util.Arrays.isArray(value)) {
             Class<?> type = value.getClass().getComponentType();
             if (type.equals(byte.class)) {
                 byte[] bytes = (byte[]) value;
@@ -168,7 +171,7 @@ class CompositesTCKTest {
             }
         }
         if (value instanceof List) {
-            return ((List) value).stream()
+            return ((List<?>) value).stream()
                 .map(this::maybeWrapByteArrays)
                 .collect(Collectors.toList());
         }
@@ -198,7 +201,7 @@ class CompositesTCKTest {
 
         ByteArrayEquals(byte[] primBytes) {
             bytes = new Byte[primBytes.length];
-            java.util.Arrays.setAll(bytes, n -> primBytes[n]);
+            Arrays.setAll(bytes, n -> primBytes[n]);
         }
 
         ByteArrayEquals(Byte[] bytes) {
@@ -210,23 +213,23 @@ class CompositesTCKTest {
             if (obj == this) {
                 return true;
             }
-            if (Arrays.isArray(obj)) {
-                return java.util.Arrays.equals(bytes, Arrays.asObjectArray(obj));
+            if (org.assertj.core.util.Arrays.isArray(obj)) {
+                return Arrays.equals(bytes, org.assertj.core.util.Arrays.asObjectArray(obj));
             }
             if (obj instanceof ByteArrayEquals) {
-                return java.util.Arrays.equals(bytes, ((ByteArrayEquals) obj).bytes);
+                return Arrays.equals(bytes, ((ByteArrayEquals) obj).bytes);
             }
             return false;
         }
 
         @Override
         public int hashCode() {
-            return java.util.Arrays.hashCode(bytes);
+            return Arrays.hashCode(bytes);
         }
 
         @Override
         public String toString() {
-            return java.util.Arrays.toString(bytes);
+            return Arrays.toString(bytes);
         }
     }
 }
