@@ -15,7 +15,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import io.identifiers.Factory;
 import io.identifiers.Identifier;
+import io.identifiers.IdentifierType;
 import io.identifiers.semantic.Geo;
 
 import com.eclipsesource.json.Json;
@@ -142,6 +144,37 @@ class TckUtil {
         }
 
         return value;
+    }
+
+    @SuppressWarnings("unchecked")
+    static void roundTripTest(JsonObject test, Function<? super JsonValue, ?> valueTransformer, boolean isHuman) {
+        String encoded = test.get(isHuman ? "mixedHuman" : "data").asString();
+        Identifier<?> id = Factory.decodeFromString(encoded);
+        IdentifierType idType = id.type();
+
+        assertThat(test.get("type").asString()).isEqualTo(idType.toString());
+
+        Object actual = maybeWrapByteArrays(id.value());
+        JsonValue value = test.get("value");
+
+        if (actual instanceof List) {
+            List<Object> expectedList = value.asArray().values().stream()
+                .map(valueTransformer)
+                .collect(Collectors.toList());
+            assertThat((List<Object>) actual).containsExactlyElementsOf(expectedList);
+        } else if (actual instanceof Map) {
+            Map<String, Object> expectedMap = StreamSupport.stream(value.asObject().spliterator(), false)
+                .collect(Collectors.toMap(
+                    JsonObject.Member::getName,
+                    t -> valueTransformer.apply(t.getValue())));
+            assertThat((Map<String, Object>) actual).containsAllEntriesOf(expectedMap);
+        }
+        else {
+            Object expected = valueTransformer.apply(value);
+            assertThat(actual).isEqualTo(expected);
+        }
+
+        testStringEncoding(test, isHuman, encoded, id);
     }
 
 
