@@ -13,6 +13,12 @@ import org.msgpack.value.ValueFactory;
 
 abstract class AbstractIdentifierEncoder<T> implements IdentifierEncoder<T> {
 
+    private static final int BUFFER_SIZE = 2048;
+
+    private static final MessagePack.PackerConfig PACKER = new MessagePack.PackerConfig()
+        .withBufferSize(BUFFER_SIZE)
+        .withSmallStringOptimizationThreshold(BUFFER_SIZE);
+
     private final IdentifierType type;
     private final Value typeCodeValue;
 
@@ -43,7 +49,7 @@ abstract class AbstractIdentifierEncoder<T> implements IdentifierEncoder<T> {
     }
 
     private byte[] toBytes(Value values) {
-        try (MessageBufferPacker packer = MessagePack.newDefaultBufferPacker()) {
+        try (MessageBufferPacker packer = PACKER.newBufferPacker()) {
             packer.packValue(values);
             return packer.toByteArray();
         } catch (IOException e) {

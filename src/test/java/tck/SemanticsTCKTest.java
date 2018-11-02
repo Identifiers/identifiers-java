@@ -1,0 +1,6 @@
+package tck;
+
+class SemanticsTCKTest {
+
+
+}

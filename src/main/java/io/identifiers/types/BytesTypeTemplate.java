@@ -20,7 +20,7 @@ final class BytesTypeTemplate extends TypeTemplateWithEncoder<byte[]> {
 
     @Override
     public byte[] value(byte[] value) {
-        return Arrays.copyOf(value, value.length);
+        return value.clone();
     }
 
     @Override

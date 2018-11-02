@@ -1,6 +1,7 @@
 package io.identifiers.types;
 
 import java.io.IOException;
+import java.nio.charset.CodingErrorAction;
 import java.util.Arrays;
 
 import io.identifiers.Assert;
@@ -12,6 +13,14 @@ import org.msgpack.core.MessagePack;
 import org.msgpack.core.MessageUnpacker;
 
 public final class IdentifierDecoderSupport {
+
+    private static final int BUFFER_SIZE = 2048;
+
+    private static final MessagePack.UnpackerConfig UNPACKER = new MessagePack.UnpackerConfig()
+        .withBufferSize(BUFFER_SIZE)
+        .withStringDecoderBufferSize(BUFFER_SIZE)
+        .withActionOnMalformedString(CodingErrorAction.REPORT)
+        .withActionOnUnmappableString(CodingErrorAction.REPORT);
 
     private IdentifierDecoderSupport() {
         // static class
@@ -45,7 +54,7 @@ public final class IdentifierDecoderSupport {
     }
 
     private static <T> Identifier<T> bytesToIdentifier(byte[] bytes) {
-        try (MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(bytes)) {
+        try (MessageUnpacker unpacker = UNPACKER.newUnpacker(bytes)) {
             return unpackIdentifier(unpacker);
         } catch (IOException e) {
             throw new IllegalArgumentException(String.format("cannot decode msgPack %s", Arrays.toString(bytes)), e);
