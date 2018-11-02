@@ -1,6 +1,5 @@
 package tck;
 
-import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
@@ -8,9 +7,8 @@ import io.identifiers.Factory;
 import io.identifiers.Identifier;
 import io.identifiers.IdentifierType;
 import org.junit.jupiter.api.Test;
-import java.io.FileReader;
+
 import java.io.IOException;
-import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -20,64 +18,45 @@ import java.util.stream.StreamSupport;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PrimitivesTCKTest {
-    private static final String PRIMITIVES_DIR = "target/tck/primitives/";
+    private static final String PRIMITIVES_DIR = "primitives";
 
     @Test
     void testString() throws IOException {
-        JsonArray tests = getTck("string");
-        testTck(tests, JsonValue::asString);
+        JsonArray tests = TckUtil.getTck(PRIMITIVES_DIR, "string");
+        testTck(tests, TckUtil.valueTransformerFor("string"));
     }
 
     @Test
     void testBoolean() throws IOException {
-        JsonArray tests = getTck("boolean");
-        testTck(tests, JsonValue::asBoolean);
+        JsonArray tests = TckUtil.getTck(PRIMITIVES_DIR, "boolean");
+        testTck(tests, TckUtil.valueTransformerFor("boolean"));
     }
 
     @Test
     void testInteger() throws IOException {
-        JsonArray tests = getTck("integer");
-        testTck(tests, JsonValue::asInt);
+        JsonArray tests = TckUtil.getTck(PRIMITIVES_DIR, "integer");
+        testTck(tests, TckUtil.valueTransformerFor("integer"));
     }
 
     @Test
     void testFloat() throws IOException {
-        JsonArray tests = getTck("float");
-        testTck(tests, JsonValue::asDouble);
+        JsonArray tests = TckUtil.getTck(PRIMITIVES_DIR, "float");
+        testTck(tests, TckUtil.valueTransformerFor("float"));
     }
 
     @Test
     void testLong() throws IOException {
-        JsonArray tests = getTck("long");
-        Function<JsonValue, Object> valueTransformer = (jv) -> {
-            String str = jv.asString();
-            return Long.parseLong(str);
-        };
-        testTck(tests, valueTransformer);
+        JsonArray tests = TckUtil.getTck(PRIMITIVES_DIR, "long");
+        testTck(tests, TckUtil.valueTransformerFor("long"));
     }
 
     @Test
     void testBytes() throws IOException {
-        JsonArray tests = getTck("bytes");
-        Function<JsonValue, Object> valueTransformer = (jv) -> jv.asArray().values().stream()
-                .map(JsonValue::asInt)
-                .map(b -> (byte) (b & 0xff))
-                .toArray(Byte[]::new);
-        testTck(tests, valueTransformer);
+        JsonArray tests = TckUtil.getTck(PRIMITIVES_DIR, "bytes");
+        testTck(tests, TckUtil.valueTransformerFor("bytes"));
     }
 
-    private JsonArray getTck(String testName) throws IOException {
-        JsonArray tests;
-        String filename = String.format("%s%s.json", PRIMITIVES_DIR, testName);
-        System.out.printf("loading TCK %s%n", filename);
-        try (Reader reader = new FileReader(filename)) {
-            JsonValue tck = Json.parse(reader);
-            tests = tck.asArray();
-        }
-        return tests;
-    }
-
-    void testTck(JsonArray tests, Function<JsonValue, Object> valueTransformer) {
+    void testTck(JsonArray tests, Function<? super JsonValue, ?> valueTransformer) {
         tests.forEach(test -> {
             JsonObject testObject = test.asObject();
             roundTripTest(testObject, valueTransformer, true);
@@ -86,14 +65,14 @@ class PrimitivesTCKTest {
     }
 
     @SuppressWarnings("unchecked")
-    void roundTripTest(JsonObject test, Function<JsonValue, Object> valueTransformer, boolean isHuman) {
+    void roundTripTest(JsonObject test, Function<? super JsonValue, ?> valueTransformer, boolean isHuman) {
         String encoded = test.get(isHuman ? "mixedHuman" : "data").asString();
         Identifier<?> id = Factory.decodeFromString(encoded);
         IdentifierType idType = id.type();
 
         assertThat(test.get("type").asString()).isEqualTo(idType.toString());
 
-        Object actual = id.value();
+        Object actual = TckUtil.maybeWrapByteArrays(id.value());
         JsonValue value = test.get("value");
 
         if (actual instanceof List) {

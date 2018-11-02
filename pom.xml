@@ -206,24 +206,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-scm-plugin</artifactId>
-                <version>${maven-scm-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>fetch-tck-files</id>
-                        <phase>generate-test-resources</phase>
-                        <goals>
-                            <goal>checkout</goal>
-                        </goals>
-                        <configuration>
-                            <connectionUrl>scm:svn:https://github.com/Identifiers/spec/trunk/tck/files</connectionUrl>
-                            <checkoutDirectory>target/tck</checkoutDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <dependencies>
