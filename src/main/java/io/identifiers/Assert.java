@@ -1,5 +1,8 @@
 package io.identifiers;
 
+/**
+ * Used internally to test values at runtime.
+ */
 public final class Assert {
 
     private Assert() {
