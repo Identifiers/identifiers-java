@@ -110,6 +110,8 @@
         <minimal-json.version>0.9.5</minimal-json.version>
 
         <!-- =========== MAVEN PLUGINS ============ -->
+        <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
         <junit-platform-surefire-provider.version>1.2.0</junit-platform-surefire-provider.version>
         <maven-bundle-plugin.version>4.0.0</maven-bundle-plugin.version>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
@@ -232,6 +234,31 @@
                     </instructions>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>${coveralls-maven-plugin.version}</version>
+            </plugin>
         </plugins>
     </build>
 
@@ -241,6 +268,7 @@
 
     <profiles>
         <profile>
+            <!-- mvn -Prelease deploy -->
             <id>release</id>
             <distributionManagement>
                 <repository>
