@@ -110,20 +110,20 @@ public class IdentifierType {
     public static final IdentifierType GEO_MAP = mapType(GEO);
 
 
-    private static IdentifierType listType(final IdentifierType baseType) {
+    private static IdentifierType listType(IdentifierType baseType) {
         return new IdentifierType(String.format("%s-list", baseType.name), Modifiers.listTypeCode(baseType));
     }
 
-    private static IdentifierType mapType(final IdentifierType baseType) {
+    private static IdentifierType mapType(IdentifierType baseType) {
         return new IdentifierType(String.format("%s-map", baseType.name), Modifiers.mapTypeCode(baseType));
     }
 
 
     public static final class Modifiers {
-        public static final int LIST_TYPE = 0x08;
-        public static final int MAP_TYPE = 0x10;
         public static final int SEMANTIC_TYPE = 0x80;
 
+        private static final int LIST_TYPE = 0x08;
+        private static final int MAP_TYPE = 0x10;
         private static final int LIST_OF = 0x20;
         private static final int MAP_OF = 0x40;
         private static final int SEMANTIC_SLOT_SHIFT = 0x8;

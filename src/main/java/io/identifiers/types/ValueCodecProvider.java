@@ -148,7 +148,7 @@ final class ValueCodecProvider {
     private static <T> ValueCodec<Map<String, T>> createMapCodec(ValueCodec<T> valueCodec) {
         return new ValueCodec<Map<String, T>>() {
             @Override
-            public Value encode(final Map<String, T> valueMap) {
+            public Value encode(Map<String, T> valueMap) {
                 Set<Map.Entry<String, T>> entries = valueMap.entrySet();
                 Value[] encodedKVs = new Value[entries.size() * 2];
 
@@ -161,7 +161,7 @@ final class ValueCodecProvider {
             }
 
             @Override
-            public Map<String, T> decode(final MessageUnpacker unpacker) throws IOException {
+            public Map<String, T> decode(MessageUnpacker unpacker) throws IOException {
                 int size = unpacker.unpackMapHeader();
                 Map<String, T> valueMap = new TreeMap<>();
                 while (size-- > 0) {

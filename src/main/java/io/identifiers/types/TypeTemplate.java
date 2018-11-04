@@ -10,7 +10,6 @@ public interface TypeTemplate<T> {
 
     T value(T value);
 
-    // todo consider removing this method and providing different type templates for immutable and mutable values
     boolean isValueMutable();
 
     String toDataString(T value);

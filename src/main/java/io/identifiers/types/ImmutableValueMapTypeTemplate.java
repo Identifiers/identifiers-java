@@ -5,7 +5,7 @@ import java.util.Map;
 
 class ImmutableValueMapTypeTemplate<T> extends TypeTemplateWithEncoder<Map<String, T>> {
 
-    ImmutableValueMapTypeTemplate(final IdentifierEncoder<Map<String, T>> encoder) {
+    ImmutableValueMapTypeTemplate(IdentifierEncoder<Map<String, T>> encoder) {
         super(encoder);
     }
 

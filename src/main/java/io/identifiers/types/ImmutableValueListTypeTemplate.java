@@ -5,12 +5,12 @@ import java.util.List;
 
 class ImmutableValueListTypeTemplate<T> extends TypeTemplateWithEncoder<List<T>> {
 
-    ImmutableValueListTypeTemplate(final IdentifierEncoder<List<T>> encoder) {
+    ImmutableValueListTypeTemplate(IdentifierEncoder<List<T>> encoder) {
         super(encoder);
     }
 
     @Override
-    public List<T> initialValue(final List<T> value) {
+    public List<T> initialValue(List<T> value) {
         return Collections.unmodifiableList(value);
     }
 }

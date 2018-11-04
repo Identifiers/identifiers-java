@@ -46,7 +46,6 @@ class CompositesTCKTest {
     @SuppressWarnings("unchecked")
     void roundTripTest(JsonObject test, boolean isHuman) {
         String encoded = test.get(isHuman ? "mixedHuman" : "data").asString();
-        System.out.println(encoded);
         Identifier<?> id = Factory.decodeFromString(encoded);
         IdentifierType idType = id.type();
 

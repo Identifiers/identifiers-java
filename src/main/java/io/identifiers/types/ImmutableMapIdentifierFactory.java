@@ -15,7 +15,7 @@ final class ImmutableMapIdentifierFactory<T> implements MapIdentifierFactory<T> 
 
     private final TypeTemplate<Map<String, T>> mapTypeTemplate;
 
-    ImmutableMapIdentifierFactory(final TypeTemplate<Map<String, T>> mapTypeTemplate) {
+    ImmutableMapIdentifierFactory(TypeTemplate<Map<String, T>> mapTypeTemplate) {
         this.mapTypeTemplate = mapTypeTemplate;
     }
 

@@ -24,48 +24,48 @@ public final class IdentifierFactoryProvider {
     static {
         addTypedFactory(IdentifierType.STRING,
             TypeTemplates.forString,
-            ListTypeTemplates.forStringList,
-            MapTypeTemplates.forStringMap);
+            TypeTemplates.forStringList,
+            TypeTemplates.forStringMap);
 
         addTypedFactory(IdentifierType.BOOLEAN,
             TypeTemplates.forBoolean,
-            ListTypeTemplates.forBooleanList,
-            MapTypeTemplates.forBooleanMap);
+            TypeTemplates.forBooleanList,
+            TypeTemplates.forBooleanMap);
 
         addTypedFactory(IdentifierType.INTEGER,
             TypeTemplates.forInteger,
-            ListTypeTemplates.forIntegerList,
-            MapTypeTemplates.forIntegerMap);
+            TypeTemplates.forIntegerList,
+            TypeTemplates.forIntegerMap);
 
         addTypedFactory(IdentifierType.FLOAT,
             TypeTemplates.forFloat,
-            ListTypeTemplates.forFloatList,
-            MapTypeTemplates.forFloatMap);
+            TypeTemplates.forFloatList,
+            TypeTemplates.forFloatMap);
 
         addTypedFactory(IdentifierType.LONG,
             TypeTemplates.forLong,
-            ListTypeTemplates.forLongList,
-            MapTypeTemplates.forLongMap);
+            TypeTemplates.forLongList,
+            TypeTemplates.forLongMap);
 
         addTypedFactory(IdentifierType.BYTES,
             TypeTemplates.forBytes,
-            ListTypeTemplates.forBytesList,
-            MapTypeTemplates.forBytesMap);
+            TypeTemplates.forBytesList,
+            TypeTemplates.forBytesMap);
 
         addTypedFactory(IdentifierType.UUID,
             TypeTemplates.forUuid,
-            ListTypeTemplates.forUuidList,
-            MapTypeTemplates.forUuidMap);
+            TypeTemplates.forUuidList,
+            TypeTemplates.forUuidMap);
 
         addTypedFactory(IdentifierType.DATETIME,
             TypeTemplates.forDatetime,
-            ListTypeTemplates.forDatetimeList,
-            MapTypeTemplates.forDatetimeMap);
+            TypeTemplates.forDatetimeList,
+            TypeTemplates.forDatetimeMap);
 
         addTypedFactory(IdentifierType.GEO,
             TypeTemplates.forGeo,
-            ListTypeTemplates.forGeoList,
-            MapTypeTemplates.forGeoMap);
+            TypeTemplates.forGeoList,
+            TypeTemplates.forGeoMap);
     }
 
     @SuppressWarnings("unchecked")
@@ -77,8 +77,8 @@ public final class IdentifierFactoryProvider {
 
     @SuppressWarnings("unchecked")
     public static CompositeIdentifierFactory compositeFactory() {
-        MapIdentifierFactory<Identifier<?>> mapFactory = new ImmutableMapIdentifierFactory(MapTypeTemplates.forCompositeMap);
-        ListIdentifierFactory<Identifier<?>> listFactory = new ImmutableListIdentifierFactory(ListTypeTemplates.forCompositeList);
+        MapIdentifierFactory<Identifier<?>> mapFactory = new ImmutableMapIdentifierFactory(TypeTemplates.forCompositeMap);
+        ListIdentifierFactory<Identifier<?>> listFactory = new ImmutableListIdentifierFactory(TypeTemplates.forCompositeList);
 
         return new CompositeIdentifierFactoryImpl(listFactory, mapFactory);
     }
