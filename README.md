@@ -5,32 +5,14 @@
 
 #### Installing the Identifiers Library
 
-For Maven users:
+Maven Central coordinates:
 
 ```
 <dependency>
    <groupId>io.identifiers</groupId>
    <artifactId>identifiers</artifactId>
-   <version>(version)</version>
+   <version>0.0.1</version>
 </dependency>
-```
-
-For sbt users:
-
-```
-libraryDependencies += "io.identifiers" % "identifiers" % "(version)"
-```
-
-For gradle users:
-
-```
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compile 'io.identifiers:identifiers:(version)'
-}
 ```
 
 ### Usage
@@ -74,14 +56,14 @@ import io.identifiers.Identifier;
 import java.time.Instant;
 
 // List identifiers are declared as generic Lists.
-Identifier<List<Boolean>> booleanListId = Factory.forString.createList(true, false);
+ListIdentifier<Boolean> booleanListId = Factory.forString.createList(true, false);
 
 Map<String, Instant>> dates = new HashMap<>();
 dates.put("before", Instant.parse("2010-01-01"));
 dates.put("after", Instant.parse("2011-12-31"));
 
 // Map identifiers are declared as generic Maps with String keys.
-Identifier<Map<String, Instant>> Factory.forDatetime.createMap(dates);
+MapIdentifier<Instant> Factory.forDatetime.createMap(dates);
 ```
 
 #### Composite Identifiers
@@ -92,8 +74,8 @@ Different types of identifiers can be combined into a composite identifier. They
 import io.identifiers.Factory;
 import io.identifiers.Identifier;
 
-Identifier<List<Identifier<?>> compositeListId = Factory.forComposite.createList(
+ListIdentifier<Identifier<?>> compositeListId = Factory.forComposite.createList(
 	Factory.string.create("s1"),
 	Factory.float.createList(22.1, 6543.87),
-	Factory.bollean.createMap(java.util.Collections.singletonMap("flag", true)));
+	Factory.boolean.createMap(java.util.Collections.singletonMap("flag", true)));
 ```

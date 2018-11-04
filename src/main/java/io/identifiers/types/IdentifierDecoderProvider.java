@@ -23,7 +23,7 @@ final class IdentifierDecoderProvider {
     private static final Map<Integer, IdentifierDecoder> decoderMap = new HashMap<>();
     private static final Map<Integer, IdentifierType> identifierTypeMap = new HashMap<>();
 
-    IdentifierDecoderProvider() {
+    private IdentifierDecoderProvider() {
         // static class
     }
 
@@ -47,7 +47,6 @@ final class IdentifierDecoderProvider {
             3. toString:  "ID<<unknown-base-type>>: base type value toString"
             4. toData/HumanString: [unknownTypeCode, encoded base value]
          */
-
         Integer baseTypeCode = typeCode & SEMANTIC_TYPE_MASK;
         IdentifierType baseType = identifierTypeMap.get(baseTypeCode);
         Assert.argumentExists(baseType, "Cannot find base type code %d", baseTypeCode);
