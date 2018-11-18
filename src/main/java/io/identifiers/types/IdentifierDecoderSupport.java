@@ -37,10 +37,7 @@ public final class IdentifierDecoderSupport {
         if (Base128Decoder.maybe(encodedString)) {
             return decodeDataString(encodedString);
         }
-        if (Base32Decoder.maybe(encodedString)) {
-            return decodeHumanString(encodedString);
-        }
-        throw new IllegalArgumentException(String.format("Cannot decode '%s'", encodedString));
+        return decodeHumanString(encodedString);
     }
 
     private static <T> Identifier<T> decodeDataString(String encodedString) {

@@ -12,7 +12,6 @@ import static io.identifiers.base32.Constants.BYTE_SHIFT_START;
 import static io.identifiers.base32.Constants.BYTE_SIZE;
 import static io.identifiers.base32.Constants.CHECK_EXTRAS;
 import static io.identifiers.base32.Constants.CHECK_PRIME;
-import static io.identifiers.base32.Constants.PREFIX;
 import static io.identifiers.base32.Constants.SYMBOLS;
 import static io.identifiers.base32.Constants.WORD_SHIFT_START;
 import static io.identifiers.base32.Constants.WORD_SIZE;
@@ -64,21 +63,17 @@ public class Base32Decoder {
     }
 
 
-    public static boolean maybe(String encoded) {
-        return encoded.length() != 3 && encoded.startsWith(PREFIX);
-    }
-
     public static byte[] decode(String encoded) {
-        if (encoded.equals(PREFIX)) {
+        if (encoded.isEmpty()) {
             return EMPTY_BYTES;
         }
 
-        int length = encoded.length() - 2;
+        int length = encoded.length() - 1;
         int bytesCount = length * WORD_SIZE / BYTE_SIZE;
         int fullWordsEnd = bytesCount / WORD_SIZE * WORD_SIZE;
         byte[] result = new byte[bytesCount];
 
-        int charPos = 1;
+        int charPos = 0;
         int bytePos = 0;
         long checksum = 0;
 
@@ -100,7 +95,7 @@ public class Base32Decoder {
         if (bytePos < bytesCount) {
             long unpacked = 0;
 
-            for (int shift = WORD_SHIFT_START; charPos <= length; shift -= WORD_SIZE) {
+            for (int shift = WORD_SHIFT_START; charPos < length; shift -= WORD_SIZE) {
                 unpacked = unpackChar(encoded, charPos++, unpacked, shift);
             }
 

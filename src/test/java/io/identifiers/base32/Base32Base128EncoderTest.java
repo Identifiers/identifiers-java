@@ -10,31 +10,31 @@ class Base32Base128EncoderTest {
     @Test
     void handlesEmptyValues() {
         String actual = encode(new byte[0]);
-        assertThat(actual).isEqualTo(Constants.PREFIX);
+        assertThat(actual).isEmpty();
     }
 
     @Test
     void encodesKnownSingleBytes() {
         String actual = encode(new byte[] {'m'});
-        assertThat(actual).isEqualTo("_dm=");
+        assertThat(actual).isEqualTo("dm=");
 
         actual = encode(new byte[] {-1});
-        assertThat(actual).isEqualTo("_zw~");
+        assertThat(actual).isEqualTo("zw~");
     }
 
     @Test
     void encodesShortByteArrayWithNoRemainder() {
         String actual = encode("green".getBytes());
-        assertThat(actual).isEqualTo("_cxs6asbeb");
+        assertThat(actual).isEqualTo("cxs6asbeb");
     }
 
     @Test
     void encodesShortByteArrayWithRemainder() {
         String actual = encode("yellow".getBytes());
-        assertThat(actual).isEqualTo("_f5jprv3few2");
+        assertThat(actual).isEqualTo("f5jprv3few2");
 
         byte[] bytes = {-20, -43, 54};
         actual = encode(bytes);
-        assertThat(actual).isEqualTo("_xkakcp");
+        assertThat(actual).isEqualTo("xkakcp");
     }
 }
