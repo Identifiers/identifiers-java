@@ -30,6 +30,7 @@ public final class IdentifierDecoderSupport {
      * Parse an encoded identifier string into an Identifier instance.
      *
      * @param encodedString the encoded string
+     * @param <T> The type of the identifier
      * @return an Identifier instance
      * @throws IllegalArgumentException if the string is not an encoded identifier
      */
