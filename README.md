@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Identifiers/identifiers-java.svg?branch=master)](https://travis-ci.org/Identifiers/identifiers-java)
 [![Coverage Status](https://coveralls.io/repos/github/Identifiers/identifiers-java/badge.svg?branch=master)](https://coveralls.io/github/Identifiers/identifiers-java?branch=master)
+[![Maven Central](https://img.shields.io/maven-central/v/io.identifiers/identifiers.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.identifiers%22%20AND%20a:%22identifiers%22)
 
 #### Installing the Identifiers Library
 
