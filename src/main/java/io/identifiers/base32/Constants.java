@@ -4,7 +4,7 @@
  */
 package io.identifiers.base32;
 
-public final class Constants {
+final class Constants {
 
     private Constants () {
         // static class

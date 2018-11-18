@@ -31,10 +31,9 @@
     <!-- ********************************************** -->
 
     <scm>
+        <url>https://github.com/identifiers/identifiers-java</url>
         <connection>scm:git:https://github.com/identifiers/identifiers-java.git</connection>
         <developerConnection>scm:git:https://github.com/identifiers/identifiers-java.git</developerConnection>
-        <tag>head</tag>
-        <url>https://github.com/identifiers/identifiers-java</url>
     </scm>
 
     <issueManagement>
@@ -92,13 +91,17 @@
     <!-- ********************************************** -->
 
     <properties>
-        <dependency.locations.enabled>false</dependency.locations.enabled>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- ============================================== -->
         <!-- =========== DEPENDENCIES VERSIONS ============ -->
         <!-- ============================================== -->
-        <msgpack-core.version>0.8.16</msgpack-core.version>
+        <!--
+         msgpack 0.8.13 has OSGi headers, thereafter does not. Consider updating when
+         this is fixed: https://github.com/msgpack/msgpack-java/issues/484
+        -->
+        <msgpack-core.version>0.8.13</msgpack-core.version>
 
         <!-- =========== UNIT-TESTING ============ -->
         <assertj-core.version>3.11.1</assertj-core.version>
@@ -194,8 +197,6 @@
     <!-- ********************************************** -->
     <!-- ******************* BUILD ******************** -->
     <!-- ********************************************** -->
-
-<!-- todo consider https://github.com/Abnaxos/markdown-doclet -->
 
     <build>
         <plugins>

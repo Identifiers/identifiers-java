@@ -4,8 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import static io.identifiers.base128.Base128Decoder.decode;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class Base32Base128DecoderTest {
+class Base128DecoderTest {
 
     @Test
     void handlesEmptyValue() {
@@ -28,5 +29,11 @@ class Base32Base128DecoderTest {
     void convertsShortByteArrays() {
         byte[] actual = decode("mÚÊÔesÈðþ");
         assertThat(actual).containsExactly("greener".getBytes());
+    }
+
+    @Test
+    void throwsOnUnsupportedChars() {
+        assertThatThrownBy(() -> decode("mÚÊÔ+sÈðþ"))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 }

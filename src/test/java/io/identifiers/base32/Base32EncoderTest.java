@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static io.identifiers.base32.Base32Encoder.encode;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class Base32Base128EncoderTest {
+class Base32EncoderTest {
 
     @Test
     void handlesEmptyValues() {
