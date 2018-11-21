@@ -23,4 +23,8 @@ final class MapSupport {
         }
         return copied;
     }
+
+    static <T> T mergeAcceptFirst(T t1, T t2) {
+        return t1;
+    }
 }

@@ -27,7 +27,7 @@ public final class UUIDValueCodec implements ValueCodec<UUID> {
     @Override
     public UUID decode(MessageUnpacker unpacker) throws IOException {
         byte[] bytes = bytesCodec.decode(unpacker);
-        Assert.state(bytes.length == BYTES_LENGTH, "uuid bytes must be 16 bytes in lengthm but found %s", bytes.length);
+        Assert.state(bytes.length == BYTES_LENGTH, "uuid bytes must be 16 bytes in length but found %s", bytes.length);
         ByteBuffer bb = ByteBuffer.wrap(bytes);
         long msb = bb.getLong();
         long lsb = bb.getLong();

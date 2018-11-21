@@ -34,7 +34,7 @@ final class ImmutableMapIdentifierFactory<T> implements MapIdentifierFactory<T> 
     @Override
     public final Collector<T, ?, MapIdentifier<T>> toMapIdentifier(Function<T, String> keyƒ) {
         return Collectors.collectingAndThen(
-            Collectors.toMap(keyƒ, Function.<T>identity(), (e1, e2) -> e1, TreeMap::new),
+            Collectors.toMap(keyƒ, Function.identity(), MapSupport::mergeAcceptFirst, TreeMap::new),
             this::instantiateMapIdentifier);
     }
 

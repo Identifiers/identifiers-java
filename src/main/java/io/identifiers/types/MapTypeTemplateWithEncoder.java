@@ -45,7 +45,7 @@ final class MapTypeTemplateWithEncoder<T> implements TypeTemplate<Map<String, T>
                     Collectors.toMap(
                         Map.Entry::getKey,
                         (entry) -> valueTypeTemplate.value(entry.getValue()),
-                        (e1, e2) -> e1,
+                        MapSupport::mergeAcceptFirst,
                         TreeMap::new),
                     Collections::unmodifiableSortedMap))
             : valueMap;
