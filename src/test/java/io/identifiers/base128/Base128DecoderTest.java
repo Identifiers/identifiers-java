@@ -10,30 +10,30 @@ class Base128DecoderTest {
 
     @Test
     void handlesEmptyValue() {
-        byte[] actual = decode(Constants.TERMINATOR);
+        byte[] actual = decode("");
         assertThat(actual).isEmpty();
     }
 
     @Test
     void convertsSingleByteValues() {
         // 'm'
-        byte[] actual = decode("pzþ");
+        byte[] actual = decode("pz");
         assertThat(actual).containsExactly(109);
 
         // 'ÿ'
-        actual = decode("ýzþ");
+        actual = decode("ýz");
         assertThat(actual).containsExactly(-1);
     }
 
     @Test
     void convertsShortByteArrays() {
-        byte[] actual = decode("mÚÊÔesÈðþ");
+        byte[] actual = decode("mÚÊÔesÈð");
         assertThat(actual).containsExactly("greener".getBytes());
     }
 
     @Test
     void throwsOnUnsupportedChars() {
-        assertThatThrownBy(() -> decode("mÚÊÔ+sÈðþ"))
+        assertThatThrownBy(() -> decode("mÚÊÔ+sÈð"))
             .isInstanceOf(IllegalArgumentException.class);
     }
 }

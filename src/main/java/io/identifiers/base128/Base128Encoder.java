@@ -19,16 +19,11 @@ public class Base128Encoder {
 
     private static final byte BITS_MASK = 0x7f;
     private static final char[] CODES = SYMBOLS.toCharArray();
-    private static final char TERMINATOR_CODE = Constants.TERMINATOR.charAt(0);
 
 
     public static String encode(byte[] unencoded) {
-        if (unencoded.length == 0) {
-            return Constants.TERMINATOR;
-        }
-
         float wordCount = (float) unencoded.length / WORD_SIZE;
-        int charCount = (int) Math.ceil(wordCount * BYTE_SIZE) + 1;
+        int charCount = (int) Math.ceil(wordCount * BYTE_SIZE);
         int fullWordsEnd = (int) Math.floor(wordCount) * WORD_SIZE;
         char[] result = new char[charCount];
 
@@ -63,7 +58,6 @@ public class Base128Encoder {
                 remainder--;
             }
         }
-        result[charPos] = TERMINATOR_CODE;
 
         return new String(result);
     }

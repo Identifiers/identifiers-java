@@ -35,10 +35,17 @@ public final class IdentifierDecoderSupport {
      * @throws IllegalArgumentException if the string is not an encoded identifier
      */
     public static <T> Identifier<T> decodeIdentifier(String encodedString) {
-        if (Base128Decoder.maybe(encodedString)) {
+        if (encodedString == null || encodedString.isEmpty()) {
+            throw new IllegalArgumentException("encoded string cannot be null or empty");
+        }
+        char firstChar = encodedString.charAt(0);
+        if (firstChar == 0xc7) { // Ç
             return decodeDataString(encodedString);
         }
-        return decodeHumanString(encodedString);
+        if (firstChar == 0x4a || firstChar == 0x6a) { // j/J
+            return decodeHumanString(encodedString);
+        }
+        throw new IllegalArgumentException(String.format("Not a valid encoded identifier: '%s'", encodedString));
     }
 
     private static <T> Identifier<T> decodeDataString(String encodedString) {

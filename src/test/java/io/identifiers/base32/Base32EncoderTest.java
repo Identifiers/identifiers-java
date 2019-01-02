@@ -10,7 +10,7 @@ class Base32EncoderTest {
     @Test
     void handlesEmptyValues() {
         String actual = encode(new byte[0]);
-        assertThat(actual).isEmpty();
+        assertThat(actual).isEqualTo("0"); //check digit
     }
 
     @Test

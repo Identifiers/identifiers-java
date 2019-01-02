@@ -7,7 +7,6 @@ package io.identifiers.base128;
 import static io.identifiers.base128.Constants.BYTE_SHIFT_START;
 import static io.identifiers.base128.Constants.BYTE_SIZE;
 import static io.identifiers.base128.Constants.SYMBOLS;
-import static io.identifiers.base128.Constants.TERMINATOR;
 import static io.identifiers.base128.Constants.WORD_SHIFT_START;
 import static io.identifiers.base128.Constants.WORD_SIZE;
 
@@ -24,23 +23,12 @@ public final class Base128Decoder {
 
     static {
         Arrays.fill(CODES, -1);
-        IntStream.range(0, SYMBOLS.length()).forEach(i ->
-            CODES[SYMBOLS.charAt(i)] = i);
+        IntStream.range(0, SYMBOLS.length()).forEach(i -> CODES[SYMBOLS.charAt(i)] = i);
     }
 
-    private static final byte[] EMPTY_BYTES = new byte[0];
-
-
-    public static boolean maybe(String encoded) {
-        return encoded.length() != 2 && encoded.endsWith(TERMINATOR);
-    }
 
     public static byte[] decode(String encoded) {
-        if (encoded.equals(TERMINATOR)) {
-            return EMPTY_BYTES;
-        }
-
-        int length = encoded.length() - 1;
+        int length = encoded.length();
         int bytesCount = length * WORD_SIZE / BYTE_SIZE;
         int fullWordsEnd = bytesCount / WORD_SIZE * WORD_SIZE;
         byte[] result = new byte[bytesCount];

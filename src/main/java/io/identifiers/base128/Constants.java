@@ -11,7 +11,6 @@ final class Constants {
     }
 
     static final String  SYMBOLS ="/0123456789?@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüý";
-    static final String TERMINATOR ="þ";
 
     static final int WORD_SIZE = 0x07;
     static final int BYTE_SIZE = 0x08;
