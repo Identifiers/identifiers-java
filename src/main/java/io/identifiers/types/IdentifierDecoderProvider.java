@@ -30,7 +30,7 @@ final class IdentifierDecoderProvider {
     static IdentifierDecoder findDecoder(Integer typeCode) {
         IdentifierDecoder decoder = decoderMap.get(typeCode);
         if (decoder == null) {
-            Assert.state(typeCode >= SEMANTIC_TYPE, "No decoder for typeCode %s found.", typeCode);
+            Assert.argumentState(typeCode >= SEMANTIC_TYPE, "No decoder for typeCode %s found.", typeCode);
             decoder = createUnknownCodec(typeCode);
         }
 

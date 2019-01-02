@@ -11,8 +11,8 @@ public final class Geo {
 
 
     public Geo(double latitude, double longitude) {
-        Assert.state(latitude <= 90 && latitude >= -90, "latitude must be between -90.0 and 90.0, received %s", latitude);
-        Assert.state(longitude <= 180 && longitude >= -180, "longitude must be between -180.0 and 180.0, received %s", longitude);
+        Assert.argumentState(latitude <= 90 && latitude >= -90, "latitude must be between -90.0 and 90.0, received %s", latitude);
+        Assert.argumentState(longitude <= 180 && longitude >= -180, "longitude must be between -180.0 and 180.0, received %s", longitude);
         this.latitude = latitude;
         this.longitude = longitude;
     }

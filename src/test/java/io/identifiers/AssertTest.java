@@ -14,8 +14,16 @@ class AssertTest {
     }
 
     @Test
+    void testArgumentState() {
+        Assert.argumentState(true, "should succeed");
+        assertThatThrownBy(() -> Assert.argumentState(false, "should fail"))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     void testState() {
         Assert.state(true, "should succeed");
-        assertThatThrownBy(() -> Assert.state(false, "should fail"));
+        assertThatThrownBy(() -> Assert.state(false, "should fail"))
+            .isInstanceOf(IllegalStateException.class);
     }
 }

@@ -15,6 +15,12 @@ public final class Assert {
         }
     }
 
+    public static void argumentState(boolean state, String formattedMessage, Object... args) {
+        if (!state) {
+            throw new IllegalArgumentException(String.format(formattedMessage, args));
+        }
+    }
+
     public static void state(boolean state, String formattedMessage, Object... args) {
         if (!state) {
             throw new IllegalStateException(String.format(formattedMessage, args));

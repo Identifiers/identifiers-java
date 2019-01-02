@@ -145,17 +145,17 @@ public class IdentifierType {
         }
 
         private static int calculateListTypeCode(int typeCode) {
-            Assert.state((typeCode & LIST_OF) == 0,
+            Assert.argumentState((typeCode & LIST_OF) == 0,
                 "Cannot create a List of List of Something. typeCode: %d", typeCode);
-            Assert.state((typeCode & MAP_OF) == 0,
+            Assert.argumentState((typeCode & MAP_OF) == 0,
                 "Cannot create a List of Map of of Something. typeCode: %d", typeCode);
             return typeCode | (isStructural(typeCode) ? LIST_OF : LIST_TYPE);
         }
 
         private static int calculateMapTypeCode(int typeCode) {
-            Assert.state((typeCode & LIST_OF) == 0,
+            Assert.argumentState((typeCode & LIST_OF) == 0,
                     "Cannot create a Map of List of Something. typeCode: %d", typeCode);
-            Assert.state((typeCode & MAP_OF) == 0,
+            Assert.argumentState((typeCode & MAP_OF) == 0,
                     "Cannot create a Map of Map of of Something. typeCode: %d", typeCode);
             return typeCode | (isStructural(typeCode) ? MAP_OF : MAP_TYPE);
         }
