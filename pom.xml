@@ -10,7 +10,7 @@
 
     <groupId>io.identifiers</groupId>
     <artifactId>identifiers</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <name>Identifiers java implementation</name>
@@ -246,7 +246,10 @@
 
     <profiles>
         <profile>
-            <!-- mvn -Prelease deploy -->
+            <!--
+            mvn -Prelease deploy
+            https://central.sonatype.org/pages/releasing-the-deployment.html
+            -->
             <id>release</id>
             <distributionManagement>
                 <repository>
