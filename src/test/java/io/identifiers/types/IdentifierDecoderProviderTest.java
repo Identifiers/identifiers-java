@@ -34,7 +34,7 @@ class IdentifierDecoderProviderTest {
         packer.packValue(encodedValue);
         byte[] bytes = packer.toByteArray();
         MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(bytes);
-        Identifier actualDecoded = unknownDecoder.decode(unpacker);
+        Identifier<?> actualDecoded = unknownDecoder.decode(unpacker);
 
         assertThat(actualDecoded.type().name()).isEqualTo("unknown-integer-map-map");
         assertThat(actualDecoded.type().code()).isEqualTo(unknownSemanticType);
@@ -44,6 +44,6 @@ class IdentifierDecoderProviderTest {
     @Test
     void testFindDecoderFailsForUnknownType() {
         assertThatThrownBy(() -> IdentifierDecoderProvider.findDecoder(-1))
-            .isInstanceOf(IllegalStateException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 }

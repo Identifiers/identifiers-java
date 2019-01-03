@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static io.identifiers.base128.Base128Encoder.encode;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Base128EncoderTest {
+class Base128EncoderTest {
 
     @Test
     void handlesEmptyValues() {

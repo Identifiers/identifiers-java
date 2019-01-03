@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class GeoTest {
 
-    private Geo classUnderTest = new Geo(1, 2);
+    private final Geo classUnderTest = new Geo(1, 2);
 
     @Test
     void testEquals() {

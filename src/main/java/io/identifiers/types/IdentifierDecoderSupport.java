@@ -35,7 +35,7 @@ public final class IdentifierDecoderSupport {
      * @throws IllegalArgumentException if the string is not an encoded identifier
      */
     public static <T> Identifier<T> decodeIdentifier(String encodedString) {
-        Assert.argumentState(encodedString == null || encodedString.isEmpty(), "encoded string cannot be null or empty");
+        Assert.argumentState(encodedString != null && !encodedString.isEmpty(), "encoded string cannot be null or empty");
         char firstChar = encodedString.charAt(0);
         if (firstChar == 0xc7) { // Ç
             return decodeDataString(encodedString);
