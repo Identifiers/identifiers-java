@@ -76,7 +76,7 @@ import io.identifiers.Factory;
 import io.identifiers.Identifier;
 
 ListIdentifier<Identifier<?>> compositeListId = Factory.forComposite.createList(
-	Factory.string.create("s1"),
-	Factory.float.createList(22.1, 6543.87),
-	Factory.boolean.createMap(java.util.Collections.singletonMap("flag", true)));
+	Factory.forString.create("s1"),
+	Factory.forFloat.createList(22.1, 6543.87),
+	Factory.forBoolean.createMap(java.util.Collections.singletonMap("flag", true)));
 ```
