@@ -4,6 +4,12 @@
 [![Coverage Status](https://coveralls.io/repos/github/Identifiers/identifiers-java/badge.svg?branch=master)](https://coveralls.io/github/Identifiers/identifiers-java?branch=master)
 [![Maven Central](https://img.shields.io/maven-central/v/io.identifiers/identifiers.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.identifiers%22%20AND%20a:%22identifiers%22)
 
+### About Identifiers
+
+Identifiers are self-describing strings of data that can be decoded into semantically-meaningful values. Identifiers can define basic data types, like numbers and bytes. They can also describe values like geolocations, date-times and uuids.
+
+Try out an online version at [identfiers.io](https://identifiers.io/id-converter/)
+
 #### Installing the Identifiers Library
 
 Maven Central coordinates:
